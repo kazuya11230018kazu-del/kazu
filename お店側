@@ -3,7 +3,7 @@
 <head>																									
 <meta charset="UTF-8">																									
 <meta name="viewport" content="width=device-width, initial-scale=1.0">																									
-<title>お店側 厨房・ホール管理画面</title>																									
+<title>店舗管理画面（厨房・ホール）</title>																									
 <style>																									
 body { font-family: sans-serif; margin: 0; padding: 20px; background: #2f3640; color: white; }																									
 h1 { font-size: 1.4rem; border-bottom: 2px solid #718093; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }																									
@@ -13,11 +13,10 @@ h1 { font-size: 1.4rem; border-bottom: 2px solid #718093; padding-bottom: 10px; 
 .order-card.done { border-left-color: #2ed573; opacity: 0.6; }																									
 .table-tag { font-size: 1.1rem; font-weight: bold; color: #ff4757; margin-bottom: 5px; }																									
 .order-time { font-size: 0.85rem; color: #57606f; margin-bottom: 10px; }																									
-.order-items { font-size: 1.05rem; margin-bottom: 15px; font-weight: bold; background: white; padding: 10px; border-radius: 4px; }																									
+.order-items { font-size: 1.05rem; margin-bottom: 15px; font-weight: bold; background: white; padding: 10px; border-radius: 4px; color: #333; }																									
 .action-btn { width: 100%; padding: 10px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; }																									
 .btn-done { background: #2ed573; color: white; }																									
 .btn-undo { background: #ffa502; color: white; }																									
-																									
 .receipt-box { margin-top: 30px; background: #353b48; padding: 15px; border-radius: 8px; }																									
 .receipt-box input { padding: 8px; margin-right: 10px; font-size: 1rem; width: 200px; }																									
 .receipt-box button { padding: 8px 15px; font-weight: bold; background: #1e90ff; color: white; border: none; border-radius: 4px; cursor: pointer; }																									
@@ -32,27 +31,28 @@ h1 { font-size: 1.4rem; border-bottom: 2px solid #718093; padding-bottom: 10px; 
 </h1>																									
 																									
 <div id="orderContainer" class="order-container">																									
-<p>読み込み中...</p>																									
+<p>データを読み込んでいます...</p>																									
 </div>																									
 																									
 <div class="receipt-box">																									
-<h3>🧾 デジタル領収書（QRコード）発行</h3>																									
+<h3>🧾 デジタル領収書発行（インボイス対応）</h3>																									
 <div>																									
 <input type="text" id="titleName" placeholder="宛名 (例: 株式会社〇〇御中)">																									
 <input type="text" id="receiptTableNo" placeholder="テーブル番号" style="width: 100px;">																									
 <input type="number" id="receiptAmount" placeholder="総額(税込)" style="width: 110px;">																									
-<button onclick="generateReceiptQR()">領収書QR作成</button>																									
+<button onclick="generateReceiptQR()">領収書QR生成</button>																									
 </div>																									
 <div id="qrDisplay">																									
 <h4 id="qrTitle"></h4>																									
 <div id="qrCodeContainer" style="display: inline-block; margin-top: 10px;"></div>																									
-<p style="font-size: 0.85rem; color: #666; margin-top: 5px;">お客様にこのQRコードを読み取ってもらいます</p>																									
+<p style="font-size: 0.85rem; color: #666; margin-top: 5px;">お客様のデバイスで読み取りを行ってください</p>																									
 </div>																									
 </div>																									
 																									
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>																									
 <script>																									
-const API_URL = "【ここにデプロイ後のウェブアプリURLを貼り付け】";																									
+// ▼ 発行されたGASのウェブアプリURLを指定してください																									
+const GAS_API_URL = "ここにGASのウェブアプリURLを記述";																									
 																									
 window.onload = function() {																									
 fetchOrders();																									
@@ -60,7 +60,10 @@ setInterval(fetchOrders, 5000);
 };																									
 																									
 function fetchOrders() {																									
-fetch(API_URL + "?action=getKitchenOrders")																									
+fetch(GAS_API_URL, {																									
+method: 'POST',																									
+body: JSON.stringify({ action: 'getKitchenOrders' })																									
+})																									
 .then(res => res.json())																									
 .then(data => {																									
 if(data.success) {																									
@@ -72,7 +75,7 @@ renderOrders(data.orders);
 function renderOrders(orders) {																									
 const container = document.getElementById('orderContainer');																									
 if(orders.length === 0) {																									
-container.innerHTML = "<p>現在、新しい注文はありません。</p>";																									
+container.innerHTML = "<p>現在、新規注文はありません。</p>";																									
 return;																									
 }																									
 																									
@@ -81,8 +84,8 @@ orders.reverse().forEach(ord => {
 const isDone = ord.status === '提供済み';																									
 container.innerHTML += `																									
 <div class="order-card ${isDone ? 'done' : ''}">																									
-<div class="table-tag">テーブル ${ord.tableNo} 番</div>																									
-<div class="order-time">注文時刻: ${ord.timestamp} | 状態: <b>${ord.status}</b></div>																									
+<div class="table-tag">テーブル ${ord.tableNo}</div>																									
+<div class="order-time">受注時刻: ${ord.timestamp} | ステータス: <b>${ord.status}</b></div>																									
 <div class="order-items">${ord.orderText}</div>																									
 ${isDone																									
 ? `<button class="action-btn btn-undo" onclick="updateStatus(${ord.rowIndex}, '未提供')">未提供に戻す</button>`																									
@@ -94,13 +97,16 @@ ${isDone
 }																									
 																									
 function updateStatus(rowIndex, status) {																									
-fetch(API_URL + `?action=updateStatus&rowIndex=${rowIndex}&status=${encodeURIComponent(status)}`)																									
+fetch(GAS_API_URL, {																									
+method: 'POST',																									
+body: JSON.stringify({ action: 'updateStatus', rowIndex: rowIndex, status: status })																									
+})																									
 .then(res => res.json())																									
 .then(data => {																									
 if(data.success) {																									
 fetchOrders();																									
 } else {																									
-alert("更新失敗: " + data.error);																									
+alert("ステータス更新失敗: " + data.error);																									
 }																									
 });																									
 }																									
@@ -111,22 +117,25 @@ const tableNo = document.getElementById('receiptTableNo').value.trim();
 const totalWithTax = document.getElementById('receiptAmount').value.trim();																									
 																									
 if(!titleName || !tableNo || !totalWithTax) {																									
-alert("宛名、テーブル番号、総額をすべて入力してください");																									
+alert("宛名、テーブル番号、総額をすべて入力してください。");																									
 return;																									
 }																									
 																									
 const receiptData = { titleName, tableNo, totalWithTax };																									
-fetch(API_URL + "?action=createReceiptQR&receiptData=" + encodeURIComponent(JSON.stringify(receiptData)))																									
+fetch(GAS_API_URL, {																									
+method: 'POST',																									
+body: JSON.stringify({ action: 'createReceiptQR', receiptData: receiptData })																									
+})																									
 .then(res => res.json())																									
 .then(data => {																									
 if(data.success) {																									
 document.getElementById('qrDisplay').style.display = 'block';																									
-document.getElementById('qrTitle').innerText = `${titleName} / ¥${Number(totalWithTax).toLocaleString()} (卓:${tableNo}番)`;																									
+document.getElementById('qrTitle').innerText = `${titleName} / ¥${Number(totalWithTax).toLocaleString()} (卓:${tableNo})`;																									
 																									
 const container = document.getElementById('qrCodeContainer');																									
 container.innerHTML = '';																									
 																									
-const qrText = `【インボイス対応デジタル領収書】\n宛名: ${titleName}\n合計: ¥${totalWithTax} (税込)\nテーブル: ${tableNo}番\n発行済み`;																									
+const qrText = `【インボイス対応デジタル領収書】\n宛名: ${titleName}\n合計: ¥${totalWithTax} (税込)\nテーブル: ${tableNo}`;																									
 new QRCode(container, {																									
 text: qrText,																									
 width: 150,																									
