@@ -1,0 +1,133 @@
+<!DOCTYPE html>																									
+<html lang="ja">																									
+<head>																									
+<meta charset="UTF-8">																									
+<meta name="viewport" content="width=device-width, initial-scale=1.0">																									
+<title>モバイルオーダー</title>																									
+<style>																									
+body { font-family: sans-serif; margin: 0; padding: 0; background: #f8f9fa; color: #333; }																									
+header { background: #ff4757; color: white; padding: 15px; text-align: center; font-size: 1.2rem; font-weight: bold; }																									
+.container { padding: 15px; max-width: 600px; margin: auto; padding-bottom: 120px; }																									
+.table-select { margin-bottom: 15px; background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }																									
+.menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }																									
+.menu-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; }																									
+.menu-card img { width: 100%; height: 110px; object-fit: cover; background: #ddd; }																									
+.menu-info { padding: 10px; }																									
+.menu-name { font-weight: bold; font-size: 0.95rem; margin-bottom: 5px; }																									
+.menu-price { color: #ff4757; font-size: 0.9rem; font-weight: bold; }																									
+.add-btn { background: #ff4757; color: white; border: none; padding: 8px; width: 100%; cursor: pointer; font-weight: bold; border-radius: 0 0 8px 8px; }																									
+																									
+.cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #ddd; padding: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); max-width: 600px; margin: auto; }																									
+.order-btn { background: #2ed573; color: white; border: none; padding: 12px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 1rem; }																									
+</style>																									
+</head>																									
+<body>																									
+																									
+<header>テーブルオーダー</header>																									
+																									
+<div class="container">																									
+<div class="table-select">																									
+<label><b>テーブル番号選択: </b></label>																									
+<select id="tableNo" style="padding: 5px; font-size: 1rem;">																									
+<option value="1">1番テーブル</option>																									
+<option value="2">2番テーブル</option>																									
+<option value="3">3番テーブル</option>																									
+</select>																									
+</div>																									
+																									
+<div id="menuGrid" class="menu-grid"></div>																									
+</div>																									
+																									
+<div class="cart-bar">																									
+<div>																									
+<div>商品数: <span id="cartCount">0</span>点</div>																									
+<div style="font-size: 0.85rem;">小計: ¥<span id="subTotal">0</span> (税込: ¥<span id="totalWithTax">0</span>)</div>																									
+</div>																									
+<button class="order-btn" onclick="sendOrder()">注文を確定する</button>																									
+</div>																									
+																									
+<script>																									
+const API_URL = "【ここにデプロイ後のウェブアプリURLを貼り付け】";																									
+let menuData = [];																									
+let cart = {};																									
+																									
+window.onload = loadMenu;																									
+																									
+function loadMenu() {																									
+fetch(API_URL + "?action=getMenu")																									
+.then(res => res.json())																									
+.then(data => {																									
+if(data.success) {																									
+menuData = data.menu;																									
+renderMenu();																									
+} else {																									
+alert("メニュー読込エラー: " + data.error);																									
+}																									
+});																									
+}																									
+																									
+function renderMenu() {																									
+const grid = document.getElementById('menuGrid');																									
+grid.innerHTML = '';																									
+menuData.forEach(item => {																									
+grid.innerHTML += `																									
+<div class="menu-card">																									
+<div>																									
+<img src="${item.imageUrl || 'https://via.placeholder.com/150'}" alt="${item.name}">																									
+<div class="menu-info">																									
+<div class="menu-name">${item.name}</div>																									
+<div class="menu-price">¥${item.price.toLocaleString()} (税別)</div>																									
+</div>																									
+</div>																									
+<button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">カートに追加</button>																									
+</div>																									
+`;																									
+});																									
+}																									
+																									
+function addToCart(name, price) {																									
+if(!cart[name]) cart[name] = { price, count: 0 };																									
+cart[name].count++;																									
+updateCartDisplay();																									
+}																									
+																									
+function updateCartDisplay() {																									
+let count = 0, sub = 0;																									
+for(let name in cart) {																									
+count += cart[name].count;																									
+sub += cart[name].price * cart[name].count;																									
+}																									
+let tax = Math.floor(sub * 0.10);																									
+document.getElementById('cartCount').innerText = count;																									
+document.getElementById('subTotal').innerText = sub.toLocaleString();																									
+document.getElementById('totalWithTax').innerText = (sub + tax).toLocaleString();																									
+}																									
+																									
+function sendOrder() {																									
+let itemsArray = [];																									
+for(let name in cart) {																									
+itemsArray.push({ name, price: cart[name].price, count: cart[name].count });																									
+}																									
+if(itemsArray.length === 0) {																									
+alert("カートが空です");																									
+return;																									
+}																									
+																									
+const tableNo = document.getElementById('tableNo').value;																									
+if(!confirm(`テーブル ${tableNo} 番から注文を送信しますか？`)) return;																									
+																									
+fetch(API_URL + "?action=order&orderData=" + encodeURIComponent(JSON.stringify({ tableNo, items: itemsArray })))																									
+.then(res => res.json())																									
+.then(data => {																									
+if(data.success) {																									
+alert("注文が完了しました！");																									
+cart = {};																									
+updateCartDisplay();																									
+} else {																									
+alert("エラー: " + data.error);																									
+}																									
+});																									
+}																									
+</script>																									
+</body>																									
+</html>																									
