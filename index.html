@@ -33,7 +33,6 @@
 <h2 class="text-xl font-bold text-gray-800">テーブル番号をお選びください</h2>																									
 <p class="text-sm text-gray-500">お座りのテーブル番号をタップしてください</p>																									
 																									
-																									
 <!-- 1〜5番を選択するボタン群 -->																									
 <div class="grid grid-cols-1 gap-3 py-2">																									
 <button type="button" onclick="selectTable('1')" class="w-full bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-600 border border-indigo-200 font-bold py-3 rounded-xl text-lg transition shadow-sm">1番テーブル</button>																									
@@ -182,12 +181,21 @@ if (result.status === "success") {
 menuData = result.data;																									
 renderMenu();																									
 } else {																									
-alert("メニューの取得に失敗しました: " + result.message);																									
+// 万が一ステータスがsuccessでなくてもメニューを強制表示できるようにする保険																									
+if (result.data) {																									
+menuData = result.data;																									
+renderMenu();																									
+} else {																									
+alert("メニューの取得に失敗しました: " + (result.message || "不明なエラー"));																									
+}																									
 }																									
 })																									
 .catch(error => {																									
 console.error(error);																									
-document.getElementById('loading').innerHTML = '<p class="text-red-500">サーバーとの通信に失敗しました。</p>';																									
+document.getElementById('loading').classList.add('hidden');																									
+// 通信エラーが起きても画面がフリーズしないよう、ダミーデータまたはコンテナを表示する																									
+document.getElementById('menu-container').classList.remove('hidden');																									
+document.getElementById('menu-container').innerHTML = '<p class="text-red-500 text-center py-4">サーバーとの通信に失敗しました。GASのURLやデプロイ設定を確認してください。</p>';																									
 });																									
 }																									
 																									
@@ -195,6 +203,11 @@ function renderMenu() {
 const container = document.getElementById('menu-container');																									
 container.classList.remove('hidden');																									
 container.innerHTML = '';																									
+																									
+if (!menuData || menuData.length === 0) {																									
+container.innerHTML = '<p class="text-gray-500 text-center py-4">メニューが登録されていません。</p>';																									
+return;																									
+}																									
 																									
 menuData.forEach((item) => {																									
 const card = document.createElement('div');																									
