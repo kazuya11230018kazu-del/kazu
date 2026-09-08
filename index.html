@@ -28,11 +28,10 @@ button:active { background: #e84118; }
 </div>																									
 																									
 <script>																									
-// 新しいGASのウェブアプリURL																									
 const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz1UPfYqM3ww8ZImbqpOCM73qXw5hrrzdJG75chYd5P8V-9Z6mQdrbDo0GyxEtq4UJbNw/exec";																									
 																									
 let menuData = [];																									
-let cart = {}; // { 商品コード: 数量 }																									
+let cart = {};																									
 																									
 async function loadMenu() {																									
 try {																									
@@ -56,7 +55,7 @@ alert("通信エラーが発生しました。");
 function renderMenu() {																									
 const container = document.getElementById("menuList");																									
 if (menuData.length === 0) {																									
-container.innerHTML = "<p>メニューが登録されていません。（スプレッドシートの「メニューマスター」シートを確認してください）</p>";																									
+container.innerHTML = "<p>メニューが登録されていません。</p>";																									
 return;																									
 }																									
 																									
