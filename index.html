@@ -27,7 +27,7 @@
 																									
 <!-- メインコンテンツ -->																									
 <main class="max-w-md mx-auto p-4">																									
-<!-- テーブル番号選択モーダル -->																									
+<!-- テーブル番号選択モーダル（アプリ起動時に毎回必ず表示） -->																									
 <div id="table-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">																									
 <div class="bg-white w-full max-w-sm rounded-2xl p-6 text-center space-y-4 shadow-xl">																									
 <h2 class="text-xl font-bold text-gray-800">テーブル番号をお選びください</h2>																									
@@ -136,18 +136,15 @@ const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz1UPfYqM3ww8ZImbqp
 																									
 let menuData = [];																									
 let cart = {};																									
-let currentTableNo = localStorage.getItem("order_table_no") || "";																									
+let currentTableNo = ""; // 毎回クリア状態からスタート																									
 let currentOrderId = localStorage.getItem("order_id") || "";																									
 let tempSelectedTable = "";																									
 																									
 window.onload = function() {																									
-if (currentTableNo) {																									
-document.getElementById('table-modal').classList.add('hidden');																									
-document.getElementById('display-table').textContent = currentTableNo + "番";																									
-fetchMenu();																									
-} else {																									
+// アプリ起動時は必ずテーブル選択モーダルを表示する																									
 document.getElementById('table-modal').classList.remove('hidden');																									
-}																									
+document.getElementById('loading').classList.add('hidden');																									
+fetchMenu(); // メニュー自体は先に対象データを読み込んでおく																									
 };																									
 																									
 function selectTempTable(tableNo) {																									
@@ -167,18 +164,14 @@ alert("テーブル番号を選択してください。");
 return;																									
 }																									
 currentTableNo = tempSelectedTable;																									
-localStorage.setItem("order_table_no", currentTableNo);																									
 document.getElementById('display-table').textContent = currentTableNo + "番";																									
 document.getElementById('table-modal').classList.add('hidden');																									
-fetchMenu();																									
 }																									
 																									
 function fetchMenu() {																									
-document.getElementById('loading').classList.remove('hidden');																									
 fetch(GAS_API_URL + "?action=getMenu")																									
 .then(response => response.json())																									
 .then(result => {																									
-document.getElementById('loading').classList.add('hidden');																									
 if (result && result.status === "success") {																									
 menuData = result.data || [];																									
 renderMenu();																									
@@ -188,8 +181,6 @@ alert("メニューの取得に失敗しました: " + (result ? result.message 
 })																									
 .catch(error => {																									
 console.error(error);																									
-document.getElementById('loading').classList.add('hidden');																									
-alert("サーバーとの通信に失敗しました。");																									
 });																									
 }																									
 																									
@@ -285,6 +276,12 @@ document.getElementById('cart-modal').classList.add('hidden');
 }																									
 																									
 function submitOrder() {																									
+if (!currentTableNo) {																									
+alert("テーブル番号が選択されていません。最初からやり直してください。");																									
+location.reload();																									
+return;																									
+}																									
+																									
 const itemsArray = Object.values(cart).filter(item => item.quantity > 0);																									
 if (itemsArray.length === 0) return;																									
 																									
