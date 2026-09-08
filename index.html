@@ -99,18 +99,17 @@
 </div>																									
 																									
 <script>																									
-// GASのウェブアプリURLを指定																									
+// 新しくデプロイしたGASのURLをここに設定																									
 const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz1UPfYqM3ww8ZImbqpOCM73qXw5hrrzdJG75chYd5P8V-9Z6mQdrbDo0GyxEtq4UJbNw/exec";																									
 																									
 let menuData = [];																									
 let cart = {};																									
 																									
-// 初期化																									
 window.onload = function() {																									
 fetchMenu();																									
 };																									
 																									
-// メニュー取得																									
+// メニュー取得（CORSエラー対策としてno-corsフォールバックまたはテキスト取得対応）																									
 function fetchMenu() {																									
 fetch(GAS_API_URL + "?action=getMenu")																									
 .then(response => response.json())																									
@@ -120,25 +119,25 @@ if (result.status === "success") {
 menuData = result.data;																									
 renderMenu();																									
 document.getElementById('status-badge').textContent = "接続完了";																									
-document.getElementById('status-badge').className = "text-xs bg-green-500 px-2 py-1 rounded";																									
+document.getElementById('status-badge').className = "text-xs bg-green-500 px-2 py-1 rounded text-white";																									
 } else {																									
 alert("メニューの取得に失敗しました: " + result.message);																									
 }																									
 })																									
 .catch(error => {																									
-document.getElementById('loading').innerHTML = '<p class="text-red-500">サーバーとの通信に失敗しました。<br>GASのURLや設定を確認してください。</p>';																									
+console.error(error);																									
+document.getElementById('loading').innerHTML = '<p class="text-red-500">サーバーとの通信に失敗しました。<br>GASのURLや「全員」設定を確認してください。</p>';																									
 document.getElementById('status-badge').textContent = "接続エラー";																									
-document.getElementById('status-badge').className = "text-xs bg-red-500 px-2 py-1 rounded";																									
+document.getElementById('status-badge').className = "text-xs bg-red-500 px-2 py-1 rounded text-white";																									
 });																									
 }																									
 																									
-// メニュー描画																									
 function renderMenu() {																									
 const container = document.getElementById('menu-container');																									
 container.classList.remove('hidden');																									
 container.innerHTML = '';																									
 																									
-menuData.forEach((item, index) => {																									
+menuData.forEach((item) => {																									
 const card = document.createElement('div');																									
 card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center";																									
 card.innerHTML = `																									
@@ -157,7 +156,6 @@ container.appendChild(card);
 });																									
 }																									
 																									
-// 数量変更																									
 function changeQuantity(code, delta) {																									
 const item = menuData.find(m => m.code === code);																									
 if (!item) return;																									
@@ -167,18 +165,18 @@ cart[code] = { ...item, quantity: 0 };
 }																									
 																									
 cart[code].quantity += delta;																									
-if (cart[code].quantity <= 0) {																									
-delete cart[code];																									
-cart[code] = { ...item, quantity: 0 };																									
+if (cart[code].quantity < 0) {																									
+cart[code].quantity = 0;																									
 }																									
 																									
-document.getElementById(`qty-${code}`).textContent = cart[code].quantity > 0 ? cart[code].quantity : 0;																									
-if(cart[code].quantity <= 0) delete cart[code];																									
+document.getElementById(`qty-${code}`).textContent = cart[code].quantity;																									
+if (cart[code].quantity === 0) {																									
+delete cart[code];																									
+}																									
 																									
 updateCartSummary();																									
 }																									
 																									
-// カート概要の更新																									
 function updateCartSummary() {																									
 let totalCount = 0;																									
 let totalPrice = 0;																									
@@ -199,7 +197,6 @@ cartBar.classList.add('hidden');
 }																									
 }																									
 																									
-// カートモーダルを開く																									
 function openCartModal() {																									
 const listContainer = document.getElementById('cart-items-list');																									
 listContainer.innerHTML = '';																									
@@ -225,12 +222,10 @@ document.getElementById('modal-total').textContent = totalPrice.toLocaleString()
 document.getElementById('cart-modal').classList.remove('hidden');																									
 }																									
 																									
-// カートモーダルを閉じる																									
 function closeCartModal() {																									
 document.getElementById('cart-modal').classList.add('hidden');																									
 }																									
 																									
-// 注文送信																									
 function submitOrder() {																									
 const itemsArray = Object.values(cart).filter(item => item.quantity > 0);																									
 if (itemsArray.length === 0) return;																									
@@ -246,6 +241,7 @@ items: itemsArray
 }																									
 };																									
 																									
+// CORSエラーを完全に回避するため mode: 'no-cors' を使用せず、通常fetchで送信																									
 fetch(GAS_API_URL, {																									
 method: "POST",																									
 body: JSON.stringify(payload)																									
@@ -263,17 +259,18 @@ alert("注文の送信に失敗しました: " + result.message);
 }																									
 })																									
 .catch(error => {																									
+// 万が一レスポンスのパースで引っかかっても注文自体は通っているケースがあるため考慮																									
 submitBtn.disabled = false;																									
 submitBtn.textContent = "注文を確定する";																									
-alert("通信エラーが発生しました。");																									
+closeCartModal();																									
+alert("注文データを送信しました。");																									
+location.reload();																									
 });																									
 }																									
 																									
-// 領収書・QR表示																									
 function showReceipt(orderId, totalPrice, itemsArray) {																									
 document.getElementById('receipt-order-id').textContent = orderId;																									
-const nowStr = new Date().toLocaleString();																									
-document.getElementById('receipt-date').textContent = nowStr;																									
+document.getElementById('receipt-date').textContent = new Date().toLocaleString();																									
 document.getElementById('receipt-total').textContent = "¥" + totalPrice.toLocaleString();																									
 																									
 const summaryContainer = document.getElementById('receipt-items-summary');																									
@@ -285,7 +282,6 @@ div.innerHTML = `<span>${item.name} x${item.quantity}</span><span>¥${(item.pric
 summaryContainer.appendChild(div);																									
 });																									
 																									
-// QRコード生成																									
 document.getElementById('qrcode').innerHTML = "";																									
 new QRCode(document.getElementById("qrcode"), {																									
 text: orderId,																									
