@@ -2,151 +2,110 @@
 <html lang="ja">																									
 <head>																									
 <meta charset="UTF-8">																									
-<meta name="viewport" content="width=device-width, initial-scale=1.0">																									
-<title>店舗管理画面（厨房・ホール）</title>																									
+<title>キッチン・注文管理ダッシュボード</title>																									
 <style>																									
-body { font-family: sans-serif; margin: 0; padding: 20px; background: #2f3640; color: white; }																									
-h1 { font-size: 1.4rem; border-bottom: 2px solid #718093; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }																									
-.refresh-info { font-size: 0.8rem; color: #ced6e0; }																									
-.order-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; margin-top: 20px; }																									
-.order-card { background: #f5f6fa; color: #2f3640; border-radius: 8px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border-left: 8px solid #ff4757; }																									
-.order-card.done { border-left-color: #2ed573; opacity: 0.6; }																									
-.table-tag { font-size: 1.1rem; font-weight: bold; color: #ff4757; margin-bottom: 5px; }																									
-.order-time { font-size: 0.85rem; color: #57606f; margin-bottom: 10px; }																									
-.order-items { font-size: 1.05rem; margin-bottom: 15px; font-weight: bold; background: white; padding: 10px; border-radius: 4px; color: #333; }																									
-.action-btn { width: 100%; padding: 10px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; }																									
+body { font-family: sans-serif; margin: 20px; background: #2f3640; color: #f5f6fa; }																									
+h1 { font-size: 1.4rem; border-bottom: 2px solid #718093; padding-bottom: 10px; display: flex; justify-content: space-between; }																									
+.order-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; margin-top: 20px; }																									
+.order-card { background: #f5f6fa; color: #333; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }																									
+.order-card h3 { margin-top: 0; border-bottom: 1px solid #ddd; padding-bottom: 5px; display: flex; justify-content: space-between; }																									
+.status-調理待ち { background: #ff4757; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; }																									
+.status-調理中 { background: #ffa502; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; }																									
+.status-提供済み { background: #2ed573; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; }																									
+ul { padding-left: 20px; margin: 10px 0; }																									
+.btn-group { display: flex; gap: 5px; margin-top: 10px; }																									
+.btn-group button { flex: 1; padding: 8px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }																									
+.btn-cooking { background: #ffa502; color: white; }																									
 .btn-done { background: #2ed573; color: white; }																									
-.btn-undo { background: #ffa502; color: white; }																									
-.receipt-box { margin-top: 30px; background: #353b48; padding: 15px; border-radius: 8px; }																									
-.receipt-box input { padding: 8px; margin-right: 10px; font-size: 1rem; width: 200px; }																									
-.receipt-box button { padding: 8px 15px; font-weight: bold; background: #1e90ff; color: white; border: none; border-radius: 4px; cursor: pointer; }																									
-#qrDisplay { margin-top: 15px; background: white; color: black; padding: 15px; border-radius: 6px; display: none; text-align: center; }																									
 </style>																									
 </head>																									
 <body>																									
-																									
 <h1>																									
-<span>厨房・ホール オーダー管理</span>																									
-<span class="refresh-info">（5秒ごとに自動更新）</span>																									
+<span>🍳 キッチン注文モニター</span>																									
+<span style="font-size: 0.9rem; font-weight: normal; color: #dcdde1;" id="liveIndicator">自動更新中...</span>																									
 </h1>																									
 																									
-<div id="orderContainer" class="order-container">																									
-<p>データを読み込んでいます...</p>																									
+<div class="order-grid" id="orderContainer">																									
+<p>注文データを読み込み中...</p>																									
 </div>																									
 																									
-<div class="receipt-box">																									
-<h3>🧾 デジタル領収書発行（インボイス対応）</h3>																									
-<div>																									
-<input type="text" id="titleName" placeholder="宛名 (例: 株式会社〇〇御中)">																									
-<input type="text" id="receiptTableNo" placeholder="テーブル番号" style="width: 100px;">																									
-<input type="number" id="receiptAmount" placeholder="総額(税込)" style="width: 110px;">																									
-<button onclick="generateReceiptQR()">領収書QR生成</button>																									
-</div>																									
-<div id="qrDisplay">																									
-<h4 id="qrTitle"></h4>																									
-<div id="qrCodeContainer" style="display: inline-block; margin-top: 10px;"></div>																									
-<p style="font-size: 0.85rem; color: #666; margin-top: 5px;">お客様のデバイスで読み取りを行ってください</p>																									
-</div>																									
-</div>																									
-																									
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>																									
 <script>																									
-// ▼ 発行されたGASのウェブアプリURLを指定してください																									
-const GAS_API_URL = "ここにGASのウェブアプリURLを記述";																									
+// ▼▼▼ ここにGASのウェブアプリURLを貼り付け ▼▼▼																									
+const GAS_API_URL = "https://script.google.com/macros/s/ここにあなたのURLを貼り付け/exec";																									
 																									
-window.onload = function() {																									
-fetchOrders();																									
-setInterval(fetchOrders, 5000);																									
+async function fetchOrders() {																									
+try {																									
+const response = await fetch(`${GAS_API_URL}?action=getOrders`);																									
+const result = await response.json();																									
+if (result.status === "success") {																									
+renderOrders(result.data);																									
+}																									
+} catch (e) {																									
+console.error("ポーリングエラー:", e);																									
+}																									
+}																									
+																									
+function renderOrders(rows) {																									
+const container = document.getElementById("orderContainer");																									
+if (rows.length === 0) {																									
+container.innerHTML = "<p>現在、新しい注文はありません。</p>";																									
+return;																									
+}																									
+																									
+// 注文IDごとにグループ化																									
+let ordersMap = {};																									
+rows.forEach(row => {																									
+const id = row.注文ID;																									
+if (!ordersMap[id]) {																									
+ordersMap[id] = {																									
+orderId: id,																									
+status: row.調理ステータス || "調理待ち",																									
+time: new Date(row.注文日時).toLocaleTimeString(),																									
+items: []																									
 };																									
-																									
-function fetchOrders() {																									
-fetch(GAS_API_URL, {																									
-method: 'POST',																									
-body: JSON.stringify({ action: 'getKitchenOrders' })																									
-})																									
-.then(res => res.json())																									
-.then(data => {																									
-if(data.success) {																									
-renderOrders(data.orders);																									
 }																									
+ordersMap[id].items.push({ name: row.商品名, qty: row.数量 });																									
 });																									
-}																									
 																									
-function renderOrders(orders) {																									
-const container = document.getElementById('orderContainer');																									
-if(orders.length === 0) {																									
-container.innerHTML = "<p>現在、新規注文はありません。</p>";																									
-return;																									
-}																									
-																									
-container.innerHTML = '';																									
-orders.reverse().forEach(ord => {																									
-const isDone = ord.status === '提供済み';																									
-container.innerHTML += `																									
-<div class="order-card ${isDone ? 'done' : ''}">																									
-<div class="table-tag">テーブル ${ord.tableNo}</div>																									
-<div class="order-time">受注時刻: ${ord.timestamp} | ステータス: <b>${ord.status}</b></div>																									
-<div class="order-items">${ord.orderText}</div>																									
-${isDone																									
-? `<button class="action-btn btn-undo" onclick="updateStatus(${ord.rowIndex}, '未提供')">未提供に戻す</button>`																									
-: `<button class="action-btn btn-done" onclick="updateStatus(${ord.rowIndex}, '提供済み')">提供完了にする</button>`																									
-}																									
+container.innerHTML = Object.values(ordersMap).map(order => `																									
+<div class="order-card">																									
+<h3>																									
+<span>${order.orderId}</span>																									
+<span class="status-${order.status}">${order.status}</span>																									
+</h3>																									
+<p style="font-size: 0.85rem; color: #666; margin: 5px 0;">時間: ${order.time}</p>																									
+<ul>																									
+${order.items.map(i => `<li><b>${i.name}</b> × ${i.qty}</li>`).join('')}																									
+</ul>																									
+<div class="btn-group">																									
+<button class="btn-cooking" onclick="updateStatus('${order.orderId}', '調理中')">調理中</button>																									
+<button class="btn-done" onclick="updateStatus('${order.orderId}', '提供済み')">提供済み</button>																									
 </div>																									
-`;																									
-});																									
+</div>																									
+`).join('');																									
 }																									
 																									
-function updateStatus(rowIndex, status) {																									
-fetch(GAS_API_URL, {																									
-method: 'POST',																									
-body: JSON.stringify({ action: 'updateStatus', rowIndex: rowIndex, status: status })																									
-})																									
-.then(res => res.json())																									
-.then(data => {																									
-if(data.success) {																									
+async function updateStatus(orderId, status) {																									
+try {																									
+const response = await fetch(GAS_API_URL, {																									
+method: "POST",																									
+body: JSON.stringify({ action: "updateStatus", payload: { orderId: orderId, status: status } })																									
+});																									
+const result = await response.json();																									
+if (result.status === "success") {																									
 fetchOrders();																									
 } else {																									
-alert("ステータス更新失敗: " + data.error);																									
+alert("更新失敗: " + result.message);																									
 }																									
-});																									
+} catch (e) {																									
+console.error(e);																									
+alert("通信エラーが発生しました。");																									
 }																									
-																									
-function generateReceiptQR() {																									
-const titleName = document.getElementById('titleName').value.trim();																									
-const tableNo = document.getElementById('receiptTableNo').value.trim();																									
-const totalWithTax = document.getElementById('receiptAmount').value.trim();																									
-																									
-if(!titleName || !tableNo || !totalWithTax) {																									
-alert("宛名、テーブル番号、総額をすべて入力してください。");																									
-return;																									
 }																									
 																									
-const receiptData = { titleName, tableNo, totalWithTax };																									
-fetch(GAS_API_URL, {																									
-method: 'POST',																									
-body: JSON.stringify({ action: 'createReceiptQR', receiptData: receiptData })																									
-})																									
-.then(res => res.json())																									
-.then(data => {																									
-if(data.success) {																									
-document.getElementById('qrDisplay').style.display = 'block';																									
-document.getElementById('qrTitle').innerText = `${titleName} / ¥${Number(totalWithTax).toLocaleString()} (卓:${tableNo})`;																									
-																									
-const container = document.getElementById('qrCodeContainer');																									
-container.innerHTML = '';																									
-																									
-const qrText = `【インボイス対応デジタル領収書】\n宛名: ${titleName}\n合計: ¥${totalWithTax} (税込)\nテーブル: ${tableNo}`;																									
-new QRCode(container, {																									
-text: qrText,																									
-width: 150,																									
-height: 150																									
-});																									
-} else {																									
-alert("領収書データ作成エラー: " + data.error);																									
-}																									
-});																									
-}																									
+// 4秒ごとに自動ポーリング																									
+setInterval(fetchOrders, 4000);																									
+window.onload = fetchOrders;																									
 </script>																									
-																									
 </body>																									
 </html>																									
