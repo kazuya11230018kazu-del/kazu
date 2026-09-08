@@ -28,8 +28,8 @@ button:active { background: #e84118; }
 </div>																									
 																									
 <script>																									
-// ▼▼▼ ここにGASのウェブアプリURLを貼り付け ▼▼▼																									
-const GAS_API_URL = "https://script.google.com/macros/s/ここにあなたのURLを貼り付け/exec";																									
+// 設定済みのGASのウェブアプリURL																									
+const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw4vFnJ2B0BKc3tvj8yChEy7wvLrO9k_1Al21u_sdm66UVEPGbRy8Q5NuLseFSXbn_2mw/exec";																									
 																									
 let menuData = [];																									
 let cart = {}; // { 商品コード: 数量 }																									
