@@ -1,0 +1,300 @@
+<!DOCTYPE html>																									
+<html lang="ja">																									
+<head>																									
+<meta charset="UTF-8">																									
+<meta name="viewport" content="width=device-width, initial-scale=1.0">																									
+<title>モバイルオーダー</title>																									
+<!-- Tailwind CSS -->																									
+<script src="https://cdn.tailwindcss.com"></script>																									
+<!-- QR Code Generator -->																									
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>																									
+</head>																									
+<body class="bg-gray-50 text-gray-800 pb-24">																									
+																									
+<!-- ヘッダー -->																									
+<header class="bg-indigo-600 text-white p-4 sticky top-0 z-10 shadow-md flex justify-between items-center">																									
+<h1 class="text-xl font-bold">モバイルオーダー</h1>																									
+<div id="status-badge" class="text-xs bg-indigo-500 px-2 py-1 rounded">接続確認中...</div>																									
+</header>																									
+																									
+<!-- メインコンテンツ -->																									
+<main class="max-w-md mx-auto p-4">																									
+<!-- ローディング -->																									
+<div id="loading" class="text-center py-10">																									
+<p class="text-gray-500">メニューを読み込んでいます...</p>																									
+</div>																									
+																									
+<!-- メニュー一覧 -->																									
+<div id="menu-container" class="space-y-4 hidden">																									
+<!-- 動的にメニューが挿入されます -->																									
+</div>																									
+</main>																									
+																									
+<!-- 注文カート（フッター固定） -->																									
+<div id="cart-bar" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg hidden max-w-md mx-auto flex justify-between items-center">																									
+<div>																									
+<p class="text-sm text-gray-500">合計点数: <span id="cart-count" class="font-bold text-gray-800">0</span>点</p>																									
+<p class="text-lg font-bold text-indigo-600">¥<span id="cart-total">0</span></p>																									
+</div>																									
+<button onclick="openCartModal()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-bold shadow hover:bg-indigo-700 transition">																									
+カートを確認する																									
+</button>																									
+</div>																									
+																									
+<!-- カート確認モーダル -->																									
+<div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4">																									
+<div class="bg-white w-full max-w-lg rounded-t-2xl sm:rounded-2xl max-h-[90vh] flex flex-col overflow-hidden">																									
+<div class="p-4 border-b flex justify-between items-center">																									
+<h2 class="text-lg font-bold">注文内容の確認</h2>																									
+<button onclick="closeCartModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>																									
+</div>																									
+<div id="cart-items-list" class="p-4 overflow-y-auto flex-grow space-y-3">																									
+<!-- カート内アイテム -->																									
+</div>																									
+<div class="p-4 border-t bg-gray-50">																									
+<div class="flex justify-between mb-4 text-lg font-bold">																									
+<span>合計金額（税込）</span>																									
+<span class="text-indigo-600">¥<span id="modal-total">0</span></span>																									
+</div>																									
+<button onclick="submitOrder()" id="submit-btn" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow">																									
+注文を確定する																									
+</button>																									
+</div>																									
+</div>																									
+</div>																									
+																									
+<!-- 注文完了・領収書モーダル -->																									
+<div id="receipt-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">																									
+<div class="bg-white w-full max-w-md rounded-2xl p-6 text-center space-y-4 max-h-[90vh] overflow-y-auto">																									
+<div class="text-green-600 text-5xl font-bold">✓</div>																									
+<h2 class="text-xl font-bold">注文が完了しました！</h2>																									
+<p class="text-sm text-gray-500">注文ID: <span id="receipt-order-id" class="font-mono font-bold text-gray-700"></span></p>																									
+																									
+<!-- インボイス対応領収書エリア -->																									
+<div id="receipt-area" class="border border-dashed border-gray-300 p-4 rounded-xl text-left text-sm space-y-2 bg-gray-50">																									
+<div class="text-center font-bold border-b pb-2">デジタル領収書（適格簡易請求書）</div>																									
+<div class="flex justify-between text-xs text-gray-500">																									
+<span>発行日時: <span id="receipt-date"></span></span>																									
+<span>登録番号: T1234567890123</span>																									
+</div>																									
+<div id="receipt-items-summary" class="py-2 space-y-1 border-b">																									
+<!-- 明細 -->																									
+</div>																									
+<div class="flex justify-between font-bold text-base pt-1">																									
+<span>合計</span>																									
+<span id="receipt-total">¥0</span>																									
+</div>																									
+</div>																									
+																									
+<!-- QRコード表示用 -->																									
+<div class="flex flex-col items-center justify-center space-y-1 pt-2">																									
+<div id="qrcode" class="p-2 bg-white border rounded shadow-sm inline-block"></div>																									
+<span class="text-xs text-gray-400">お控え用QRコード</span>																									
+</div>																									
+																									
+<button onclick="location.reload()" class="w-full bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition">																									
+新しい注文をする																									
+</button>																									
+</div>																									
+</div>																									
+																									
+<script>																									
+// ご提示いただいたGASウェブアプリのURLを組み込み済み																									
+const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz1UPfYqM3ww8ZImbqpOCM73qXw5hrrzdJG75chYd5P8V-9Z6mQdrbDo0GyxEtq4UJbNw/exec";																									
+																									
+let menuData = [];																									
+let cart = {};																									
+																									
+// 初期化																									
+window.onload = function() {																									
+fetchMenu();																									
+};																									
+																									
+// メニュー取得																									
+function fetchMenu() {																									
+fetch(GAS_API_URL + "?action=getMenu")																									
+.then(response => response.json())																									
+.then(result => {																									
+document.getElementById('loading').classList.add('hidden');																									
+if (result.status === "success") {																									
+menuData = result.data;																									
+renderMenu();																									
+document.getElementById('status-badge').textContent = "接続完了";																									
+document.getElementById('status-badge').className = "text-xs bg-green-500 px-2 py-1 rounded";																									
+} else {																									
+alert("メニューの取得に失敗しました: " + result.message);																									
+}																									
+})																									
+.catch(error => {																									
+document.getElementById('loading').innerHTML = '<p class="text-red-500">サーバーとの通信に失敗しました。<br>GASのURLや設定を確認してください。</p>';																									
+document.getElementById('status-badge').textContent = "接続エラー";																									
+document.getElementById('status-badge').className = "text-xs bg-red-500 px-2 py-1 rounded";																									
+});																									
+}																									
+																									
+// メニュー描画																									
+function renderMenu() {																									
+const container = document.getElementById('menu-container');																									
+container.classList.remove('hidden');																									
+container.innerHTML = '';																									
+																									
+menuData.forEach((item, index) => {																									
+const card = document.createElement('div');																									
+card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center";																									
+card.innerHTML = `																									
+<div>																									
+<h3 class="font-bold text-gray-800">${item.name}</h3>																									
+<p class="text-indigo-600 font-bold mt-1">¥${Number(item.price).toLocaleString()}</p>																									
+<p class="text-xs text-gray-400 mt-1">${item.category || ''}</p>																									
+</div>																									
+<div class="flex items-center space-x-3">																									
+<button onclick="changeQuantity('${item.code}', -1)" class="w-8 h-8 rounded-full bg-gray-100 text-gray-600 font-bold flex items-center justify-center hover:bg-gray-200">-</button>																									
+<span id="qty-${item.code}" class="font-bold w-4 text-center">0</span>																									
+<button onclick="changeQuantity('${item.code}', 1)" class="w-8 h-8 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center hover:bg-indigo-700">+</button>																									
+</div>																									
+`;																									
+container.appendChild(card);																									
+});																									
+}																									
+																									
+// 数量変更																									
+function changeQuantity(code, delta) {																									
+const item = menuData.find(m => m.code === code);																									
+if (!item) return;																									
+																									
+if (!cart[code]) {																									
+cart[code] = { ...item, quantity: 0 };																									
+}																									
+																									
+cart[code].quantity += delta;																									
+if (cart[code].quantity <= 0) {																									
+delete cart[code];																									
+cart[code] = { ...item, quantity: 0 };																									
+}																									
+																									
+document.getElementById(`qty-${code}`).textContent = cart[code].quantity > 0 ? cart[code].quantity : 0;																									
+if(cart[code].quantity <= 0) delete cart[code];																									
+																									
+updateCartSummary();																									
+}																									
+																									
+// カート概要の更新																									
+function updateCartSummary() {																									
+let totalCount = 0;																									
+let totalPrice = 0;																									
+																									
+Object.values(cart).forEach(item => {																									
+totalCount += item.quantity;																									
+totalPrice += item.price * item.quantity;																									
+});																									
+																									
+document.getElementById('cart-count').textContent = totalCount;																									
+document.getElementById('cart-total').textContent = totalPrice.toLocaleString();																									
+																									
+const cartBar = document.getElementById('cart-bar');																									
+if (totalCount > 0) {																									
+cartBar.classList.remove('hidden');																									
+} else {																									
+cartBar.classList.add('hidden');																									
+}																									
+}																									
+																									
+// カートモーダルを開く																									
+function openCartModal() {																									
+const listContainer = document.getElementById('cart-items-list');																									
+listContainer.innerHTML = '';																									
+let totalPrice = 0;																									
+																									
+Object.values(cart).forEach(item => {																									
+const subtotal = item.price * item.quantity;																									
+totalPrice += subtotal;																									
+																									
+const row = document.createElement('div');																									
+row.className = "flex justify-between items-center border-b pb-2";																									
+row.innerHTML = `																									
+<div>																									
+<div class="font-bold">${item.name}</div>																									
+<div class="text-xs text-gray-500">¥${item.price} × ${item.quantity}</div>																									
+</div>																									
+<div class="font-bold">¥${subtotal.toLocaleString()}</div>																									
+`;																									
+listContainer.appendChild(row);																									
+});																									
+																									
+document.getElementById('modal-total').textContent = totalPrice.toLocaleString();																									
+document.getElementById('cart-modal').classList.remove('hidden');																									
+}																									
+																									
+// カートモーダルを閉じる																									
+function closeCartModal() {																									
+document.getElementById('cart-modal').classList.add('hidden');																									
+}																									
+																									
+// 注文送信																									
+function submitOrder() {																									
+const itemsArray = Object.values(cart).filter(item => item.quantity > 0);																									
+if (itemsArray.length === 0) return;																									
+																									
+const submitBtn = document.getElementById('submit-btn');																									
+submitBtn.disabled = true;																									
+submitBtn.textContent = "送信中...";																									
+																									
+const payload = {																									
+action: "submitOrder",																									
+payload: {																									
+items: itemsArray																									
+}																									
+};																									
+																									
+fetch(GAS_API_URL, {																									
+method: "POST",																									
+body: JSON.stringify(payload)																									
+})																									
+.then(response => response.json())																									
+.then(result => {																									
+submitBtn.disabled = false;																									
+submitBtn.textContent = "注文を確定する";																									
+closeCartModal();																									
+																									
+if (result.status === "success") {																									
+showReceipt(result.data.orderId, result.data.totalPrice, itemsArray);																									
+} else {																									
+alert("注文の送信に失敗しました: " + result.message);																									
+}																									
+})																									
+.catch(error => {																									
+submitBtn.disabled = false;																									
+submitBtn.textContent = "注文を確定する";																									
+alert("通信エラーが発生しました。");																									
+});																									
+}																									
+																									
+// 領収書・QR表示																									
+function showReceipt(orderId, totalPrice, itemsArray) {																									
+document.getElementById('receipt-order-id').textContent = orderId;																									
+const nowStr = new Date().toLocaleString();																									
+document.getElementById('receipt-date').textContent = nowStr;																									
+document.getElementById('receipt-total').textContent = "¥" + totalPrice.toLocaleString();																									
+																									
+const summaryContainer = document.getElementById('receipt-items-summary');																									
+summaryContainer.innerHTML = '';																									
+itemsArray.forEach(item => {																									
+const div = document.createElement('div');																									
+div.className = "flex justify-between text-xs";																									
+div.innerHTML = `<span>${item.name} x${item.quantity}</span><span>¥${(item.price * item.quantity).toLocaleString()}</span>`;																									
+summaryContainer.appendChild(div);																									
+});																									
+																									
+// QRコード生成																									
+document.getElementById('qrcode').innerHTML = "";																									
+new QRCode(document.getElementById("qrcode"), {																									
+text: orderId,																									
+width: 120,																									
+height: 120																									
+});																									
+																									
+document.getElementById('receipt-modal').classList.remove('hidden');																									
+}																									
+</script>																									
+</body>																									
+</html>																									
