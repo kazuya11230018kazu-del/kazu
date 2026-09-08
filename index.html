@@ -51,7 +51,7 @@
 </div>																									
 																									
 <!-- ローディング -->																									
-<div id="loading" class="text-center py-10 hidden">																									
+<div id="loading" class="text-center py-10">																									
 <p class="text-gray-500">メニューを読み込んでいます...</p>																									
 </div>																									
 																									
@@ -202,12 +202,12 @@ fetch(GAS_API_URL + "?action=getMenu")
 .then(response => response.json())																									
 .then(result => {																									
 document.getElementById('loading').classList.add('hidden');																									
-if (result && result.status === "success" && result.data) {																									
+if (result && result.status === "success") {																									
 menuData = result.data;																									
-} else {																									
-menuData = result.data || [];																									
-}																									
 renderMenu();																									
+} else {																									
+alert("メニューの取得に失敗しました: " + (result ? result.message : "不明なエラー"));																									
+}																									
 })																									
 .catch(error => {																									
 console.error("通信エラー:", error);																									
@@ -221,11 +221,6 @@ const container = document.getElementById('menu-container');
 container.classList.remove('hidden');																									
 container.innerHTML = '';																									
 																									
-if (!menuData || menuData.length === 0) {																									
-container.innerHTML = '<p class="text-gray-500 text-center py-4">メニューが登録されていません。</p>';																									
-return;																									
-}																									
-																									
 menuData.forEach((item) => {																									
 const card = document.createElement('div');																									
 card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center";																									
@@ -236,9 +231,9 @@ card.innerHTML = `
 <p class="text-xs text-gray-400 mt-1">${item.category || ''}</p>																									
 </div>																									
 <div class="flex items-center space-x-3">																									
-<button type="button" onclick="changeQuantity('${item.code}', -1)" class="w-8 h-8 rounded-full bg-gray-100 text-gray-600 font-bold flex items-center justify-center hover:bg-gray-200">-</button>																									
+<button onclick="changeQuantity('${item.code}', -1)" class="w-8 h-8 rounded-full bg-gray-100 text-gray-600 font-bold flex items-center justify-center hover:bg-gray-200">-</button>																									
 <span id="qty-${item.code}" class="font-bold w-4 text-center">0</span>																									
-<button type="button" onclick="changeQuantity('${item.code}', 1)" class="w-8 h-8 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center hover:bg-indigo-700">+</button>																									
+<button onclick="changeQuantity('${item.code}', 1)" class="w-8 h-8 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center hover:bg-indigo-700">+</button>																									
 </div>																									
 `;																									
 container.appendChild(card);																									
@@ -256,8 +251,7 @@ cart[code] = { ...item, quantity: 0 };
 cart[code].quantity += delta;																									
 if (cart[code].quantity < 0) cart[code].quantity = 0;																									
 																									
-const qtyElem = document.getElementById(`qty-${code}`);																									
-if (qtyElem) qtyElem.textContent = cart[code].quantity;																									
+document.getElementById(`qty-${code}`).textContent = cart[code].quantity;																									
 if (cart[code].quantity === 0) delete cart[code];																									
 																									
 updateCartSummary();																									
@@ -324,7 +318,7 @@ submitBtn.textContent = "送信中...";
 const payload = {																									
 action: "submitOrder",																									
 payload: {																									
-tableNo: currentTableNo,																									
+tableNo: currentTableNo, // 選択・決定されたテーブル番号（1〜5）が正しく送信されます																									
 items: itemsArray																									
 }																									
 };																									
