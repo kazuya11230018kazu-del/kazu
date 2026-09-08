@@ -9,16 +9,36 @@
 <!-- QR Code Generator -->																									
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>																									
 </head>																									
-<body class="bg-gray-50 text-gray-800 pb-24">																									
+<body class="bg-gray-50 text-gray-800 pb-28">																									
 																									
 <!-- ヘッダー -->																									
 <header class="bg-indigo-600 text-white p-4 sticky top-0 z-10 shadow-md flex justify-between items-center">																									
-<h1 class="text-xl font-bold">モバイルオーダー</h1>																									
-<div id="status-badge" class="text-xs bg-indigo-500 px-2 py-1 rounded">接続確認中...</div>																									
+<div>																									
+<h1 class="text-lg font-bold">モバイルオーダー</h1>																									
+<p class="text-xs text-indigo-200">テーブル: <span id="display-table" class="font-bold">未設定</span></p>																									
+</div>																									
+<div class="flex items-center space-x-2">																									
+<button onclick="openStatusModal()" class="text-xs bg-indigo-500 px-3 py-1.5 rounded-lg font-bold hover:bg-indigo-400 transition shadow">																									
+注文状況・会計																									
+</button>																									
+<div id="status-badge" class="text-xs bg-green-500 px-2 py-1 rounded text-white">接続完了</div>																									
+</div>																									
 </header>																									
 																									
 <!-- メインコンテンツ -->																									
 <main class="max-w-md mx-auto p-4">																									
+<!-- テーブル番号入力モーダル（起動時） -->																									
+<div id="table-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">																									
+<div class="bg-white w-full max-w-sm rounded-2xl p-6 text-center space-y-4 shadow-xl">																									
+<h2 class="text-xl font-bold text-gray-800">テーブル番号を入力</h2>																									
+<p class="text-sm text-gray-500">お座りのテーブル番号を入力してください</p>																									
+<input type="number" id="table-input" placeholder="例: 3" class="w-full border border-gray-300 rounded-xl p-3 text-center text-xl font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none">																									
+<button onclick="setTableNumber()" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow">																									
+注文を始める																									
+</button>																									
+</div>																									
+</div>																									
+																									
 <!-- ローディング -->																									
 <div id="loading" class="text-center py-10">																									
 <p class="text-gray-500">メニューを読み込んでいます...</p>																									
@@ -31,12 +51,12 @@
 </main>																									
 																									
 <!-- 注文カート（フッター固定） -->																									
-<div id="cart-bar" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg hidden max-w-md mx-auto flex justify-between items-center">																									
+<div id="cart-bar" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg hidden max-w-md mx-auto flex justify-between items-center z-20">																									
 <div>																									
 <p class="text-sm text-gray-500">合計点数: <span id="cart-count" class="font-bold text-gray-800">0</span>点</p>																									
 <p class="text-lg font-bold text-indigo-600">¥<span id="cart-total">0</span></p>																									
 </div>																									
-<button onclick="openCartModal()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-bold shadow hover:bg-indigo-700 transition">																									
+<button onclick="openCartModal()" class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold shadow hover:bg-indigo-700 transition">																									
 カートを確認する																									
 </button>																									
 </div>																									
@@ -63,11 +83,29 @@
 </div>																									
 </div>																									
 																									
+<!-- 注文状況・お会計モーダル -->																									
+<div id="status-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">																									
+<div class="bg-white w-full max-w-md rounded-2xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">																									
+<div class="flex justify-between items-center border-b pb-3">																									
+<h2 class="text-lg font-bold">注文状況・お会計</h2>																									
+<button onclick="closeStatusModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>																									
+</div>																									
+<div id="status-content" class="space-y-3 text-sm">																									
+<p class="text-gray-500 text-center py-4">現在、保存されている注文はありません。</p>																									
+</div>																									
+<div id="checkout-area" class="pt-2 hidden">																									
+<button onclick="requestCheckout()" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 transition shadow">																									
+お会計する（領収書発行）																									
+</button>																									
+</div>																									
+</div>																									
+</div>																									
+																									
 <!-- 注文完了・領収書モーダル -->																									
 <div id="receipt-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">																									
 <div class="bg-white w-full max-w-md rounded-2xl p-6 text-center space-y-4 max-h-[90vh] overflow-y-auto">																									
 <div class="text-green-600 text-5xl font-bold">✓</div>																									
-<h2 class="text-xl font-bold">注文が完了しました！</h2>																									
+<h2 id="receipt-title" class="text-xl font-bold">注文が完了しました！</h2>																									
 <p class="text-sm text-gray-500">注文ID: <span id="receipt-order-id" class="font-mono font-bold text-gray-700"></span></p>																									
 																									
 <!-- インボイス対応領収書エリア -->																									
@@ -89,7 +127,7 @@
 <!-- QRコード表示用 -->																									
 <div class="flex flex-col items-center justify-center space-y-1 pt-2">																									
 <div id="qrcode" class="p-2 bg-white border rounded shadow-sm inline-block"></div>																									
-<span class="text-xs text-gray-400">お控え用QRコード</span>																									
+<span class="text-xs text-gray-400">お会計用QRコード</span>																									
 </div>																									
 																									
 <button onclick="location.reload()" class="w-full bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition">																									
@@ -99,17 +137,33 @@
 </div>																									
 																									
 <script>																									
-// 新しくデプロイしたGASのURLをここに設定																									
 const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz1UPfYqM3ww8ZImbqpOCM73qXw5hrrzdJG75chYd5P8V-9Z6mQdrbDo0GyxEtq4UJbNw/exec";																									
 																									
 let menuData = [];																									
 let cart = {};																									
+let currentTableNo = localStorage.getItem("order_table_no") || "";																									
+let currentOrderId = localStorage.getItem("order_id") || "";																									
 																									
 window.onload = function() {																									
+if (currentTableNo) {																									
+document.getElementById('table-modal').classList.add('hidden');																									
+document.getElementById('display-table').textContent = currentTableNo + "番";																									
+}																									
 fetchMenu();																									
 };																									
 																									
-// メニュー取得（CORSエラー対策としてno-corsフォールバックまたはテキスト取得対応）																									
+function setTableNumber() {																									
+const val = document.getElementById('table-input').value.trim();																									
+if (!val) {																									
+alert("テーブル番号を入力してください");																									
+return;																									
+}																									
+currentTableNo = val;																									
+localStorage.setItem("order_table_no", currentTableNo);																									
+document.getElementById('display-table').textContent = currentTableNo + "番";																									
+document.getElementById('table-modal').classList.add('hidden');																									
+}																									
+																									
 function fetchMenu() {																									
 fetch(GAS_API_URL + "?action=getMenu")																									
 .then(response => response.json())																									
@@ -118,17 +172,13 @@ document.getElementById('loading').classList.add('hidden');
 if (result.status === "success") {																									
 menuData = result.data;																									
 renderMenu();																									
-document.getElementById('status-badge').textContent = "接続完了";																									
-document.getElementById('status-badge').className = "text-xs bg-green-500 px-2 py-1 rounded text-white";																									
 } else {																									
 alert("メニューの取得に失敗しました: " + result.message);																									
 }																									
 })																									
 .catch(error => {																									
 console.error(error);																									
-document.getElementById('loading').innerHTML = '<p class="text-red-500">サーバーとの通信に失敗しました。<br>GASのURLや「全員」設定を確認してください。</p>';																									
-document.getElementById('status-badge').textContent = "接続エラー";																									
-document.getElementById('status-badge').className = "text-xs bg-red-500 px-2 py-1 rounded text-white";																									
+document.getElementById('loading').innerHTML = '<p class="text-red-500">サーバーとの通信に失敗しました。</p>';																									
 });																									
 }																									
 																									
@@ -165,14 +215,10 @@ cart[code] = { ...item, quantity: 0 };
 }																									
 																									
 cart[code].quantity += delta;																									
-if (cart[code].quantity < 0) {																									
-cart[code].quantity = 0;																									
-}																									
+if (cart[code].quantity < 0) cart[code].quantity = 0;																									
 																									
 document.getElementById(`qty-${code}`).textContent = cart[code].quantity;																									
-if (cart[code].quantity === 0) {																									
-delete cart[code];																									
-}																									
+if (cart[code].quantity === 0) delete cart[code];																									
 																									
 updateCartSummary();																									
 }																									
@@ -237,11 +283,11 @@ submitBtn.textContent = "送信中...";
 const payload = {																									
 action: "submitOrder",																									
 payload: {																									
+tableNo: currentTableNo,																									
 items: itemsArray																									
 }																									
 };																									
 																									
-// CORSエラーを完全に回避するため mode: 'no-cors' を使用せず、通常fetchで送信																									
 fetch(GAS_API_URL, {																									
 method: "POST",																									
 body: JSON.stringify(payload)																									
@@ -253,13 +299,17 @@ submitBtn.textContent = "注文を確定する";
 closeCartModal();																									
 																									
 if (result.status === "success") {																									
-showReceipt(result.data.orderId, result.data.totalPrice, itemsArray);																									
+currentOrderId = result.data.orderId;																									
+localStorage.setItem("order_id", currentOrderId);																									
+alert("注文が完了しました！キッチンへ送信されました。");																									
+cart = {};																									
+updateCartSummary();																									
+location.reload();																									
 } else {																									
 alert("注文の送信に失敗しました: " + result.message);																									
 }																									
 })																									
 .catch(error => {																									
-// 万が一レスポンスのパースで引っかかっても注文自体は通っているケースがあるため考慮																									
 submitBtn.disabled = false;																									
 submitBtn.textContent = "注文を確定する";																									
 closeCartModal();																									
@@ -268,7 +318,91 @@ location.reload();
 });																									
 }																									
 																									
+// 注文状況・お会計モーダルを開く																									
+function openStatusModal() {																									
+const modal = document.getElementById('status-modal');																									
+const content = document.getElementById('status-content');																									
+const checkoutArea = document.getElementById('checkout-area');																									
+																									
+modal.classList.remove('hidden');																									
+																									
+if (!currentOrderId) {																									
+content.innerHTML = '<p class="text-gray-500 text-center py-4">まだ注文履歴がありません。</p>';																									
+checkoutArea.classList.add('hidden');																									
+return;																									
+}																									
+																									
+content.innerHTML = '<p class="text-gray-500 text-center py-4">注文状況を確認中...</p>';																									
+																									
+fetch(GAS_API_URL + "?action=getOrderStatus&orderId=" + currentOrderId)																									
+.then(res => res.json())																									
+.then(res => {																									
+if (res.status === "success" && res.items.length > 0) {																									
+let html = `<p class="text-xs text-gray-500 mb-2">注文ID: <b>${currentOrderId}</b> (テーブル: ${res.items[0].tableNo}番)</p>`;																									
+html += '<div class="space-y-2 max-h-60 overflow-y-auto">';																									
+																									
+res.items.forEach(i => {																									
+let badgeColor = "bg-yellow-100 text-yellow-800";																									
+if (i.cookStatus === "調理中") badgeColor = "bg-blue-100 text-blue-800";																									
+if (i.cookStatus === "提供済み" || i.cookStatus === "完了") badgeColor = "bg-green-100 text-green-800";																									
+if (i.cookStatus === "会計済み") badgeColor = "bg-gray-100 text-gray-800";																									
+																									
+html += `																									
+<div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border">																									
+<div>																									
+<div class="font-bold">${i.name} × ${i.quantity}</div>																									
+<div class="text-xs text-gray-500">¥${Number(i.price).toLocaleString()}</div>																									
+</div>																									
+<span class="text-xs px-2.5 py-1 rounded-full font-bold ${badgeColor}">${i.cookStatus}</span>																									
+</div>																									
+`;																									
+});																									
+html += '</div>';																									
+content.innerHTML = html;																									
+checkoutArea.classList.remove('hidden');																									
+} else {																									
+content.innerHTML = '<p class="text-gray-500 text-center py-4">注文情報が見つかりませんでした。</p>';																									
+checkoutArea.classList.add('hidden');																									
+}																									
+})																									
+.catch(err => {																									
+content.innerHTML = '<p class="text-red-500 text-center py-4">情報の取得に失敗しました。</p>';																									
+});																									
+}																									
+																									
+function closeStatusModal() {																									
+document.getElementById('status-modal').classList.add('hidden');																									
+}																									
+																									
+// お会計リクエスト																									
+function requestCheckout() {																									
+if (!currentOrderId) return;																									
+																									
+const payload = {																									
+action: "checkout",																									
+payload: { orderId: currentOrderId }																									
+};																									
+																									
+fetch(GAS_API_URL, {																									
+method: "POST",																									
+body: JSON.stringify(payload)																									
+})																									
+.then(res => res.json())																									
+.then(res => {																									
+closeStatusModal();																									
+if (res.status === "success") {																									
+showReceipt(res.data.orderId, res.data.totalPrice, res.data.items);																									
+} else {																									
+alert("お会計処理に失敗しました。");																									
+}																									
+})																									
+.catch(err => {																									
+alert("通信エラーが発生しました。");																									
+});																									
+}																									
+																									
 function showReceipt(orderId, totalPrice, itemsArray) {																									
+document.getElementById('receipt-title').textContent = "お会計・領収書";																									
 document.getElementById('receipt-order-id').textContent = orderId;																									
 document.getElementById('receipt-date').textContent = new Date().toLocaleString();																									
 document.getElementById('receipt-total').textContent = "¥" + totalPrice.toLocaleString();																									
@@ -290,6 +424,7 @@ height: 120
 });																									
 																									
 document.getElementById('receipt-modal').classList.remove('hidden');																									
+localStorage.removeItem("order_id"); // 支払い完了したら注文IDをリセット																									
 }																									
 </script>																									
 </body>																									
