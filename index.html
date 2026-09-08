@@ -1,0 +1,126 @@
+<!DOCTYPE html>																									
+<html lang="ja">																									
+<head>																									
+<meta charset="UTF-8">																									
+<meta name="viewport" content="width=device-width, initial-scale=1.0">																									
+<title>モバイルオーダー</title>																									
+<style>																									
+body { font-family: sans-serif; margin: 0; background: #f9f9f9; color: #333; }																									
+header { background: #ff4757; color: white; padding: 15px; text-align: center; font-size: 1.2rem; font-weight: bold; }																									
+.container { padding: 15px; max-width: 600px; margin: auto; padding-bottom: 80px; }																									
+.menu-card { background: white; padding: 12px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }																									
+.menu-info h3 { margin: 0 0 5px 0; font-size: 1rem; }																									
+.menu-info p { margin: 0; color: #e84118; font-weight: bold; }																									
+button { background: #ff4757; color: white; border: none; padding: 8px 14px; border-radius: 4px; cursor: pointer; }																									
+button:active { background: #e84118; }																									
+.cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #ddd; padding: 15px; display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin: auto; box-shadow: 0 -2px 5px rgba(0,0,0,0.05); }																									
+</style>																									
+</head>																									
+<body>																									
+<header>お食事ご注文画面</header>																									
+<div class="container" id="menuList">																									
+<p>メニューを読み込み中...</p>																									
+</div>																									
+																									
+<div class="cart-bar">																									
+<div>選択数: <span id="cartCount">0</span>点</div>																									
+<button onclick="submitOrder()" style="background: #2ed573; font-size: 1rem; padding: 10px 20px;">注文を確定する</button>																									
+</div>																									
+																									
+<script>																									
+// 新しいGASのウェブアプリURL																									
+const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz1UPfYqM3ww8ZImbqpOCM73qXw5hrrzdJG75chYd5P8V-9Z6mQdrbDo0GyxEtq4UJbNw/exec";																									
+																									
+let menuData = [];																									
+let cart = {}; // { 商品コード: 数量 }																									
+																									
+async function loadMenu() {																									
+try {																									
+const response = await fetch(GAS_API_URL, {																									
+method: "POST",																									
+body: JSON.stringify({ action: "getMenu" })																									
+});																									
+const result = await response.json();																									
+if (result.status === "success") {																									
+menuData = result.data;																									
+renderMenu();																									
+} else {																									
+alert("メニューの取得に失敗しました: " + result.message);																									
+}																									
+} catch (e) {																									
+console.error(e);																									
+alert("通信エラーが発生しました。");																									
+}																									
+}																									
+																									
+function renderMenu() {																									
+const container = document.getElementById("menuList");																									
+if (menuData.length === 0) {																									
+container.innerHTML = "<p>メニューが登録されていません。（スプレッドシートの「メニューマスター」シートを確認してください）</p>";																									
+return;																									
+}																									
+																									
+container.innerHTML = menuData.map(item => `																									
+<div class="menu-card">																									
+<div class="menu-info">																									
+<h3>${item.商品名}</h3>																									
+<p>¥${Number(item.価格).toLocaleString()}</p>																									
+</div>																									
+<div>																									
+<button onclick="addToCart('${item.商品コード}')">＋ 追加</button>																									
+</div>																									
+</div>																									
+`).join('');																									
+}																									
+																									
+function addToCart(code) {																									
+cart[code] = (cart[code] || 0) + 1;																									
+updateCartCount();																									
+}																									
+																									
+function updateCartCount() {																									
+const totalCount = Object.values(cart).reduce((a, b) => a + b, 0);																									
+document.getElementById("cartCount").textContent = totalCount;																									
+}																									
+																									
+async function submitOrder() {																									
+const itemsArray = Object.keys(cart).map(code => {																									
+const item = menuData.find(m => m.商品コード == code);																									
+return {																									
+code: code,																									
+name: item.商品名,																									
+price: Number(item.価格),																									
+quantity: cart[code]																									
+};																									
+});																									
+																									
+if (itemsArray.length === 0) {																									
+alert("メニューが選択されていません。");																									
+return;																									
+}																									
+																									
+if (!confirm("この内容で注文を確定しますか？")) return;																									
+																									
+try {																									
+const response = await fetch(GAS_API_URL, {																									
+method: "POST",																									
+body: JSON.stringify({ action: "submitOrder", payload: { items: itemsArray } })																									
+});																									
+const result = await response.json();																									
+if (result.status === "success") {																									
+alert(`注文を受け付けました！\n注文ID: ${result.data.orderId}\n合計金額: ¥${result.data.totalPrice.toLocaleString()}`);																									
+cart = {};																									
+updateCartCount();																									
+} else {																									
+alert("注文エラー: " + result.message);																									
+}																									
+} catch (e) {																									
+console.error(e);																									
+alert("通信エラーが発生しました。");																									
+}																									
+}																									
+																									
+window.onload = loadMenu;																									
+</script>																									
+</body>																									
+</html>																									
