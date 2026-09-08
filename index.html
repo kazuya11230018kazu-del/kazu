@@ -33,7 +33,7 @@
 <h2 class="text-xl font-bold text-gray-800">テーブル番号を入力</h2>																									
 <p class="text-sm text-gray-500">お座りのテーブル番号を入力してください</p>																									
 <input type="number" id="table-input" placeholder="例: 3" class="w-full border border-gray-300 rounded-xl p-3 text-center text-xl font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none">																									
-<button id="btn-set-table" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow">																									
+<button id="btn-set-table" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow cursor-pointer">																									
 注文を始める																									
 </button>																									
 </div>																									
@@ -144,20 +144,23 @@ let cart = {};
 let currentTableNo = localStorage.getItem("order_table_no") || "";																									
 let currentOrderId = localStorage.getItem("order_id") || "";																									
 																									
-// ページ読み込み時にすべてのイベントを確実に紐づける																									
 window.addEventListener("DOMContentLoaded", () => {																									
-// テーブル番号がすでに保存されている場合																									
 if (currentTableNo) {																									
 document.getElementById('table-modal').classList.add('hidden');																									
 document.getElementById('display-table').textContent = currentTableNo + "番";																									
 fetchMenu();																									
 } else {																									
-// 未設定の場合はモーダルを表示																									
 document.getElementById('table-modal').classList.remove('hidden');																									
 }																									
 																									
-// ボタン類のイベントリスナー設定																									
-document.getElementById('btn-set-table').addEventListener('click', setTableNumber);																									
+// スマホでのタップ抜けを防ぐため click と touchend の両方に反応させる																									
+const setTableBtn = document.getElementById('btn-set-table');																									
+setTableBtn.addEventListener('click', handleSetTable);																									
+setTableBtn.addEventListener('touchend', (e) => {																									
+e.preventDefault(); // スマホ特有のダブルタップ拡大などを防ぐ																									
+handleSetTable();																									
+});																									
+																									
 document.getElementById('btn-status-modal').addEventListener('click', openStatusModal);																									
 document.getElementById('btn-open-cart').addEventListener('click', openCartModal);																									
 document.getElementById('btn-close-cart').addEventListener('click', closeCartModal);																									
@@ -166,8 +169,12 @@ document.getElementById('btn-close-status').addEventListener('click', closeStatu
 document.getElementById('btn-checkout').addEventListener('click', requestCheckout);																									
 });																									
 																									
-function setTableNumber() {																									
+function handleSetTable() {																									
 const inputElem = document.getElementById('table-input');																									
+if (inputElem) {																									
+inputElem.blur(); // キーボードを強制的に閉じる																									
+}																									
+																									
 const val = inputElem ? inputElem.value.trim() : "";																									
 																									
 if (!val) {																									
