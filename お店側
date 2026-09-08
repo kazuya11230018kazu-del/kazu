@@ -30,8 +30,8 @@ ul { padding-left: 20px; margin: 10px 0; }
 </div>																									
 																									
 <script>																									
-// 設定済みのGASのウェブアプリURL																									
-const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw4vFnJ2B0BKc3tvj8yChEy7wvLrO9k_1Al21u_sdm66UVEPGbRy8Q5NuLseFSXbn_2mw/exec";																									
+// 新しいGASのウェブアプリURL																									
+const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz1UPfYqM3ww8ZImbqpOCM73qXw5hrrzdJG75chYd5P8V-9Z6mQdrbDo0GyxEtq4UJbNw/exec";																									
 																									
 async function fetchOrders() {																									
 try {																									
@@ -47,7 +47,7 @@ console.error("ポーリングエラー:", e);
 																									
 function renderOrders(rows) {																									
 const container = document.getElementById("orderContainer");																									
-if (rows.length === 0) {																									
+if (!rows || rows.length === 0) {																									
 container.innerHTML = "<p>現在、新しい注文はありません。</p>";																									
 return;																									
 }																									
@@ -56,18 +56,27 @@ return;
 let ordersMap = {};																									
 rows.forEach(row => {																									
 const id = row.注文ID;																									
+if (!id) return;																									
 if (!ordersMap[id]) {																									
 ordersMap[id] = {																									
 orderId: id,																									
 status: row.調理ステータス || "調理待ち",																									
-time: new Date(row.注文日時).toLocaleTimeString(),																									
+time: row.注文日時 ? new Date(row.注文日時).toLocaleTimeString() : "",																									
 items: []																									
 };																									
 }																									
 ordersMap[id].items.push({ name: row.商品名, qty: row.数量 });																									
 });																									
 																									
-container.innerHTML = Object.values(ordersMap).map(order => `																									
+const orderKeys = Object.keys(ordersMap);																									
+if (orderKeys.length === 0) {																									
+container.innerHTML = "<p>現在、有効な注文はありません。</p>";																									
+return;																									
+}																									
+																									
+container.innerHTML = orderKeys.map(id => {																									
+const order = ordersMap[id];																									
+return `																									
 <div class="order-card">																									
 <h3>																									
 <span>${order.orderId}</span>																									
@@ -82,7 +91,8 @@ ${order.items.map(i => `<li><b>${i.name}</b> × ${i.qty}</li>`).join('')}
 <button class="btn-done" onclick="updateStatus('${order.orderId}', '提供済み')">提供済み</button>																									
 </div>																									
 </div>																									
-`).join('');																									
+`;																									
+}).join('');																									
 }																									
 																									
 async function updateStatus(orderId, status) {																									
