@@ -27,15 +27,15 @@
 																									
 <!-- メインコンテンツ -->																									
 <main class="max-w-md mx-auto p-4">																									
-<!-- テーブル番号入力モーダル（起動時） -->																									
+<!-- テーブル番号選択モーダル（起動時） -->																									
 <div id="table-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">																									
 <div class="bg-white w-full max-w-sm rounded-2xl p-6 text-center space-y-4 shadow-xl">																									
-<h2 class="text-xl font-bold text-gray-800">テーブル番号を入力</h2>																									
-<p class="text-sm text-gray-500">お座りのテーブル番号を入力してください</p>																									
-<input type="number" id="table-input" placeholder="例: 3" class="w-full border border-gray-300 rounded-xl p-3 text-center text-xl font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none">																									
-<button id="btn-set-table" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow cursor-pointer">																									
-注文を始める																									
-</button>																									
+<h2 class="text-xl font-bold text-gray-800">テーブル番号をお選びください</h2>																									
+<p class="text-sm text-gray-500">お座りのテーブル番号をタップしてください</p>																									
+<!-- テーブルボタンを並べるグリッド（1〜10番） -->																									
+<div id="table-buttons-grid" class="grid grid-cols-3 gap-3 py-2">																									
+<!-- JSで動的にボタンを生成します -->																									
+</div>																									
 </div>																									
 </div>																									
 																									
@@ -145,6 +145,8 @@ let currentTableNo = localStorage.getItem("order_table_no") || "";
 let currentOrderId = localStorage.getItem("order_id") || "";																									
 																									
 window.addEventListener("DOMContentLoaded", () => {																									
+renderTableButtons(); // テーブル選択ボタンを生成																									
+																									
 if (currentTableNo) {																									
 document.getElementById('table-modal').classList.add('hidden');																									
 document.getElementById('display-table').textContent = currentTableNo + "番";																									
@@ -152,14 +154,6 @@ fetchMenu();
 } else {																									
 document.getElementById('table-modal').classList.remove('hidden');																									
 }																									
-																									
-// スマホでのタップ抜けを防ぐため click と touchend の両方に反応させる																									
-const setTableBtn = document.getElementById('btn-set-table');																									
-setTableBtn.addEventListener('click', handleSetTable);																									
-setTableBtn.addEventListener('touchend', (e) => {																									
-e.preventDefault(); // スマホ特有のダブルタップ拡大などを防ぐ																									
-handleSetTable();																									
-});																									
 																									
 document.getElementById('btn-status-modal').addEventListener('click', openStatusModal);																									
 document.getElementById('btn-open-cart').addEventListener('click', openCartModal);																									
@@ -169,20 +163,25 @@ document.getElementById('btn-close-status').addEventListener('click', closeStatu
 document.getElementById('btn-checkout').addEventListener('click', requestCheckout);																									
 });																									
 																									
-function handleSetTable() {																									
-const inputElem = document.getElementById('table-input');																									
-if (inputElem) {																									
-inputElem.blur(); // キーボードを強制的に閉じる																									
+// 1〜10番までのテーブルボタンを自動生成する関数																									
+function renderTableButtons() {																									
+const grid = document.getElementById('table-buttons-grid');																									
+if (!grid) return;																									
+grid.innerHTML = '';																									
+																									
+for (let i = 1; i <= 10; i++) {																									
+const btn = document.createElement('button');																									
+btn.type = "button";																									
+btn.className = "bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-600 border border-indigo-200 font-bold py-3 rounded-xl text-lg transition shadow-sm";																									
+btn.textContent = i + "番";																									
+btn.addEventListener('click', () => selectTable(i));																									
+grid.appendChild(btn);																									
+}																									
 }																									
 																									
-const val = inputElem ? inputElem.value.trim() : "";																									
-																									
-if (!val) {																									
-alert("テーブル番号を入力してください");																									
-return;																									
-}																									
-																									
-currentTableNo = val;																									
+// テーブルが選ばれたときの処理																									
+function selectTable(tableNo) {																									
+currentTableNo = String(tableNo);																									
 localStorage.setItem("order_table_no", currentTableNo);																									
 																									
 document.getElementById('display-table').textContent = currentTableNo + "番";																									
