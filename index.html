@@ -1,1045 +1,295 @@
-<!DOCTYPE html>																									
-<html lang="ja">																									
-<head>																									
-<meta charset="UTF-8">																									
-<meta name="viewport" content="width=device-width, initial-scale=1.0">																									
-<title>モバイルオーダー</title>																									
-																									
-<script src="https://cdn.tailwindcss.com"></script>																									
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>																									
-</head>																									
-																									
-<body class="bg-gray-50 text-gray-800 pb-28">																									
-																									
-<header class="bg-indigo-600 text-white p-4 sticky top-0 z-10 shadow-md flex justify-between items-center">																									
-<div>																									
-<h1 class="text-lg font-bold">モバイルオーダー</h1>																									
-<p class="text-xs text-indigo-200">																									
-テーブル:																									
-<span id="display-table" class="font-bold">未設定</span>																									
-</p>																									
-</div>																									
-																									
-<button																									
-onclick="openStatusModal()"																									
-class="text-xs bg-indigo-500 px-3 py-2 rounded-lg font-bold">																									
-注文状況・会計																									
-</button>																									
-</header>																									
-																									
-																									
-<main class="max-w-md mx-auto p-4">																									
-																									
-<!-- テーブル選択 -->																									
-<div																									
-id="table-modal"																									
-class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">																									
-																									
-<div class="bg-white w-full max-w-sm rounded-2xl p-6 text-center space-y-4 shadow-xl">																									
-																									
-<h2 class="text-xl font-bold">																									
-テーブル番号をお選びください																									
-</h2>																									
-																									
-<p class="text-sm text-gray-500">																									
-テーブル番号を選択して決定してください																									
-</p>																									
-																									
-<div class="grid grid-cols-1 gap-2.5">																									
-																									
-<button																									
-type="button"																									
-id="t-btn-1"																									
-onclick="selectTempTable('1')"																									
-class="table-select-btn w-full bg-gray-50 border border-gray-200 font-bold py-3 rounded-xl">																									
-1番テーブル																									
-</button>																									
-																									
-<button																									
-type="button"																									
-id="t-btn-2"																									
-onclick="selectTempTable('2')"																									
-class="table-select-btn w-full bg-gray-50 border border-gray-200 font-bold py-3 rounded-xl">																									
-2番テーブル																									
-</button>																									
-																									
-<button																									
-type="button"																									
-id="t-btn-3"																									
-onclick="selectTempTable('3')"																									
-class="table-select-btn w-full bg-gray-50 border border-gray-200 font-bold py-3 rounded-xl">																									
-3番テーブル																									
-</button>																									
-																									
-<button																									
-type="button"																									
-id="t-btn-4"																									
-onclick="selectTempTable('4')"																									
-class="table-select-btn w-full bg-gray-50 border border-gray-200 font-bold py-3 rounded-xl">																									
-4番テーブル																									
-</button>																									
-																									
-<button																									
-type="button"																									
-id="t-btn-5"																									
-onclick="selectTempTable('5')"																									
-class="table-select-btn w-full bg-gray-50 border border-gray-200 font-bold py-3 rounded-xl">																									
-5番テーブル																									
-</button>																									
-																									
-</div>																									
-																									
-<button																									
-type="button"																									
-onclick="confirmTable()"																									
-class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-xl">																									
-決定する																									
-</button>																									
-																									
-</div>																									
-</div>																									
-																									
-																									
-<!-- ローディング -->																									
-<div id="loading" class="text-center py-10 hidden">																									
-<p class="text-gray-500">																									
-メニューを読み込んでいます...																									
-</p>																									
-</div>																									
-																									
-																									
-<!-- エラー -->																									
-<div id="error-area" class="hidden text-center py-10">																									
-<p id="error-message" class="text-red-500 mb-4">																									
-メニューを取得できませんでした。																									
-</p>																									
-																									
-<button																									
-onclick="fetchMenu()"																									
-class="bg-indigo-600 text-white px-6 py-2 rounded-xl font-bold">																									
-再読み込み																									
-</button>																									
-</div>																									
-																									
-																									
-<!-- メニュー -->																									
-<div id="menu-container" class="space-y-4 hidden"></div>																									
-																									
-</main>																									
-																									
-																									
-<!-- カート -->																									
-<div																									
-id="cart-bar"																									
-class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-lg hidden max-w-md mx-auto flex justify-between items-center z-20">																									
-																									
-<div>																									
-<p class="text-sm text-gray-500">																									
-合計:																									
-<span id="cart-count" class="font-bold">0</span>点																									
-</p>																									
-																									
-<p class="text-lg font-bold text-indigo-600">																									
-¥<span id="cart-total">0</span>																									
-</p>																									
-</div>																									
-																									
-<button																									
-onclick="openCartModal()"																									
-class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold">																									
-カート確認																									
-</button>																									
-</div>																									
-																									
-																									
-<!-- カート確認 -->																									
-<div																									
-id="cart-modal"																									
-class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-end sm:items-center justify-center">																									
-																									
-<div class="bg-white w-full max-w-lg rounded-t-2xl sm:rounded-2xl max-h-[90vh] flex flex-col">																									
-																									
-<div class="p-4 border-b flex justify-between">																									
-<h2 class="font-bold">注文内容</h2>																									
-																									
-<button																									
-onclick="closeCartModal()"																									
-class="text-xl">																									
-×																									
-</button>																									
-</div>																									
-																									
-<div																									
-id="cart-items-list"																									
-class="p-4 overflow-y-auto flex-grow space-y-3">																									
-</div>																									
-																									
-<div class="p-4 border-t bg-gray-50">																									
-																									
-<div class="flex justify-between text-lg font-bold mb-4">																									
-<span>合計</span>																									
-																									
-<span class="text-indigo-600">																									
-¥<span id="modal-total">0</span>																									
-</span>																									
-</div>																									
-																									
-<button																									
-id="submit-btn"																									
-onclick="submitOrder()"																									
-class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold">																									
-注文を確定する																									
-</button>																									
-																									
-</div>																									
-</div>																									
-</div>																									
-																									
-																									
-<!-- 注文状況 -->																									
-<div																									
-id="status-modal"																									
-class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">																									
-																									
-<div class="bg-white w-full max-w-md rounded-2xl p-6 max-h-[90vh] overflow-y-auto">																									
-																									
-<div class="flex justify-between border-b pb-3">																									
-<h2 class="font-bold">注文状況・お会計</h2>																									
-																									
-<button																									
-onclick="closeStatusModal()"																									
-class="text-xl">																									
-×																									
-</button>																									
-</div>																									
-																									
-<div																									
-id="status-content"																									
-class="space-y-3 text-sm py-4">																									
-</div>																									
-																									
-<div id="checkout-area" class="hidden">																									
-																									
-<button																									
-onclick="requestCheckout()"																									
-class="w-full bg-green-600 text-white py-3 rounded-xl font-bold">																									
-お会計する																									
-</button>																									
-																									
-</div>																									
-</div>																									
-</div>																									
-																									
-																									
-<!-- 領収書 -->																									
-<div																									
-id="receipt-modal"																									
-class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">																									
-																									
-<div class="bg-white w-full max-w-md rounded-2xl p-6 text-center space-y-4 max-h-[90vh] overflow-y-auto">																									
-																									
-<div class="text-green-600 text-5xl font-bold">																									
-✓																									
-</div>																									
-																									
-<h2 class="text-xl font-bold">																									
-お会計完了																									
-</h2>																									
-																									
-<p class="text-sm">																									
-注文ID:																									
-<span id="receipt-order-id" class="font-bold"></span>																									
-</p>																									
-																									
-<div class="border border-dashed p-4 rounded-xl text-left text-sm">																									
-																									
-<div class="text-center font-bold border-b pb-2 mb-2">																									
-デジタル領収書																									
-</div>																									
-																									
-<div class="text-xs text-gray-500 mb-2">																									
-発行日時:																									
-<span id="receipt-date"></span>																									
-</div>																									
-																									
-<div																									
-id="receipt-items-summary"																									
-class="space-y-1 border-b pb-2">																									
-</div>																									
-																									
-<div class="flex justify-between font-bold text-lg pt-2">																									
-<span>合計</span>																									
-<span id="receipt-total">¥0</span>																									
-</div>																									
-																									
-</div>																									
-																									
-<div class="flex flex-col items-center">																									
-<div id="qrcode"></div>																									
-																									
-<p class="text-xs text-gray-400 mt-2">																									
-お会計用QRコード																									
-</p>																									
-</div>																									
-																									
-<button																									
-onclick="location.reload()"																									
-class="w-full bg-gray-200 py-3 rounded-xl font-bold">																									
-閉じる																									
-</button>																									
-																									
-</div>																									
-</div>																									
-																									
-																									
-<script>																									
-																									
-/* ================================																									
-GAS URL																									
+const SHEET_MENU = "メニューマスター";																									
+const SHEET_ORDERS = "注文一覧";																									
+const SHEET_LOGS = "売上ログ";																									
+																									
+/* ==========================================																									
+GETリクエスト処理																									
 #ERROR!																									
+function doGet(e) {																									
+try {																									
+const action = (e && e.parameter && e.parameter.action) ? e.parameter.action : "";																									
+const ss = SpreadsheetApp.getActiveSpreadsheet();																									
+let result = {};																									
 																									
-const GAS_API_URL =																									
-https://script.google.com/macros/s/AKfycbz1UPfYqM3ww8ZImbqpOCM73qXw5hrrzdJG75chYd5P8V-9Z6mQdrbDo0GyxEtq4UJbNw/exec;																									
-																									
-																									
-/* ================================																									
-データ																									
-#ERROR!																									
-																									
-let menuData = [];																									
-let cart = {};																									
-																									
-let currentTableNo =																									
-localStorage.getItem("order_table_no") || "";																									
-																									
-let currentOrderId =																									
-localStorage.getItem("order_id") || "";																									
-																									
-let tempSelectedTable = "";																									
-																									
-																									
-/* ================================																									
-起動																									
-#ERROR!																									
-																									
-window.onload = function() {																									
-																									
-if (currentTableNo) {																									
-																									
-document																									
-.getElementById("table-modal")																									
-.classList.add("hidden");																									
-																									
-document																									
-.getElementById("display-table")																									
-.textContent = currentTableNo + "番";																									
-																									
-fetchMenu();																									
-																									
+if (action === "getMenu") {																									
+result = getMenuData(ss);																									
+} else if (action === "getOrderStatus") {																									
+result = getOrderStatusData(ss, e.parameter.orderId);																									
 } else {																									
-																									
-document																									
-.getElementById("table-modal")																									
-.classList.remove("hidden");																									
-}																									
-};																									
-																									
-																									
-/* ================================																									
-テーブル選択																									
-#ERROR!																									
-																									
-function selectTempTable(tableNo) {																									
-																									
-tempSelectedTable = String(tableNo);																									
-																									
-document																									
-.querySelectorAll(".table-select-btn")																									
-.forEach(btn => {																									
-																									
-btn.className =																									
-table-select-btn w-full bg-gray-50 border border-gray-200 font-bold py-3 rounded-xl;																									
-});																									
-																									
-const selected =																									
-document.getElementById("t-btn-" + tableNo);																									
-																									
-if (selected) {																									
-																									
-selected.className =																									
-table-select-btn w-full bg-indigo-600 text-white border border-indigo-600 font-bold py-3 rounded-xl;																									
-}																									
-}																									
-																									
-																									
-function confirmTable() {																									
-																									
-if (!tempSelectedTable) {																									
-																									
-alert("テーブル番号を選択してください。");																									
-return;																									
-}																									
-																									
-currentTableNo = tempSelectedTable;																									
-																									
-localStorage.setItem(																									
-order_table_no,																									
-currentTableNo																									
-);																									
-																									
-document																									
-.getElementById("display-table")																									
-.textContent = currentTableNo + "番";																									
-																									
-document																									
-.getElementById("table-modal")																									
-.classList.add("hidden");																									
-																									
-fetchMenu();																									
-}																									
-																									
-																									
-/* ================================																									
-通信																									
-#ERROR!																									
-																									
-async function fetchWithTimeout(url, options = {}, timeout = 10000) {																									
-																									
-const controller = new AbortController();																									
-																									
-const timer = setTimeout(																									
-() => controller.abort(),																									
-timeout																									
-);																									
-																									
-try {																									
-																									
-const response = await fetch(url, {																									
-...options,																									
-signal: controller.signal																									
-});																									
-																									
-clearTimeout(timer);																									
-																									
-return response;																									
-																									
-} catch (error) {																									
-																									
-clearTimeout(timer);																									
-throw error;																									
-}																									
-}																									
-																									
-																									
-/* ================================																									
-メニュー取得																									
-#ERROR!																									
-																									
-async function fetchMenu() {																									
-																									
-const loading =																									
-document.getElementById("loading");																									
-																									
-const menu =																									
-document.getElementById("menu-container");																									
-																									
-const errorArea =																									
-document.getElementById("error-area");																									
-																									
-loading.classList.remove("hidden");																									
-menu.classList.add("hidden");																									
-errorArea.classList.add("hidden");																									
-																									
-try {																									
-																									
-const response = await fetchWithTimeout(																									
-GAS_API_URL +																									
-?action=getMenu&t= +																									
-Date.now()																									
-);																									
-																									
-const result = await response.json();																									
-																									
-if (																									
-result.status !== "success" ||																									
-!Array.isArray(result.data)																									
-) {																									
-																									
-throw new Error(																									
-result.message || "メニュー取得失敗"																									
-);																									
-}																									
-																									
-menuData = result.data;																									
-																									
-loading.classList.add("hidden");																									
-																									
-renderMenu();																									
-																									
-} catch (error) {																									
-																									
-console.error(error);																									
-																									
-loading.classList.add("hidden");																									
-																									
-document																									
-.getElementById("error-message")																									
-.textContent =																									
-メニューを取得できませんでした。通信またはGAS設定を確認してください。;																									
-																									
-errorArea.classList.remove("hidden");																									
-}																									
-}																									
-																									
-																									
-/* ================================																									
-メニュー表示																									
-#ERROR!																									
-																									
-function renderMenu() {																									
-																									
-const container =																									
-document.getElementById("menu-container");																									
-																									
-container.innerHTML = "";																									
-																									
-container.classList.remove("hidden");																									
-																									
-if (menuData.length === 0) {																									
-																									
-container.innerHTML =																									
-<p class="text-gray-500 text-center py-6">メニューが登録されていません。</p>';																									
-																									
-return;																									
-}																									
-																									
-menuData.forEach(item => {																									
-																									
-const card =																									
-document.createElement("div");																									
-																									
-card.className =																									
-bg-white p-4 rounded-xl shadow-sm border flex justify-between items-center;																									
-																									
-card.innerHTML = `																									
-<div>																									
-<h3 class="font-bold">																									
-${item.name}																									
-</h3>																									
-																									
-<p class="text-indigo-600 font-bold">																									
-¥${Number(item.price).toLocaleString()}																									
-</p>																									
-																									
-<p class="text-xs text-gray-400">																									
-${item.category || ""}																									
-</p>																									
-</div>																									
-																									
-<div class="flex items-center space-x-3">																									
-																									
-<button																									
-onclick="changeQuantity('${item.code}', -1)"																									
-class="w-8 h-8 bg-gray-100 rounded-full font-bold">																									
-−																									
-</button>																									
-																									
-<span																									
-id="qty-${item.code}"																									
-class="font-bold">																									
-0																									
-</span>																									
-																									
-<button																									
-onclick="changeQuantity('${item.code}', 1)"																									
-class="w-8 h-8 bg-indigo-600 text-white rounded-full font-bold">																									
-＋																									
-</button>																									
-																									
-</div>																									
-`;																									
-																									
-container.appendChild(card);																									
-});																									
-}																									
-																									
-																									
-/* ================================																									
-数量変更																									
-#ERROR!																									
-																									
-function changeQuantity(code, delta) {																									
-																									
-const item =																									
-menuData.find(																									
-m => String(m.code) === String(code)																									
-);																									
-																									
-if (!item) return;																									
-																									
-if (!cart[code]) {																									
-																									
-cart[code] = {																									
-...item,																									
-quantity: 0																									
+result = {																									
+status: "success",																									
+message: "GAS API is running successfully."																									
 };																									
 }																									
 																									
-cart[code].quantity += delta;																									
-																									
-if (cart[code].quantity < 0) {																									
-cart[code].quantity = 0;																									
-}																									
-																									
-document																									
-.getElementById("qty-" + code)																									
-.textContent =																									
-cart[code].quantity;																									
-																									
-if (cart[code].quantity === 0) {																									
-delete cart[code];																									
-}																									
-																									
-updateCartSummary();																									
-}																									
-																									
-																									
-/* ================================																									
-カート																									
-#ERROR!																									
-																									
-function updateCartSummary() {																									
-																									
-let count = 0;																									
-let total = 0;																									
-																									
-Object.values(cart).forEach(item => {																									
-																									
-count += item.quantity;																									
-																									
-total +=																									
-Number(item.price) *																									
-item.quantity;																									
+return jsonResponse(result);																									
+} catch (error) {																									
+return jsonResponse({																									
+status: "error",																									
+message: error.toString()																									
 });																									
+}																									
+}																									
 																									
-document																									
-.getElementById("cart-count")																									
-.textContent = count;																									
+/* ==========================================																									
+POSTリクエスト処理																									
+#ERROR!																									
+function doPost(e) {																									
+try {																									
+if (!e || !e.postData || !e.postData.contents) {																									
+throw new Error("POSTデータがありません");																									
+}																									
 																									
-document																									
-.getElementById("cart-total")																									
-.textContent =																									
-total.toLocaleString();																									
+const data = JSON.parse(e.postData.contents);																									
+const action = data.action;																									
+const payload = data.payload || {};																									
+const ss = SpreadsheetApp.getActiveSpreadsheet();																									
+let result = {};																									
 																									
-const bar =																									
-document.getElementById("cart-bar");																									
-																									
-if (count > 0) {																									
-bar.classList.remove("hidden");																									
+if (action === "submitOrder") {																									
+result = submitOrderData(ss, payload);																									
+} else if (action === "checkout") {																									
+result = checkoutOrderData(ss, payload);																									
 } else {																									
-bar.classList.add("hidden");																									
-}																									
-}																									
-																									
-																									
-function openCartModal() {																									
-																									
-const list =																									
-document.getElementById("cart-items-list");																									
-																									
-list.innerHTML = "";																									
-																									
-let total = 0;																									
-																									
-Object.values(cart).forEach(item => {																									
-																									
-const subtotal =																									
-Number(item.price) *																									
-item.quantity;																									
-																									
-total += subtotal;																									
-																									
-const row =																									
-document.createElement("div");																									
-																									
-row.className =																									
-flex justify-between border-b pb-2;																									
-																									
-row.innerHTML = `																									
-<div>																									
-<div class="font-bold">																									
-${item.name}																									
-</div>																									
-																									
-<div class="text-xs text-gray-500">																									
-¥${Number(item.price).toLocaleString()}																									
-× ${item.quantity}																									
-</div>																									
-</div>																									
-																									
-<div class="font-bold">																									
-¥${subtotal.toLocaleString()}																									
-</div>																									
-`;																									
-																									
-list.appendChild(row);																									
-});																									
-																									
-document																									
-.getElementById("modal-total")																									
-.textContent =																									
-total.toLocaleString();																									
-																									
-document																									
-.getElementById("cart-modal")																									
-.classList.remove("hidden");																									
+throw new Error("不明なアクションです: " + action);																									
 }																									
 																									
-																									
-function closeCartModal() {																									
-																									
-document																									
-.getElementById("cart-modal")																									
-.classList.add("hidden");																									
-}																									
-																									
-																									
-/* ================================																									
-注文送信																									
-#ERROR!																									
-																									
-async function submitOrder() {																									
-																									
-const items =																									
-Object.values(cart)																									
-.filter(item => item.quantity > 0);																									
-																									
-if (items.length === 0) return;																									
-																									
-const button =																									
-document.getElementById("submit-btn");																									
-																									
-button.disabled = true;																									
-button.textContent = "送信中...";																									
-																									
-try {																									
-																									
-const response =																									
-await fetchWithTimeout(																									
-GAS_API_URL,																									
-{																									
-method: "POST",																									
-																									
-headers: {																									
-Content-Type:																									
-text/plain;charset=utf-8																									
-},																									
-																									
-body: JSON.stringify({																									
-action: "submitOrder",																									
-																									
-payload: {																									
-tableNo: currentTableNo,																									
-items: items																									
-}																									
-})																									
-},																									
-15000																									
-);																									
-																									
-const result =																									
-await response.json();																									
-																									
-if (result.status !== "success") {																									
-																									
-throw new Error(																									
-result.message || "注文失敗"																									
-);																									
-}																									
-																									
-currentOrderId =																									
-result.data.orderId;																									
-																									
-localStorage.setItem(																									
-order_id,																									
-currentOrderId																									
-);																									
-																									
-cart = {};																									
-																									
-closeCartModal();																									
-updateCartSummary();																									
-																									
-alert(																									
-注文が完了しました。\nキッチンへ送信しました。																									
-);																									
-																									
-location.reload();																									
-																									
+return jsonResponse(result);																									
 } catch (error) {																									
-																									
-console.error(error);																									
-																									
-alert(																									
-注文を送信できませんでした。\n通信状態を確認してください。																									
-);																									
-																									
-} finally {																									
-																									
-button.disabled = false;																									
-button.textContent =																									
-注文を確定する;																									
+return jsonResponse({																									
+status: "error",																									
+message: error.toString()																									
+});																									
 }																									
 }																									
 																									
-																									
-/* ================================																									
-注文状況																									
+/* ==========================================																									
+JSONレスポンス生成																									
 #ERROR!																									
+function jsonResponse(data) {																									
+return ContentService																									
+.createTextOutput(JSON.stringify(data))																									
+.setMimeType(ContentService.MimeType.JSON);																									
+}																									
 																									
-async function openStatusModal() {																									
+/* ==========================================																									
+1. メニューデータ取得																									
+#ERROR!																									
+function getMenuData(ss) {																									
+const sheet = ss.getSheetByName(SHEET_MENU);																									
+if (!sheet) {																									
+throw new Error("「メニューマスター」シートが見つかりません");																									
+}																									
 																									
-const modal =																									
-document.getElementById("status-modal");																									
+const lastRow = sheet.getLastRow();																									
+if (lastRow <= 1) {																									
+return { status: "success", data: [] };																									
+}																									
 																									
-const content =																									
-document.getElementById("status-content");																									
+const rows = sheet.getRange(2, 1, lastRow - 1, 4).getValues();																									
+const data = [];																									
 																									
-const checkout =																									
-document.getElementById("checkout-area");																									
+rows.forEach(row => {																									
+const code = String(row[0] || "").trim();																									
+const name = String(row[1] || "").trim();																									
+const price = Number(row[2]) || 0;																									
+const category = String(row[3] || "").trim();																									
 																									
-modal.classList.remove("hidden");																									
-																									
-if (!currentOrderId) {																									
-																									
-content.innerHTML =																									
-<p class="text-gray-500 text-center">まだ注文履歴がありません。</p>';																									
-																									
-checkout.classList.add("hidden");																									
-																									
+if (!code || !name) {																									
 return;																									
 }																									
 																									
-content.innerHTML =																									
-<p class="text-gray-500 text-center">確認中...</p>';																									
-																									
-try {																									
-																									
-const response =																									
-await fetchWithTimeout(																									
-GAS_API_URL +																									
-?action=getOrderStatus&orderId= +																									
-encodeURIComponent(currentOrderId) +																									
-&t= +																									
-Date.now()																									
-);																									
-																									
-const result =																									
-await response.json();																									
-																									
-if (																									
-result.status !== "success" ||																									
-!Array.isArray(result.items) ||																									
-result.items.length === 0																									
-) {																									
-																									
-content.innerHTML =																									
-<p class="text-gray-500 text-center">注文情報がありません。</p>';																									
-																									
-checkout.classList.add("hidden");																									
-																									
-return;																									
-}																									
-																									
-let html =																									
-`<p class="text-xs text-gray-500">																									
-注文ID: ${currentOrderId}																									
-</p>`;																									
-																									
-result.items.forEach(item => {																									
-																									
-html += `																									
-<div class="flex justify-between bg-gray-50 p-3 rounded-xl border">																									
-																									
-<div>																									
-<div class="font-bold">																									
-${item.name} × ${item.quantity}																									
-</div>																									
-																									
-<div class="text-xs text-gray-500">																									
-¥${Number(item.price).toLocaleString()}																									
-</div>																									
-</div>																									
-																									
-<span class="text-xs font-bold">																									
-${item.cookStatus}																									
-</span>																									
-																									
-</div>																									
-`;																									
+data.push({																									
+code: code,																									
+name: name,																									
+price: price,																									
+category: category																									
+});																									
 });																									
 																									
-content.innerHTML = html;																									
-																									
-checkout.classList.remove("hidden");																									
-																									
-} catch (error) {																									
-																									
-console.error(error);																									
-																									
-content.innerHTML =																									
-<p class="text-red-500 text-center">注文状況を取得できませんでした。</p>';																									
-}																									
+return {																									
+status: "success",																									
+data: data																									
+};																									
 }																									
 																									
-																									
-function closeStatusModal() {																									
-																									
-document																									
-.getElementById("status-modal")																									
-.classList.add("hidden");																									
-}																									
-																									
-																									
-/* ================================																									
-会計																									
+/* ==========================================																									
+2. 注文データの登録																									
 #ERROR!																									
+function submitOrderData(ss, payload) {																									
+const tableNo = String(payload.tableNo || "").trim();																									
+const items = Array.isArray(payload.items) ? payload.items : [];																									
 																									
-async function requestCheckout() {																									
-																									
-if (!currentOrderId) return;																									
-																									
-try {																									
-																									
-const response =																									
-await fetchWithTimeout(																									
-GAS_API_URL,																									
-{																									
-method: "POST",																									
-																									
-headers: {																									
-Content-Type:																									
-text/plain;charset=utf-8																									
-},																									
-																									
-body: JSON.stringify({																									
-action: "checkout",																									
-																									
-payload: {																									
-orderId: currentOrderId																									
-}																									
-})																									
-},																									
-15000																									
-);																									
-																									
-const result =																									
-await response.json();																									
-																									
-if (result.status !== "success") {																									
-																									
-throw new Error(																									
-result.message || "会計失敗"																									
-);																									
+if (!tableNo) {																									
+throw new Error("テーブル番号がありません");																									
 }																									
 																									
-closeStatusModal();																									
-																									
-showReceipt(																									
-result.data.orderId,																									
-result.data.totalPrice,																									
-result.data.items																									
-);																									
-																									
-} catch (error) {																									
-																									
-console.error(error);																									
-																									
-alert(																									
-会計処理に失敗しました。																									
-);																									
-}																									
+if (items.length === 0) {																									
+throw new Error("注文商品がありません");																									
 }																									
 																									
+const ordersSheet = ss.getSheetByName(SHEET_ORDERS);																									
+if (!ordersSheet) {																									
+throw new Error("「注文一覧」シートが見つかりません");																									
+}																									
 																									
-/* ================================																									
-領収書																									
-#ERROR!																									
+const now = new Date();																									
+const orderId = "ORD-" + Utilities.formatDate(now, "Asia/Tokyo", "yyyyMMdd-HHmmss") + "-" + Math.floor(Math.random() * 900 + 100);																									
 																									
-function showReceipt(																									
-orderId,																									
-totalPrice,																									
-items																									
-) {																									
-																									
-document																									
-.getElementById("receipt-order-id")																									
-.textContent = orderId;																									
-																									
-document																									
-.getElementById("receipt-date")																									
-.textContent =																									
-new Date().toLocaleString("ja-JP");																									
-																									
-document																									
-.getElementById("receipt-total")																									
-.textContent =																									
-¥ +																									
-Number(totalPrice).toLocaleString();																									
-																									
-const summary =																									
-document.getElementById(																									
-receipt-items-summary																									
-);																									
-																									
-summary.innerHTML = "";																									
+let totalPrice = 0;																									
+const rows = [];																									
 																									
 items.forEach(item => {																									
+const code = String(item.code || "");																									
+const name = String(item.name || "");																									
+const price = Number(item.price) || 0;																									
+const quantity = Number(item.quantity) || 0;																									
 																									
-const subtotal =																									
-Number(item.price) *																									
-Number(item.quantity);																									
-																									
-const row =																									
-document.createElement("div");																									
-																									
-row.className =																									
-flex justify-between text-xs;																									
-																									
-row.innerHTML = `																									
-<span>																									
-${item.name} × ${item.quantity}																									
-</span>																									
-																									
-<span>																									
-¥${subtotal.toLocaleString()}																									
-</span>																									
-`;																									
-																									
-summary.appendChild(row);																									
-});																									
-																									
-const qr =																									
-document.getElementById("qrcode");																									
-																									
-qr.innerHTML = "";																									
-																									
-new QRCode(qr, {																									
-text: orderId,																									
-width: 120,																									
-height: 120																									
-});																									
-																									
-document																									
-.getElementById("receipt-modal")																									
-.classList.remove("hidden");																									
-																									
-localStorage.removeItem("order_id");																									
-																									
-currentOrderId = "";																									
+if (quantity <= 0) {																									
+return;																									
 }																									
 																									
-</script>																									
+totalPrice += price * quantity;																									
 																									
-</body>																									
-</html>																									
+rows.push([																									
+orderId,																									
+tableNo,																									
+code,																									
+name,																									
+price,																									
+quantity,																									
+調理待ち,																									
+now																									
+]);																									
+});																									
+																									
+if (rows.length === 0) {																									
+throw new Error("有効な注文商品がありません");																									
+}																									
+																									
+const startRow = ordersSheet.getLastRow() + 1;																									
+ordersSheet.getRange(startRow, 1, rows.length, 8).setValues(rows);																									
+																									
+// 売上ログへの記録																									
+const logsSheet = ss.getSheetByName(SHEET_LOGS);																									
+if (logsSheet) {																									
+logsSheet.appendRow([																									
+now,																									
+orderId,																									
+tableNo,																									
+totalPrice,																									
+JSON.stringify(items)																									
+]);																									
+}																									
+																									
+return {																									
+status: "success",																									
+data: {																									
+orderId: orderId,																									
+tableNo: tableNo,																									
+totalPrice: totalPrice																									
+}																									
+};																									
+}																									
+																									
+/* ==========================================																									
+3. 注文状況の取得																									
+#ERROR!																									
+function getOrderStatusData(ss, orderId) {																									
+if (!orderId) {																									
+return { status: "success", items: [] };																									
+}																									
+																									
+const sheet = ss.getSheetByName(SHEET_ORDERS);																									
+if (!sheet) {																									
+throw new Error("「注文一覧」シートが見つかりません");																									
+}																									
+																									
+const lastRow = sheet.getLastRow();																									
+if (lastRow <= 1) {																									
+return { status: "success", items: [] };																									
+}																									
+																									
+const rows = sheet.getRange(2, 1, lastRow - 1, 8).getValues();																									
+const items = [];																									
+																									
+rows.forEach(row => {																									
+if (String(row[0]) !== String(orderId)) {																									
+return;																									
+}																									
+																									
+items.push({																									
+orderId: row[0],																									
+tableNo: row[1],																									
+code: row[2],																									
+name: row[3],																									
+price: Number(row[4]) || 0,																									
+quantity: Number(row[5]) || 0,																									
+cookStatus: row[6] || "調理待ち",																									
+time: row[7]																									
+});																									
+});																									
+																									
+return {																									
+status: "success",																									
+items: items																									
+};																									
+}																									
+																									
+/* ==========================================																									
+4. 会計処理																									
+#ERROR!																									
+function checkoutOrderData(ss, payload) {																									
+const orderId = String(payload.orderId || "").trim();																									
+if (!orderId) {																									
+throw new Error("注文IDがありません");																									
+}																									
+																									
+const sheet = ss.getSheetByName(SHEET_ORDERS);																									
+if (!sheet) {																									
+throw new Error("「注文一覧」シートが見つかりません");																									
+}																									
+																									
+const lastRow = sheet.getLastRow();																									
+if (lastRow <= 1) {																									
+throw new Error("注文がありません");																									
+}																									
+																									
+const rows = sheet.getRange(2, 1, lastRow - 1, 8).getValues();																									
+let totalPrice = 0;																									
+const items = [];																									
+let found = false;																									
+																									
+rows.forEach((row, index) => {																									
+if (String(row[0]) !== orderId) {																									
+return;																									
+}																									
+																									
+found = true;																									
+const price = Number(row[4]) || 0;																									
+const quantity = Number(row[5]) || 0;																									
+																									
+totalPrice += price * quantity;																									
+																									
+items.push({																									
+name: String(row[3] || ""),																									
+price: price,																									
+quantity: quantity																									
+});																									
+																									
+sheet.getRange(index + 2, 7).setValue("会計済み");																									
+});																									
+																									
+if (!found) {																									
+throw new Error("注文IDが見つかりません");																									
+}																									
+																									
+return {																									
+status: "success",																									
+data: {																									
+orderId: orderId,																									
+totalPrice: totalPrice,																									
+items: items																									
+}																									
+};																									
+}																									
