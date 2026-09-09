@@ -1,2073 +1,1018 @@
 <!DOCTYPE html>																									
-<html lang="ja">																									
+<html lang='ja'>																									
 <head>																									
-<meta charset="UTF-8">																									
-<meta																									
-name="viewport"																									
-content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"																									
->																									
+<meta charset='UTF-8'>																									
+<meta name='viewport' content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no'>																									
+<title>モバイルオーダー</title>																									
 																									
-<title>モバイルオーダーシステム</title>																									
+<script src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'></script>																									
 																									
-<script src="https://cdn.tailwindcss.com"></script>																									
-																									
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>																									
+<style>																									
+*{box-sizing:border-box}																									
+body{																									
+margin:0;																									
+font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;																									
+background:#f1f5f9;																									
+color:#1e293b;																									
+padding-bottom:80px;																									
+}																									
+header{																									
+position:sticky;																									
+top:0;																									
+z-index:20;																									
+background:#2563eb;																									
+color:white;																									
+padding:16px;																									
+display:flex;																									
+justify-content:space-between;																									
+align-items:center;																									
+box-shadow:0 2px 8px #0002;																									
+}																									
+header button{																									
+border:0;																									
+background:#1d4ed8;																									
+color:white;																									
+padding:7px 10px;																									
+border-radius:8px;																									
+}																									
+.status{																									
+background:#10b981;																									
+padding:6px 10px;																									
+border-radius:20px;																									
+font-size:12px;																									
+}																									
+main{																									
+max-width:500px;																									
+margin:auto;																									
+padding:16px;																									
+}																									
+.hidden{display:none!important}																									
+.categories{																									
+display:flex;																									
+gap:8px;																									
+overflow-x:auto;																									
+margin-bottom:14px;																									
+}																									
+.categories button{																									
+border:1px solid #ddd;																									
+background:white;																									
+padding:10px 16px;																									
+border-radius:24px;																									
+white-space:nowrap;																									
+}																									
+.categories .active{																									
+background:#2563eb;																									
+color:white;																									
+}																									
+.card{																									
+background:white;																									
+padding:15px;																									
+margin-bottom:12px;																									
+border-radius:16px;																									
+box-shadow:0 1px 5px #0001;																									
+}																									
+.row{																									
+display:flex;																									
+justify-content:space-between;																									
+align-items:center;																									
+gap:10px;																									
+}																									
+.name{																									
+font-weight:700;																									
+font-size:16px;																									
+}																									
+.category{																									
+font-size:11px;																									
+color:#64748b;																									
+}																									
+.price{																									
+color:#2563eb;																									
+font-weight:700;																									
+margin-top:5px;																									
+}																									
+.qty{																									
+display:flex;																									
+align-items:center;																									
+gap:8px;																									
+}																									
+.qty button{																									
+width:34px;																									
+height:34px;																									
+border:0;																									
+border-radius:9px;																									
+font-size:20px;																									
+}																									
+.plus{																									
+background:#2563eb;																									
+color:white;																									
+}																									
+.minus{																									
+background:#e2e8f0;																									
+}																									
+.title{																									
+font-size:20px;																									
+font-weight:700;																									
+margin-bottom:15px;																									
+}																									
+.total{																									
+background:white;																									
+border-radius:16px;																									
+padding:18px;																									
+margin-top:15px;																									
+}																									
+.total-line{																									
+display:flex;																									
+justify-content:space-between;																									
+font-size:20px;																									
+font-weight:700;																									
+}																									
+.main-btn{																									
+width:100%;																									
+border:0;																									
+border-radius:13px;																									
+padding:15px;																									
+background:#2563eb;																									
+color:white;																									
+font-size:17px;																									
+font-weight:700;																									
+margin-top:15px;																									
+}																									
+.checkout-btn{background:#059669}																									
+nav{																									
+position:fixed;																									
+bottom:0;																									
+left:0;																									
+right:0;																									
+height:72px;																									
+background:white;																									
+border-top:1px solid #ddd;																									
+display:grid;																									
+grid-template-columns:repeat(4,1fr);																									
+z-index:30;																									
+}																									
+nav button{																									
+border:0;																									
+background:white;																									
+color:#64748b;																									
+font-weight:700;																									
+}																									
+nav .active{color:#2563eb}																									
+nav span{																									
+display:block;																									
+font-size:21px;																									
+}																									
+.small{																									
+color:#64748b;																									
+font-size:12px;																									
+}																									
+.badge{																									
+display:inline-block;																									
+padding:5px 9px;																									
+border-radius:15px;																									
+background:#fef3c7;																									
+color:#92400e;																									
+font-size:12px;																									
+}																									
+.paid{																									
+background:#e2e8f0;																									
+color:#475569;																									
+}																									
+.modal{																									
+position:fixed;																									
+inset:0;																									
+z-index:100;																									
+background:#0009;																									
+display:flex;																									
+align-items:center;																									
+justify-content:center;																									
+padding:20px;																									
+}																									
+.modal-box{																									
+width:100%;																									
+max-width:360px;																									
+background:white;																									
+border-radius:22px;																									
+padding:22px;																									
+}																									
+.table-btn{																									
+width:100%;																									
+padding:14px;																									
+margin:5px 0;																									
+border:0;																									
+border-radius:12px;																									
+background:#f1f5f9;																									
+font-size:17px;																									
+font-weight:700;																									
+}																									
+.receipt{																									
+border:1px dashed #aaa;																									
+padding:15px;																									
+margin-top:15px;																									
+}																									
+.center{text-align:center}																									
+.error{color:#dc2626;text-align:center;padding:40px 0}																									
+.loading{color:#94a3b8;text-align:center;padding:50px 0}																									
+</style>																									
 </head>																									
 																									
-<body class="bg-slate-100 text-slate-800 pb-24 select-none antialiased">																									
+<body>																									
 																									
-																									
-<!-- ==================================================																									
-ヘッダー																									
-#ERROR!																									
-																									
-<header class="bg-blue-600 text-white p-4 sticky top-0 z-30 shadow-md flex justify-between items-center">																									
-																									
-<div class="flex items-center space-x-2">																									
-																									
-<span class="text-lg font-bold">																									
-テーブル:																									
-<span id="current-table-display">1</span>番																									
-</span>																									
-																									
-<button																									
-onclick="openTableModal()"																									
-class="text-xs bg-blue-700 hover:bg-blue-800 px-2 py-1 rounded transition"																									
->																									
-変更																									
-</button>																									
-																									
+<header>																									
+<div>																									
+<b>テーブル: <span id='tableDisplay'>1</span>番</b>																									
+<button onclick='openTable()'>変更</button>																									
 </div>																									
-																									
-																									
-<div class="flex items-center space-x-2">																									
-																									
-<span																									
-id="connection-status"																									
-class="text-xs bg-amber-500 px-2.5 py-1 rounded-full font-medium"																									
->																									
-接続確認中																									
-</span>																									
-																									
-</div>																									
-																									
+<div id='status' class='status'>接続中</div>																									
 </header>																									
 																									
+<main>																									
 																									
-																									
-<!-- ==================================================																									
-メイン																									
-#ERROR!																									
-																									
-<main class="max-w-md mx-auto p-4">																									
-																									
-																									
-<!-- ==================================================																									
-1. メニュー																									
-#ERROR!																									
-																									
-<section id="view-menu" class="space-y-4">																									
-																									
-<div																									
-id="category-tabs"																									
-class="flex space-x-2 overflow-x-auto pb-2"																									
->																									
-																									
-<button																									
-onclick="filterCategory('all')"																									
-class="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-bold whitespace-nowrap shadow-sm"																									
->																									
-すべて																									
-</button>																									
-																									
-</div>																									
-																									
-																									
-<div id="menu-list" class="space-y-3">																									
-																									
-<p class="text-center text-slate-400 py-10">																									
-メニューを読み込んでいます...																									
-</p>																									
-																									
-</div>																									
-																									
+<section id='menuView'>																									
+<div id='categories' class='categories'></div>																									
+<div id='menuList' class='loading'>メニューを読み込んでいます...</div>																									
 </section>																									
 																									
+<section id='cartView' class='hidden'>																									
+<div class='title'>注文かご</div>																									
+<div id='cartList'></div>																									
 																									
-																									
-<!-- ==================================================																									
-2. カート																									
-#ERROR!																									
-																									
-<section id="view-cart" class="space-y-4 hidden">																									
-																									
-<h2 class="text-lg font-bold text-slate-700 border-b pb-2">																									
-注文かごの中身																									
-</h2>																									
-																									
-																									
-<div																									
-id="cart-items-list"																									
-class="space-y-3"																									
->																									
+<div class='total'>																									
+<div class='total-line'>																									
+<span>合計</span>																									
+<span>¥<span id='cartTotal'>0</span></span>																									
 </div>																									
 																									
-																									
-<div class="bg-white p-4 rounded-2xl shadow-sm border space-y-3 mt-4">																									
-																									
-<div class="flex justify-between text-lg font-bold">																									
-																									
-<span>																									
-合計金額（税込）																									
-</span>																									
-																									
-<span class="text-blue-600">																									
-¥<span id="cart-total">0</span>																									
-</span>																									
-																									
-</div>																									
-																									
-																									
-<button																									
-onclick="submitOrder()"																									
-class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-bold text-base shadow-md transition active:scale-95"																									
->																									
+<button class='main-btn' onclick='submitOrder()'>																									
 注文を確定する																									
 </button>																									
-																									
 </div>																									
-																									
 </section>																									
 																									
-																									
-																									
-<!-- ==================================================																									
-3. 注文履歴																									
-#ERROR!																									
-																									
-<section id="view-history" class="space-y-4 hidden">																									
-																									
-<div class="flex justify-between items-center border-b pb-2">																									
-																									
-<h2 class="text-lg font-bold text-slate-700">																									
-注文履歴・状況																									
-</h2>																									
-																									
-<button																									
-onclick="fetchHistory()"																									
-class="text-xs bg-slate-200 hover:bg-slate-300 px-3 py-1.5 rounded-lg font-medium"																									
->																									
-更新																									
-</button>																									
-																									
-</div>																									
-																									
-																									
-<div																									
-id="history-container"																									
-class="space-y-4"																									
->																									
-																									
-<p class="text-center text-slate-400 py-10">																									
-履歴を読み込んでいます...																									
-</p>																									
-																									
-</div>																									
-																									
+<section id='historyView' class='hidden'>																									
+<div class='title'>注文履歴</div>																									
+<div id='historyList'></div>																									
 </section>																									
 																									
+<section id='checkoutView' class='hidden'>																									
+<div class='title'>お会計</div>																									
+<div id='checkoutList'></div>																									
 																									
-																									
-<!-- ==================================================																									
-4. 会計																									
-#ERROR!																									
-																									
-<section id="view-checkout" class="space-y-4 hidden">																									
-																									
-<h2 class="text-lg font-bold text-slate-700 border-b pb-2">																									
-お会計の確認																									
-</h2>																									
-																									
-																									
-<div																									
-id="checkout-summary-list"																									
-class="space-y-3"																									
->																									
-																									
-<p class="text-center text-slate-400 py-10">																									
-読み込んでいます...																									
-</p>																									
-																									
+<div class='total'>																									
+<div class='total-line'>																									
+<span>お支払い総額</span>																									
+<span>¥<span id='checkoutTotal'>0</span></span>																									
 </div>																									
 																									
-																									
-<div class="bg-white p-4 rounded-2xl shadow-sm border space-y-4 mt-4">																									
-																									
-<div class="flex justify-between text-xl font-bold">																									
-																									
-<span>																									
-お支払い総額																									
-</span>																									
-																									
-<span class="text-blue-600">																									
-¥<span id="checkout-total">0</span>																									
-</span>																									
-																									
-</div>																									
-																									
-																									
-<button																									
-onclick="requestCheckout()"																									
-id="checkout-btn"																									
-class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-xl font-bold text-lg shadow-md transition active:scale-95"																									
->																									
+<button class='main-btn checkout-btn' onclick='checkout()'>																									
 お会計を確定する																									
 </button>																									
-																									
 </div>																									
-																									
 </section>																									
 																									
 </main>																									
 																									
-																									
-																									
-<!-- ==================================================																									
-下部ナビ																									
-#ERROR!																									
-																									
-<nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 py-2 px-4 grid grid-cols-4 gap-1 shadow-lg z-30 max-w-md mx-auto">																									
-																									
-<button																									
-onclick="switchTab('menu')"																									
-id="nav-menu"																									
-class="nav-btn flex flex-col items-center justify-center py-1 text-blue-600 text-xs font-bold rounded-xl"																									
->																									
-																									
-<span class="text-xl mb-0.5">																									
-📋																									
-</span>																									
-																									
-<span>																									
-メニュー																									
-</span>																									
-																									
+<nav>																									
+<button id='navMenu' class='active' onclick='showView("menu")'>																									
+<span>📋</span>メニュー																									
 </button>																									
 																									
-																									
-<button																									
-onclick="switchTab('cart')"																									
-id="nav-cart"																									
-class="nav-btn flex flex-col items-center justify-center py-1 text-slate-400 text-xs font-bold rounded-xl relative"																									
->																									
-																									
-<span class="text-xl mb-0.5">																									
-🛒																									
-</span>																									
-																									
-<span>																									
-かご																									
-</span>																									
-																									
-																									
-<span																									
-id="cart-badge"																									
-class="absolute top-0.5 right-4 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center hidden font-bold"																									
->																									
-0																									
-</span>																									
-																									
+<button id='navCart' onclick='showView("cart")'>																									
+<span>🛒</span>かご																									
 </button>																									
 																									
-																									
-<button																									
-onclick="switchTab('history')"																									
-id="nav-history"																									
-class="nav-btn flex flex-col items-center justify-center py-1 text-slate-400 text-xs font-bold rounded-xl"																									
->																									
-																									
-<span class="text-xl mb-0.5">																									
-⏳																									
-</span>																									
-																									
-<span>																									
-履歴																									
-</span>																									
-																									
+<button id='navHistory' onclick='showView("history")'>																									
+<span>⏳</span>履歴																									
 </button>																									
 																									
-																									
-<button																									
-onclick="switchTab('checkout')"																									
-id="nav-checkout"																									
-class="nav-btn flex flex-col items-center justify-center py-1 text-slate-400 text-xs font-bold rounded-xl"																									
->																									
-																									
-<span class="text-xl mb-0.5">																									
-💰																									
-</span>																									
-																									
-<span>																									
-会計																									
-</span>																									
-																									
+<button id='navCheckout' onclick='showView("checkout")'>																									
+<span>💰</span>会計																									
 </button>																									
-																									
 </nav>																									
 																									
+<div id='tableModal' class='modal hidden'>																									
+<div class='modal-box'>																									
+<div class='title center'>テーブル番号を選択</div>																									
 																									
-																									
-<!-- ==================================================																									
-テーブル選択																									
-#ERROR!																									
-																									
-<div																									
-id="table-modal"																									
-class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm"																									
->																									
-																									
-<div class="bg-white w-full max-w-xs rounded-3xl p-6 text-center space-y-4 shadow-2xl">																									
-																									
-<h3 class="text-lg font-bold text-slate-800">																									
-テーブル番号を選択																									
-</h3>																									
-																									
-																									
-<div class="grid grid-cols-1 gap-2.5">																									
-																									
-<button																									
-onclick="selectTable(1)"																									
-class="py-3.5 bg-slate-100 font-bold rounded-2xl text-lg"																									
->																									
-テーブル 1																									
-</button>																									
-																									
-<button																									
-onclick="selectTable(2)"																									
-class="py-3.5 bg-slate-100 font-bold rounded-2xl text-lg"																									
->																									
-テーブル 2																									
-</button>																									
-																									
-<button																									
-onclick="selectTable(3)"																									
-class="py-3.5 bg-slate-100 font-bold rounded-2xl text-lg"																									
->																									
-テーブル 3																									
-</button>																									
-																									
-<button																									
-onclick="selectTable(4)"																									
-class="py-3.5 bg-slate-100 font-bold rounded-2xl text-lg"																									
->																									
-テーブル 4																									
-</button>																									
-																									
-<button																									
-onclick="selectTable(5)"																									
-class="py-3.5 bg-slate-100 font-bold rounded-2xl text-lg"																									
->																									
-テーブル 5																									
-</button>																									
-																									
+<button class='table-btn' onclick='selectTable(1)'>テーブル 1</button>																									
+<button class='table-btn' onclick='selectTable(2)'>テーブル 2</button>																									
+<button class='table-btn' onclick='selectTable(3)'>テーブル 3</button>																									
+<button class='table-btn' onclick='selectTable(4)'>テーブル 4</button>																									
+<button class='table-btn' onclick='selectTable(5)'>テーブル 5</button>																									
+</div>																									
 </div>																									
 																									
+<div id='receiptModal' class='modal hidden'>																									
+<div class='modal-box'>																									
+																									
+<div class='center' style='font-size:45px'>✅</div>																									
+<div class='title center'>お会計完了</div>																									
+																									
+<div class='receipt'>																									
+<div class='row'>																									
+<b>テーブル</b>																									
+<span id='receiptTable'></span>																									
 </div>																									
 																									
+<div id='receiptItems' style='margin-top:12px'></div>																									
+																									
+<hr>																									
+																									
+<div class='row'>																									
+<b>合計</b>																									
+<b id='receiptTotal'></b>																									
+</div>																									
 </div>																									
 																									
+<div id='qr' class='center' style='margin-top:18px'></div>																									
 																									
-																									
-<!-- ==================================================																									
-領収書																									
-#ERROR!																									
-																									
-<div																									
-id="receipt-modal"																									
-class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm"																									
->																									
-																									
-<div class="bg-white w-full max-w-sm rounded-3xl p-6 text-center space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">																									
-																									
-<div class="text-emerald-500 text-5xl font-bold">																									
-✓																									
-</div>																									
-																									
-																									
-<h3 class="text-xl font-bold text-slate-800">																									
-お会計が完了しました																									
-</h3>																									
-																									
-																									
-<div class="border border-dashed border-slate-300 p-4 rounded-2xl text-left text-sm space-y-2 bg-slate-50">																									
-																									
-<div class="flex justify-between font-bold text-slate-600 border-b pb-2">																									
-																									
-<span>																									
-テーブル番号																									
-</span>																									
-																									
-<span id="receipt-table">																									
--																									
-</span>																									
-																									
-</div>																									
-																									
-																									
-<div																									
-id="receipt-items"																									
-class="py-2 space-y-1 border-b text-xs"																									
->																									
-</div>																									
-																									
-																									
-<div class="flex justify-between font-bold text-base pt-1 text-slate-800">																									
-																									
-<span>																									
-お支払い合計																									
-</span>																									
-																									
-<span																									
-id="receipt-total"																									
-class="text-blue-600"																									
->																									
-¥0																									
-</span>																									
-																									
-</div>																									
-																									
-</div>																									
-																									
-																									
-<div class="flex flex-col items-center justify-center space-y-1 pt-1">																									
-																									
-<div																									
-id="qrcode"																									
-class="p-2 bg-white border rounded-xl shadow-sm inline-block"																									
->																									
-</div>																									
-																									
-<span class="text-[10px] text-slate-400">																									
-お会計確認用QRコード																									
-</span>																									
-																									
-</div>																									
-																									
-																									
-<button																									
-onclick="closeReceiptModal()"																									
-class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-bold shadow-md"																									
->																									
+<button class='main-btn' onclick='closeReceipt()'>																									
 閉じる																									
 </button>																									
-																									
 </div>																									
-																									
 </div>																									
-																									
-																									
 																									
 <script>																									
 																									
-/* ==================================================																									
-GAS URL																									
-#ERROR!																									
+const API='https://script.google.com/macros/s/AKfycbxzxAT7w9VscVWSYeCGs0b0BSzw_FSV58ijndShy6Jrn_27p0Abw4O3bru6KK_vCCK2iQ/exec';																									
 																									
-const GAS_API_URL =																									
-https://script.google.com/macros/s/AKfycbxzxAT7w9VscVWSYeCGs0b0BSzw_FSV58ijndShy6Jrn_27p0Abw4O3bru6KK_vCCK2iQ/exec;																									
-																									
-																									
-/* ==================================================																									
-データ																									
-#ERROR!																									
-																									
-let menuData = [];																									
-																									
-let currentCategory = "all";																									
-																									
-let cart = {};																									
-																									
-let currentTableNo =																									
-localStorage.getItem("saizeriya_table_no") || "1";																									
+let menu=[];																									
+let cart={};																									
+let category='all';																									
+let tableNo=localStorage.getItem('saizeriya_table_no')||'1';																									
 																									
 																									
+window.addEventListener('DOMContentLoaded',function(){																									
 																									
-/* ==================================================																									
-起動																									
-#ERROR!																									
+document.getElementById('tableDisplay').textContent=tableNo;																									
 																									
-window.addEventListener("DOMContentLoaded", () => {																									
-																									
-document.getElementById(																									
-current-table-display																									
-).textContent = currentTableNo;																									
-																									
-																									
-if (																									
-!localStorage.getItem(																									
-saizeriya_table_no																									
-)																									
-) {																									
-																									
-openTableModal();																									
-																									
+if(!localStorage.getItem('saizeriya_table_no')){																									
+openTable();																									
 }																									
 																									
-																									
-updateCartBadge();																									
-																									
-updateCartView();																									
-																									
-fetchMenu();																									
+loadMenu();																									
+renderCart();																									
 																									
 });																									
 																									
 																									
+function api(action,data){																									
 																									
-/* ==================================================																									
-接続表示																									
-#ERROR!																									
+return new Promise(function(resolve,reject){																									
 																									
-function setConnectionStatus(ok) {																									
+const callback='cb_'+Date.now()+'_'+Math.floor(Math.random()*99999);																									
+const script=document.createElement('script');																									
 																									
-const el =																									
-document.getElementById(																									
-connection-status																									
-);																									
+const timer=setTimeout(function(){																									
+clean();																									
+reject(new Error('タイムアウト'));																									
+},15000);																									
 																									
-																									
-if (ok) {																									
-																									
-el.textContent =																									
-接続中;																									
-																									
-el.className =																									
-text-xs bg-emerald-500 px-2.5 py-1 rounded-full font-medium;																									
-																									
-} else {																									
-																									
-el.textContent =																									
-通信エラー;																									
-																									
-el.className =																									
-text-xs bg-red-500 px-2.5 py-1 rounded-full font-medium;																									
-																									
+function clean(){																									
+clearTimeout(timer);																									
+delete window[callback];																									
+if(script.parentNode){																									
+script.parentNode.removeChild(script);																									
+}																									
 }																									
 																									
-}																									
-																									
-																									
-																									
-/* ==================================================																									
-JSONP																									
-#ERROR!																									
-																									
-function callJSONP(																									
-action,																									
-payload = {}																									
-) {																									
-																									
-return new Promise(																									
-(resolve, reject) => {																									
-																									
-const cbName =																									
-jsonp_cb_ +																									
-Date.now() +																									
-_ +																									
-Math.random()																									
-.toString(36)																									
-.substring(2);																									
-																									
-																									
-const script =																									
-document.createElement(																									
-script																									
-);																									
-																									
-																									
-const timeout =																									
-setTimeout(() => {																									
-																									
-cleanup();																									
-																									
-reject(																									
-new Error(																									
-通信がタイムアウトしました																									
-)																									
-);																									
-																									
-}, 15000);																									
-																									
-																									
-function cleanup() {																									
-																									
-clearTimeout(timeout);																									
-																									
-if (																									
-window[cbName]																									
-) {																									
-																									
-delete window[cbName];																									
-																									
-}																									
-																									
-																									
-if (																									
-script.parentNode																									
-) {																									
-																									
-script.parentNode																									
-.removeChild(script);																									
-																									
-}																									
-																									
-}																									
-																									
-																									
-window[cbName] =																									
-function(response) {																									
-																									
-cleanup();																									
-																									
-resolve(response);																									
-																									
+window[callback]=function(result){																									
+clean();																									
+resolve(result);																									
 };																									
 																									
-																									
-script.onerror =																									
-function() {																									
-																									
-cleanup();																									
-																									
-reject(																									
-new Error(																									
-JSONP通信エラー																									
-)																									
-);																									
-																									
+script.onerror=function(){																									
+clean();																									
+reject(new Error('通信エラー'));																									
 };																									
 																									
+const params=new URLSearchParams();																									
 																									
-const params =																									
-new URLSearchParams({																									
+params.set('action',action);																									
+params.set('callback',callback);																									
+params.set('data',JSON.stringify(data||{}));																									
+params.set('_',Date.now());																									
 																									
-action: action,																									
+script.src=API+'?'+params.toString();																									
 																									
-callback: cbName,																									
-																									
-data:																									
-JSON.stringify(																									
-payload																									
-),																									
-																									
-_: Date.now()																									
+document.body.appendChild(script);																									
 																									
 });																									
 																									
-																									
-script.src =																									
-GAS_API_URL +																									
-? +																									
-params.toString();																									
-																									
-																									
-document.body																									
-.appendChild(script);																									
-																									
-}																									
-);																									
-																									
 }																									
 																									
 																									
+function setStatus(ok){																									
 																									
-/* ==================================================																									
-テーブル																									
-#ERROR!																									
+const el=document.getElementById('status');																									
 																									
-function openTableModal() {																									
-																									
-document																									
-.getElementById(																									
-table-modal																									
-)																									
-.classList																									
-.remove("hidden");																									
+if(ok){																									
+el.textContent='接続中';																									
+el.style.background='#10b981';																									
+}else{																									
+el.textContent='通信エラー';																									
+el.style.background='#dc2626';																									
+}																									
 																									
 }																									
 																									
 																									
-																									
-function selectTable(no) {																									
-																									
-currentTableNo =																									
-String(no);																									
+function openTable(){																									
+document.getElementById('tableModal').classList.remove('hidden');																									
+}																									
 																									
 																									
-localStorage.setItem(																									
-saizeriya_table_no,																									
-currentTableNo																									
-);																									
+function selectTable(no){																									
 																									
+tableNo=String(no);																									
 																									
-document.getElementById(																									
-current-table-display																									
-).textContent =																									
-currentTableNo;																									
+localStorage.setItem('saizeriya_table_no',tableNo);																									
 																									
+document.getElementById('tableDisplay').textContent=tableNo;																									
 																									
-document																									
-.getElementById(																									
-table-modal																									
-)																									
-.classList																									
-.add("hidden");																									
+document.getElementById('tableModal').classList.add('hidden');																									
 																									
+cart={};																									
 																									
-cart = {};																									
-																									
-updateCartBadge();																									
-																									
-updateCartView();																									
+renderCart();																									
 																									
 renderMenu();																									
 																									
-switchTab("menu");																									
+showView('menu');																									
 																									
 }																									
 																									
 																									
+function showView(view){																									
 																									
-/* ==================================================																									
-タブ																									
-#ERROR!																									
+const names=['menu','cart','history','checkout'];																									
 																									
-function switchTab(tabId) {																									
+names.forEach(function(name){																									
 																									
-[																									
-menu,																									
-cart,																									
-history,																									
-checkout																									
-].forEach(t => {																									
+document.getElementById(name+'View').classList.add('hidden');																									
 																									
-document																									
-.getElementById(																									
-view- + t																									
-)																									
-.classList																									
-.add("hidden");																									
-																									
-																									
-const nav =																									
-document.getElementById(																									
-nav- + t																									
+const nav=document.getElementById(																									
+nav'+name.charAt(0).toUpperCase()+name.slice(1)																									
 );																									
 																									
-																									
-nav.classList																									
-.remove(																									
-text-blue-600,																									
-font-bold																									
-);																									
-																									
-																									
-nav.classList																									
-.add(																									
-text-slate-400																									
-);																									
+nav.classList.remove('active');																									
 																									
 });																									
 																									
+document.getElementById(view+'View').classList.remove('hidden');																									
 																									
-document																									
-.getElementById(																									
-view- + tabId																									
-)																									
-.classList																									
-.remove("hidden");																									
-																									
-																									
-const activeNav =																									
 document.getElementById(																									
-nav- + tabId																									
-);																									
+nav'+view.charAt(0).toUpperCase()+view.slice(1)																									
+).classList.add('active');																									
 																									
-																									
-activeNav.classList																									
-.remove(																									
-text-slate-400																									
-);																									
-																									
-																									
-activeNav.classList																									
-.add(																									
-text-blue-600,																									
-font-bold																									
-);																									
-																									
-																									
-if (																									
-tabId === "history"																									
-) {																									
-																									
-fetchHistory();																									
-																									
+if(view==='history'){																									
+loadHistory();																									
 }																									
 																									
-																									
-if (																									
-tabId === "checkout"																									
-) {																									
-																									
-fetchCheckoutData();																									
-																									
+if(view==='checkout'){																									
+loadCheckout();																									
 }																									
 																									
 }																									
 																									
 																									
+function loadMenu(){																									
 																									
-/* ==================================================																									
-メニュー取得																									
-#ERROR!																									
+api('getMenu',{})																									
 																									
-function fetchMenu() {																									
+.then(function(res){																									
 																									
-const container =																									
-document.getElementById(																									
-menu-list																									
-);																									
+if(!res||res.status!=='success'){																									
+throw new Error('メニュー取得失敗');																									
+}																									
 																									
+setStatus(true);																									
 																									
-container.innerHTML =																									
-<p class="text-center text-slate-400 py-10">メニューを読み込んでいます...</p>';																									
+menu=res.data||[];																									
 																									
-																									
-callJSONP(																									
-getMenu																									
-)																									
-																									
-.then(res => {																									
-																									
-if (																									
-res &&																									
-res.status === "success"																									
-) {																									
-																									
-setConnectionStatus(true);																									
-																									
-menuData =																									
-res.data || [];																									
-																									
-renderCategoryTabs();																									
-																									
+renderCategories();																									
 renderMenu();																									
-																									
-} else {																									
-																									
-setConnectionStatus(false);																									
-																									
-container.innerHTML =																									
-<p class="text-center text-red-500 py-10">メニューの取得に失敗しました</p>';																									
-																									
-}																									
 																									
 })																									
 																									
-.catch(err => {																									
+.catch(function(err){																									
 																									
 console.error(err);																									
 																									
-setConnectionStatus(false);																									
+setStatus(false);																									
 																									
-container.innerHTML =																									
-<p class="text-center text-red-500 py-10">通信エラーが発生しました</p>';																									
+document.getElementById('menuList').innerHTML=																									
+<div class=error>メニューの取得に失敗しました</div>';																									
 																									
 });																									
 																									
 }																									
 																									
 																									
+function renderCategories(){																									
 																									
-/* ==================================================																									
-カテゴリ																									
-#ERROR!																									
+const list=['all'];																									
 																									
-function renderCategoryTabs() {																									
+menu.forEach(function(item){																									
 																									
-const container =																									
-document.getElementById(																									
-category-tabs																									
-);																									
-																									
-																									
-const categories =																									
-[																									
-all,																									
-...new Set(																									
-menuData.map(																									
-item =>																									
-item.category																									
-)																									
-)																									
-];																									
-																									
-																									
-container.innerHTML =																									
-categories.map(cat => {																									
-																									
-const active =																									
-cat === currentCategory;																									
-																									
-																									
-return `																									
-																									
-<button																									
-onclick='filterCategory(${JSON.stringify(cat)})'																									
-class="px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap shadow-sm transition ${																									
-active																									
-? "bg-blue-600 text-white"																									
-: "bg-white text-slate-600 border"																									
-}"																									
->																									
-																									
-${																									
-cat === "all"																									
-? "すべて"																									
-: escapeHtml(cat)																									
+if(list.indexOf(item.category)===-1){																									
+list.push(item.category);																									
 }																									
 																									
-</button>																									
+});																									
 																									
-`;																									
+const box=document.getElementById('categories');																									
 																									
-}).join("");																									
+box.innerHTML='';																									
 																									
+list.forEach(function(cat){																									
+																									
+const btn=document.createElement('button');																									
+																									
+btn.textContent=cat==='all'?'すべて':cat;																									
+																									
+if(cat===category){																									
+btn.className='active';																									
 }																									
 																									
-																									
-																									
-function filterCategory(cat) {																									
-																									
-currentCategory =																									
-cat;																									
-																									
-renderCategoryTabs();																									
-																									
+btn.onclick=function(){																									
+category=cat;																									
+renderCategories();																									
 renderMenu();																									
+};																									
+																									
+box.appendChild(btn);																									
+																									
+});																									
 																									
 }																									
 																									
 																									
+function renderMenu(){																									
 																									
-/* ==================================================																									
-メニュー表示																									
-#ERROR!																									
+const box=document.getElementById('menuList');																									
 																									
-function renderMenu() {																									
+const list=category==='all'																									
+?menu																									
+:menu.filter(function(item){																									
+return item.category===category;																									
+});																									
 																									
-const container =																									
-document.getElementById(																									
-menu-list																									
-);																									
+if(list.length===0){																									
 																									
-																									
-const filtered =																									
-currentCategory === "all"																									
-? menuData																									
-: menuData.filter(																									
-item =>																									
-item.category ===																									
-currentCategory																									
-);																									
-																									
-																									
-if (																									
-filtered.length === 0																									
-) {																									
-																									
-container.innerHTML =																									
-<p class="text-center text-slate-400 py-10">メニューがありません</p>';																									
+box.innerHTML='<div class=loading>メニューがありません</div>';																									
 																									
 return;																									
 																									
 }																									
 																									
+box.innerHTML='';																									
 																									
-container.innerHTML =																									
-filtered.map(item => {																									
+list.forEach(function(item){																									
 																									
-const qty =																									
-cart[item.id]																									
-? cart[item.id].quantity																									
-: 0;																									
+const qty=cart[item.id]?cart[item.id].quantity:0;																									
 																									
+const card=document.createElement('div');																									
 																									
-return `																									
+card.className='card';																									
 																									
-<div class="bg-white p-4 rounded-2xl shadow-sm border flex justify-between items-center">																									
+card.innerHTML=																									
+<div class=row>'+																									
+<div>'+																									
+<div class=category>'+safe(item.category)+'</div>'+																									
+<div class=name>'+safe(item.name)+'</div>'+																									
+<div class=price>¥'+money(item.price)+'</div>'+																									
+</div>'+																									
+<div class=qty>'+																									
+<button class=minus>-</button>'+																									
+<b>'+qty+'</b>'+																									
+<button class=plus>+</button>'+																									
+</div>'+																									
+</div>';																									
 																									
-<div class="space-y-1 pr-2">																									
+const buttons=card.querySelectorAll('button');																									
 																									
-<span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md font-medium">																									
-${escapeHtml(item.category)}																									
-</span>																									
+buttons[0].onclick=function(){																									
+changeQty(item.id,-1);																									
+};																									
 																									
+buttons[1].onclick=function(){																									
+changeQty(item.id,1);																									
+};																									
 																									
-<div class="font-bold text-slate-800 text-base">																									
-${escapeHtml(item.name)}																									
-</div>																									
+box.appendChild(card);																									
 																									
-																									
-<div class="text-blue-600 font-extrabold text-sm">																									
-¥${Number(item.price).toLocaleString("ja-JP")}																									
-</div>																									
-																									
-</div>																									
-																									
-																									
-<div class="flex items-center space-x-3 bg-slate-50 p-1.5 rounded-xl border">																									
-																									
-<button																									
-onclick='changeQuantity(${JSON.stringify(String(item.id))}, -1)'																									
-class="w-8 h-8 rounded-lg bg-white shadow-sm text-slate-700 font-bold"																									
->																									
--																									
-</button>																									
-																									
-																									
-<span																									
-id="qty-${escapeAttribute(item.id)}"																									
-class="font-bold w-5 text-center text-sm"																									
->																									
-${qty}																									
-</span>																									
-																									
-																									
-<button																									
-onclick='changeQuantity(${JSON.stringify(String(item.id))}, 1)'																									
-class="w-8 h-8 rounded-lg bg-blue-600 text-white font-bold"																									
->																									
-#ERROR!																									
-</button>																									
-																									
-</div>																									
-																									
-</div>																									
-																									
-`;																									
-																									
-}).join("");																									
+});																									
 																									
 }																									
 																									
 																									
+function changeQty(id,change){																									
 																									
-/* ==================================================																									
-数量																									
-#ERROR!																									
+const item=menu.find(function(x){																									
+return String(x.id)===String(id);																									
+});																									
 																									
-function changeQuantity(																									
-id,																									
-delta																									
-) {																									
-																									
-const item =																									
-menuData.find(																									
-item =>																									
-String(item.id) ===																									
-String(id)																									
-);																									
-																									
-																									
-if (!item) {																									
-																									
+if(!item){																									
 return;																									
-																									
 }																									
 																									
+if(!cart[id]){																									
 																									
-if (																									
-!cart[id]																									
-) {																									
-																									
-if (																									
-delta < 0																									
-) {																									
-																									
+if(change<0){																									
 return;																									
-																									
 }																									
 																									
-																									
-cart[id] = {																									
-																									
-id:																									
-item.id,																									
-																									
-name:																									
-item.name,																									
-																									
-price:																									
-Number(item.price),																									
-																									
-quantity:																									
-0																									
-																									
+cart[id]={																									
+id:item.id,																									
+name:item.name,																									
+price:Number(item.price),																									
+quantity:0																									
 };																									
 																									
 }																									
 																									
+cart[id].quantity+=change;																									
 																									
-cart[id].quantity +=																									
-delta;																									
-																									
-																									
-if (																									
-cart[id].quantity <= 0																									
-) {																									
-																									
+if(cart[id].quantity<=0){																									
 delete cart[id];																									
-																									
 }																									
-																									
 																									
 renderMenu();																									
-																									
-updateCartBadge();																									
-																									
-updateCartView();																									
+renderCart();																									
 																									
 }																									
 																									
 																									
+function renderCart(){																									
 																									
-/* ==================================================																									
-カート表示																									
-#ERROR!																									
+const box=document.getElementById('cartList');																									
+const items=Object.values(cart);																									
 																									
-function updateCartBadge() {																									
+let total=0;																									
 																									
-let totalCount = 0;																									
+box.innerHTML='';																									
 																									
+if(items.length===0){																									
 																									
-Object.values(																									
-cart																									
-).forEach(item => {																									
+box.innerHTML='<div class=loading>注文かごは空です</div>';																									
 																									
-totalCount +=																									
-Number(																									
-item.quantity																									
-);																									
+}else{																									
+																									
+items.forEach(function(item){																									
+																									
+const subtotal=item.price*item.quantity;																									
+																									
+total+=subtotal;																									
+																									
+const card=document.createElement('div');																									
+																									
+card.className='card';																									
+																									
+card.innerHTML=																									
+<div class=row>'+																									
+<div>'+																									
+<div class=name>'+safe(item.name)+'</div>'+																									
+<div class=small>¥'+money(item.price)+' × '+item.quantity+'</div>'+																									
+</div>'+																									
+<b>¥'+money(subtotal)+'</b>'+																									
+</div>';																									
+																									
+box.appendChild(card);																									
 																									
 });																									
 																									
-																									
-const badge =																									
-document.getElementById(																									
-cart-badge																									
-);																									
-																									
-																									
-if (																									
-totalCount > 0																									
-) {																									
-																									
-badge.textContent =																									
-totalCount;																									
-																									
-badge.classList																									
-.remove("hidden");																									
-																									
-} else {																									
-																									
-badge.classList																									
-.add("hidden");																									
-																									
 }																									
+																									
+document.getElementById('cartTotal').textContent=money(total);																									
 																									
 }																									
 																									
 																									
+function submitOrder(){																									
 																									
-function updateCartView() {																									
+const items=Object.values(cart);																									
 																									
-const container =																									
-document.getElementById(																									
-cart-items-list																									
-);																									
-																									
-																									
-const items =																									
-Object.values(																									
-cart																									
-);																									
-																									
-																									
-let total = 0;																									
-																									
-																									
-if (																									
-items.length === 0																									
-) {																									
-																									
-container.innerHTML =																									
-<p class="text-center text-slate-400 py-10">注文かごは空です</p>';																									
-																									
-																									
-document																									
-.getElementById(																									
-cart-total																									
-)																									
-.textContent =																									
-0;																									
-																									
-																									
+if(items.length===0){																									
+alert('商品を選択してください');																									
 return;																									
-																									
 }																									
 																									
-																									
-container.innerHTML =																									
-items.map(item => {																									
-																									
-const subtotal =																									
-Number(item.price) *																									
-Number(item.quantity);																									
-																									
-																									
-total +=																									
-subtotal;																									
-																									
-																									
-return `																									
-																									
-<div class="bg-white p-4 rounded-2xl shadow-sm border flex justify-between items-center">																									
-																									
-<div>																									
-																									
-<div class="font-bold text-slate-800">																									
-${escapeHtml(item.name)}																									
-</div>																									
-																									
-<div class="text-xs text-slate-500">																									
-¥${Number(item.price).toLocaleString("ja-JP")}																									
-×																									
-${item.quantity}																									
-</div>																									
-																									
-</div>																									
-																									
-																									
-<div class="flex items-center space-x-3">																									
-																									
-<span class="font-bold text-blue-600">																									
-¥${subtotal.toLocaleString("ja-JP")}																									
-</span>																									
-																									
-																									
-<button																									
-onclick='changeQuantity(${JSON.stringify(String(item.id))}, -1)'																									
-class="text-red-500 text-xs font-bold bg-red-50 px-2.5 py-1 rounded-lg"																									
->																									
-1個減らす																									
-</button>																									
-																									
-</div>																									
-																									
-</div>																									
-																									
-`;																									
-																									
-}).join("");																									
-																									
-																									
-document																									
-.getElementById(																									
-cart-total																									
-)																									
-.textContent =																									
-total.toLocaleString(																									
-ja-JP																									
-);																									
-																									
-}																									
-																									
-																									
-																									
-/* ==================================================																									
-注文																									
-#ERROR!																									
-																									
-function submitOrder() {																									
-																									
-const items =																									
-Object.values(																									
-cart																									
-);																									
-																									
-																									
-if (																									
-items.length === 0																									
-) {																									
-																									
-alert(																									
-かごに商品が入っていません																									
-);																									
-																									
+if(!confirm('この内容で注文しますか？')){																									
 return;																									
-																									
 }																									
 																									
+api('submitOrder',{																									
+tableNo:tableNo,																									
+items:items																									
+})																									
 																									
-if (																									
-!confirm(																									
-この内容で注文しますか？																									
-)																									
-) {																									
+.then(function(res){																									
 																									
-return;																									
-																									
+if(!res||res.status!=='success'){																									
+throw new Error(res&&res.message?res.message:'注文失敗');																									
 }																									
 																									
+setStatus(true);																									
 																									
-callJSONP(																									
-submitOrder,																									
-{																									
+alert('注文しました\n注文番号: '+res.orderId);																									
 																									
-tableNo:																									
-currentTableNo,																									
+cart={};																									
 																									
-items:																									
-items																									
-																									
-}																									
-)																									
-																									
-.then(res => {																									
-																									
-if (																									
-res &&																									
-res.status === "success"																									
-) {																									
-																									
-setConnectionStatus(true);																									
-																									
-																									
-alert(																									
-注文を確定しました！\n注文番号:  +																									
-res.orderId																									
-);																									
-																									
-																									
-cart = {};																									
-																									
-updateCartBadge();																									
-																									
-updateCartView();																									
-																									
+renderCart();																									
 renderMenu();																									
 																									
-switchTab(																									
-history																									
-);																									
-																									
-} else {																									
-																									
-alert(																									
-注文に失敗しました\n +																									
-(																									
-res.message ||																									
-																									
-)																									
-);																									
-																									
-}																									
+showView('history');																									
 																									
 })																									
 																									
-.catch(err => {																									
+.catch(function(err){																									
 																									
-console.error(err);																									
+setStatus(false);																									
 																									
-setConnectionStatus(false);																									
-																									
-alert(																									
-通信エラーが発生しました																									
-);																									
+alert('注文エラー\n'+err.message);																									
 																									
 });																									
 																									
 }																									
 																									
 																									
+function loadHistory(){																									
 																									
-/* ==================================================																									
-履歴																									
-#ERROR!																									
+const box=document.getElementById('historyList');																									
 																									
-function fetchHistory() {																									
+box.innerHTML='<div class=loading>読み込み中...</div>';																									
 																									
-const container =																									
-document.getElementById(																									
-history-container																									
-);																									
+api('getOrderByTable',{																									
+tableNo:tableNo																									
+})																									
 																									
+.then(function(res){																									
 																									
-container.innerHTML =																									
-<p class="text-center text-slate-400 py-10">履歴を読み込んでいます...</p>';																									
-																									
-																									
-callJSONP(																									
-getOrderByTable,																									
-{																									
-																									
-tableNo:																									
-currentTableNo																									
-																									
+if(!res||res.status!=='success'){																									
+throw new Error('取得失敗');																									
 }																									
-)																									
 																									
-.then(res => {																									
+setStatus(true);																									
 																									
-if (																									
-!res ||																									
-res.status !== "success"																									
-) {																									
+const orders=res.orders||[];																									
 																									
-container.innerHTML =																									
-<p class="text-center text-red-500 py-10">履歴の取得に失敗しました</p>';																									
+box.innerHTML='';																									
+																									
+if(orders.length===0){																									
+																									
+box.innerHTML='<div class=loading>注文履歴はありません</div>';																									
 																									
 return;																									
 																									
 }																									
 																									
+orders.forEach(function(order){																									
 																									
-setConnectionStatus(true);																									
+const card=document.createElement('div');																									
 																									
+card.className='card';																									
 																									
-const orders =																									
-res.orders || [];																									
+const badge=order.status==='会計済み'																									
+?'badge paid'																									
+:'badge';																									
 																									
+let items='';																									
 																									
-if (																									
-orders.length === 0																									
-) {																									
+order.items.forEach(function(item){																									
 																									
-container.innerHTML =																									
-<p class="text-center text-slate-400 py-10">注文履歴はありません</p>';																									
+items+=																									
+<div class=row>'+																									
+<span>'+safe(item.name)+' × '+item.quantity+'</span>'+																									
+<span>¥'+money(item.subtotal)+'</span>'+																									
+</div>';																									
 																									
-return;																									
+});																									
 																									
-}																									
+card.innerHTML=																									
+<div class=row>'+																									
+<div class=small>'+safe(order.orderDate)+'</div>'+																									
+<span class=\''+badge+'\'>'+safe(order.status)+'</span>'+																									
+</div>'+																									
+<hr>'+																									
+items+																									
+<hr>'+																									
+<div class=row><b>小計</b><b>¥'+money(order.total)+'</b></div>';																									
 																									
+box.appendChild(card);																									
 																									
-container.innerHTML =																									
-orders.map(order => {																									
-																									
-let badgeColor =																									
-bg-amber-100 text-amber-800;																									
-																									
-																									
-if (																									
-order.status === "提供済み"																									
-) {																									
-																									
-badgeColor =																									
-bg-blue-100 text-blue-800;																									
-																									
-}																									
-																									
-																									
-if (																									
-order.status === "完了"																									
-) {																									
-																									
-badgeColor =																									
-bg-emerald-100 text-emerald-800;																									
-																									
-}																									
-																									
-																									
-if (																									
-order.status === "会計済み"																									
-) {																									
-																									
-badgeColor =																									
-bg-slate-200 text-slate-600;																									
-																									
-}																									
-																									
-																									
-const itemHtml =																									
-order.items.map(item => {																									
-																									
-return `																									
-																									
-<div class="flex justify-between text-sm">																									
-																									
-<span class="text-slate-700 font-medium">																									
-${escapeHtml(item.name)}																									
-×																									
-${item.quantity}																									
-</span>																									
-																									
-<span class="text-slate-600">																									
-¥${Number(item.subtotal).toLocaleString("ja-JP")}																									
-</span>																									
-																									
-</div>																									
-																									
-`;																									
-																									
-}).join("");																									
-																									
-																									
-return `																									
-																									
-<div class="bg-white p-4 rounded-2xl shadow-sm border space-y-3">																									
-																									
-<div class="flex justify-between items-center text-xs text-slate-400 border-b pb-2">																									
-																									
-<div>																									
-																									
-<div>																									
-${escapeHtml(order.orderDate)}																									
-</div>																									
-																									
-<div class="mt-1">																									
-${escapeHtml(order.orderId)}																									
-</div>																									
-																									
-</div>																									
-																									
-																									
-<span class="px-2.5 py-1 rounded-full font-bold ${badgeColor}">																									
-${escapeHtml(order.status)}																									
-</span>																									
-																									
-</div>																									
-																									
-																									
-<div class="space-y-2">																									
-${itemHtml}																									
-</div>																									
-																									
-																									
-<div class="flex justify-between text-sm font-bold pt-2 border-t text-slate-800">																									
-																									
-<span>																									
-小計																									
-</span>																									
-																									
-<span class="text-blue-600">																									
-¥${Number(order.total).toLocaleString("ja-JP")}																									
-</span>																									
-																									
-</div>																									
-																									
-</div>																									
-																									
-`;																									
-																									
-}).join("");																									
+});																									
 																									
 })																									
 																									
-.catch(err => {																									
+.catch(function(){																									
 																									
-console.error(err);																									
+setStatus(false);																									
 																									
-setConnectionStatus(false);																									
-																									
-																									
-container.innerHTML =																									
-<p class="text-center text-red-500 py-10">通信エラーが発生しました</p>';																									
+box.innerHTML='<div class=error>注文履歴を取得できません</div>';																									
 																									
 });																									
 																									
 }																									
 																									
 																									
+function loadCheckout(){																									
 																									
-/* ==================================================																									
-会計画面																									
-#ERROR!																									
+const box=document.getElementById('checkoutList');																									
 																									
-function fetchCheckoutData() {																									
+box.innerHTML='<div class=loading>読み込み中...</div>';																									
 																									
-const container =																									
-document.getElementById(																									
-checkout-summary-list																									
-);																									
+api('getOrderByTable',{																									
+tableNo:tableNo																									
+})																									
 																									
+.then(function(res){																									
 																									
-container.innerHTML =																									
-<p class="text-center text-slate-400 py-10">読み込んでいます...</p>';																									
-																									
-																									
-callJSONP(																									
-getOrderByTable,																									
-{																									
-																									
-tableNo:																									
-currentTableNo																									
-																									
-}																									
-)																									
-																									
-.then(res => {																									
-																									
-if (																									
-!res ||																									
-res.status !== "success"																									
-) {																									
-																									
-container.innerHTML =																									
-<p class="text-center text-red-500 py-10">読み込みに失敗しました</p>';																									
-																									
-return;																									
-																									
+if(!res||res.status!=='success'){																									
+throw new Error('取得失敗');																									
 }																									
 																									
+const orders=(res.orders||[]).filter(function(order){																									
+return order.status!=='会計済み';																									
+});																									
 																									
-setConnectionStatus(true);																									
+const itemMap={};																									
+let total=0;																									
 																									
+orders.forEach(function(order){																									
 																									
-const activeOrders =																									
-(res.orders || [])																									
-.filter(																									
-order =>																									
-order.status !==																									
-会計済み																									
-);																									
+total+=Number(order.total);																									
 																									
+order.items.forEach(function(item){																									
 																									
-if (																									
-activeOrders.length === 0																									
-) {																									
+const id=String(item.id);																									
 																									
-container.innerHTML =																									
-<p class="text-center text-slate-400 py-10">お会計対象の注文はありません</p>';																									
-																									
-																									
-document																									
-.getElementById(																									
-checkout-total																									
-)																									
-.textContent =																									
-0;																									
-																									
-																									
-return;																									
-																									
-}																									
-																									
-																									
-let grandTotal = 0;																									
-																									
-const allItemsMap = {};																									
-																									
-																									
-activeOrders.forEach(																									
-order => {																									
-																									
-grandTotal +=																									
-Number(																									
-order.total																									
-);																									
-																									
-																									
-order.items.forEach(																									
-item => {																									
-																									
-const key =																									
-String(																									
-item.id																									
-);																									
-																									
-																									
-if (																									
-!allItemsMap[key]																									
-) {																									
-																									
-allItemsMap[key] = {																									
-																									
-name:																									
-item.name,																									
-																									
-price:																									
-Number(																									
-item.price																									
-),																									
-																									
-quantity:																									
-0,																									
-																									
-subtotal:																									
-0																									
-																									
+if(!itemMap[id]){																									
+itemMap[id]={																									
+name:item.name,																									
+quantity:0,																									
+subtotal:0																									
 };																									
+}																									
+																									
+itemMap[id].quantity+=Number(item.quantity);																									
+itemMap[id].subtotal+=Number(item.subtotal);																									
+																									
+});																									
+																									
+});																									
+																									
+box.innerHTML='';																									
+																									
+const items=Object.values(itemMap);																									
+																									
+if(items.length===0){																									
+																									
+box.innerHTML='<div class=loading>未会計の注文はありません</div>';																									
+																									
+}else{																									
+																									
+items.forEach(function(item){																									
+																									
+const card=document.createElement('div');																									
+																									
+card.className='card';																									
+																									
+card.innerHTML=																									
+<div class=row>'+																									
+<b>'+safe(item.name)+' × '+item.quantity+'</b>'+																									
+<b>¥'+money(item.subtotal)+'</b>'+																									
+</div>';																									
+																									
+box.appendChild(card);																									
+																									
+});																									
 																									
 }																									
 																									
-																									
-allItemsMap[key]																									
-.quantity +=																									
-Number(																									
-item.quantity																									
-);																									
-																									
-																									
-allItemsMap[key]																									
-.subtotal +=																									
-Number(																									
-item.subtotal																									
-);																									
-																									
-}																									
-);																									
-																									
-}																									
-);																									
-																									
-																									
-container.innerHTML =																									
-Object.values(																									
-allItemsMap																									
-).map(item => {																									
-																									
-return `																									
-																									
-<div class="bg-white p-4 rounded-2xl shadow-sm border flex justify-between items-center text-sm">																									
-																									
-<div>																									
-																									
-<div class="font-bold text-slate-800">																									
-${escapeHtml(item.name)}																									
-×																									
-${item.quantity}																									
-</div>																									
-																									
-<div class="text-xs text-slate-400">																									
-¥${item.price.toLocaleString("ja-JP")}																									
-/ 1点																									
-</div>																									
-																									
-</div>																									
-																									
-																									
-<div class="font-bold text-slate-700">																									
-¥${item.subtotal.toLocaleString("ja-JP")}																									
-</div>																									
-																									
-</div>																									
-																									
-`;																									
-																									
-}).join("");																									
-																									
-																									
-document																									
-.getElementById(																									
-checkout-total																									
-)																									
-.textContent =																									
-grandTotal																									
-.toLocaleString(																									
-ja-JP																									
-);																									
+document.getElementById('checkoutTotal').textContent=money(total);																									
 																									
 })																									
 																									
-.catch(err => {																									
+.catch(function(){																									
 																									
-console.error(err);																									
+setStatus(false);																									
 																									
-setConnectionStatus(false);																									
-																									
-																									
-container.innerHTML =																									
-<p class="text-center text-red-500 py-10">通信エラーが発生しました</p>';																									
+box.innerHTML='<div class=error>会計情報を取得できません</div>';																									
 																									
 });																									
 																									
 }																									
 																									
 																									
+function checkout(){																									
 																									
-/* ==================================================																									
-会計実行																									
-#ERROR!																									
+const total=Number(																									
+document.getElementById('checkoutTotal').textContent.replace(/,/g,'')																									
+);																									
 																									
-function requestCheckout() {																									
+if(total<=0){																									
 																									
-if (																									
-!confirm(																									
-お会計を確定しますか？																									
-)																									
-) {																									
+alert('未会計の注文はありません');																									
 																									
 return;																									
 																									
 }																									
 																									
-																									
-const button =																									
-document.getElementById(																									
-checkout-btn																									
-);																									
-																									
-																									
-button.disabled =																									
-true;																									
-																									
-																									
-button.textContent =																									
-処理中...;																									
-																									
-																									
-callJSONP(																									
-checkoutByTable,																									
-{																									
-																									
-tableNo:																									
-currentTableNo																									
-																									
+if(!confirm('お会計を確定しますか？')){																									
+return;																									
 }																									
-)																									
 																									
-.then(res => {																									
+api('checkoutByTable',{																									
+tableNo:tableNo																									
+})																									
 																									
-if (																									
-res &&																									
-res.status === "success"																									
-) {																									
+.then(function(res){																									
 																									
-setConnectionStatus(true);																									
-																									
-showReceipt(																									
-res.receipt																									
-);																									
-																									
-} else {																									
-																									
-alert(																									
-お会計処理に失敗しました\n +																									
-(																									
-res.message ||																									
-																									
-)																									
-);																									
-																									
+if(!res||res.status!=='success'){																									
+throw new Error(res&&res.message?res.message:'会計失敗');																									
 }																									
+																									
+setStatus(true);																									
+																									
+showReceipt(res.receipt);																									
 																									
 })																									
 																									
-.catch(err => {																									
+.catch(function(err){																									
 																									
-console.error(err);																									
+setStatus(false);																									
 																									
-setConnectionStatus(false);																									
-																									
-alert(																									
-通信エラーが発生しました																									
-);																									
-																									
-})																									
-																									
-.finally(() => {																									
-																									
-button.disabled =																									
-false;																									
-																									
-button.textContent =																									
-お会計を確定する;																									
+alert('会計エラー\n'+err.message);																									
 																									
 });																									
 																									
 }																									
 																									
 																									
+function showReceipt(receipt){																									
 																									
-/* ==================================================																									
-領収書																									
-#ERROR!																									
+document.getElementById('receiptTable').textContent=																									
+receipt.tableNo+'番';																									
 																									
-function showReceipt(																									
-receipt																									
-) {																									
+document.getElementById('receiptTotal').textContent=																									
+¥'+money(receipt.totalAmount);																									
 																									
-if (!receipt) {																									
+const box=document.getElementById('receiptItems');																									
 																									
-alert(																									
-領収書データがありません																									
-);																									
+box.innerHTML='';																									
 																									
-return;																									
+receipt.items.forEach(function(item){																									
 																									
-}																									
+const row=document.createElement('div');																									
 																									
+row.className='row';																									
 																									
-document																									
-.getElementById(																									
-receipt-table																									
-)																									
-.textContent =																									
-receipt.tableNo +																									
-番;																									
+row.innerHTML=																									
+<span>'+safe(item.name)+' × '+item.quantity+'</span>'+																									
+<span>¥'+money(item.subtotal)+'</span>';																									
 																									
+box.appendChild(row);																									
 																									
-document																									
-.getElementById(																									
-receipt-total																									
-)																									
-.textContent =																									
-¥ +																									
-Number(																									
-receipt.totalAmount																									
-).toLocaleString(																									
-ja-JP																									
-);																									
+});																									
 																									
+const qr=document.getElementById('qr');																									
 																									
-const container =																									
-document.getElementById(																									
-receipt-items																									
-);																									
+qr.innerHTML='';																									
 																									
+new QRCode(qr,{																									
+text:'RECEIPT='+receipt.receiptId+																									
+&TABLE='+receipt.tableNo+																									
+&TOTAL='+receipt.totalAmount,																									
+width:120,																									
+height:120																									
+});																									
 																									
-container.innerHTML =																									
-receipt.items.map(																									
-item => {																									
-																									
-return `																									
-																									
-<div class="flex justify-between text-xs">																									
-																									
-<span>																									
-${escapeHtml(item.name)}																									
-×																									
-${item.quantity}																									
-</span>																									
-																									
-<span>																									
-¥${Number(item.subtotal).toLocaleString("ja-JP")}																									
-</span>																									
-																									
-</div>																									
-																									
-`;																									
-																									
-}																									
-).join("");																									
-																									
-																									
-document																									
-.getElementById(																									
-qrcode																									
-)																									
-.innerHTML =																									
-;																									
-																									
-																									
-new QRCode(																									
-document.getElementById(																									
-qrcode																									
-),																									
-{																									
-																									
-text:																									
-RECEIPT= +																									
-receipt.receiptId +																									
-&TABLE= +																									
-receipt.tableNo +																									
-&TOTAL= +																									
-receipt.totalAmount,																									
-																									
-width:																									
-110,																									
-																									
-height:																									
-110																									
-																									
-}																									
-);																									
-																									
-																									
-document																									
-.getElementById(																									
-receipt-modal																									
-)																									
-.classList																									
-.remove("hidden");																									
+document.getElementById('receiptModal').classList.remove('hidden');																									
 																									
 }																									
 																									
 																									
+function closeReceipt(){																									
 																									
-function closeReceiptModal() {																									
+document.getElementById('receiptModal').classList.add('hidden');																									
 																									
-document																									
-.getElementById(																									
-receipt-modal																									
-)																									
-.classList																									
-.add("hidden");																									
-																									
-																									
-switchTab(																									
-menu																									
-);																									
+showView('menu');																									
 																									
 }																									
 																									
 																									
-																									
-/* ==================================================																									
-HTML安全化																									
-#ERROR!																									
-																									
-function escapeHtml(value) {																									
-																									
-return String(																									
-value ?? ""																									
-)																									
-.replace(																									
-/&/g,																									
-&amp;																									
-)																									
-.replace(																									
-/</g,																									
-&lt;																									
-)																									
-.replace(																									
-/>/g,																									
-&gt;																									
-)																									
-.replace(																									
-/"/g,																									
-&quot;																									
-)																									
-.replace(																									
-/'/g,																									
-&#039;																									
-);																									
-																									
+function money(value){																									
+return Number(value||0).toLocaleString('ja-JP');																									
 }																									
 																									
 																									
+function safe(value){																									
 																									
-function escapeAttribute(value) {																									
+const div=document.createElement('div');																									
 																									
-return String(																									
-value ?? ""																									
-)																									
-.replace(																									
-/[^a-zA-Z0-9_-]/g,																									
-_																									
-);																									
+div.textContent=String(value==null?'':value);																									
+																									
+return div.innerHTML;																									
 																									
 }																									
 																									
