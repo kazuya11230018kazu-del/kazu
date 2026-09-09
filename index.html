@@ -64,7 +64,9 @@
 <div class="text-center py-2 bg-blue-50 rounded-lg text-blue-900 text-xs font-bold border border-blue-200">																									
 メニューを選んで数量を指定してください																									
 </div>																									
-<div id="menu-container" class="space-y-3"></div>																									
+<div id="menu-container" class="space-y-3">																									
+<p class="text-center text-gray-400 py-6 text-sm">メニューを読み込んでいます...</p>																									
+</div>																									
 </div>																									
 																									
 <!-- Tab B: 注文かご -->																									
@@ -170,7 +172,6 @@
 </div>																									
 																									
 <script>																									
-// 正しいURLを設定済み																									
 const GAS_API_URL = "https://script.google.com/macros/s/AKfycbx1KxRv4QBFyEgXzlOmbp9VswB7pI0fRkX3hSX21Sxj0lmxURYX0PQNIteHUJNQqlAmYQ/exec";																									
 																									
 let menuData = [];																									
@@ -444,7 +445,7 @@ document.getElementById('receipt-table-no').textContent = tableNo;
 document.getElementById('receipt-total').textContent = "¥" + totalPrice.toLocaleString();																									
 																									
 const summary = document.getElementById('receipt-items-summary');																									
-summary.innerHTML = ';																									
+summary.innerHTML = '';																									
 																									
 const merged = {};																									
 itemsArray.forEach(i => {																									
