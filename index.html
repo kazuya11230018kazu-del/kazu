@@ -170,7 +170,7 @@
 </div>																									
 																									
 <script>																									
-// 新しく発行された正しいGASのWebアプリURLを設定済み																									
+// 正しいURLを設定済み																									
 const GAS_API_URL = "https://script.google.com/macros/s/AKfycbx1KxRv4QBFyEgXzlOmbp9VswB7pI0fRkX3hSX21Sxj0lmxURYX0PQNIteHUJNQqlAmYQ/exec";																									
 																									
 let menuData = [];																									
@@ -217,12 +217,17 @@ renderMenu();
 alert("メニュー取得エラー: " + (result ? result.message : ""));																									
 }																									
 })																									
-.catch(err => { console.error(err); });																									
+.catch(err => { console.error(err); alert("メニューの取得に失敗しました。"); });																									
 }																									
 																									
 function renderMenu() {																									
 const container = document.getElementById('menu-container');																									
 container.innerHTML = '';																									
+																									
+if (menuData.length === 0) {																									
+container.innerHTML = '<p class="text-center text-gray-400 py-10">メニューが登録されていません。</p>';																									
+return;																									
+}																									
 																									
 const categories = {};																									
 menuData.forEach(item => {																									
@@ -439,7 +444,7 @@ document.getElementById('receipt-table-no').textContent = tableNo;
 document.getElementById('receipt-total').textContent = "¥" + totalPrice.toLocaleString();																									
 																									
 const summary = document.getElementById('receipt-items-summary');																									
-summary.innerHTML = '';																									
+summary.innerHTML = ';																									
 																									
 const merged = {};																									
 itemsArray.forEach(i => {																									
