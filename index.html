@@ -136,6 +136,9 @@ let cart = {};
 let currentTableNo = "";																									
 let tempSelectedTable = "";																									
 																									
+// 端末のLocalStorageに保存されている注文IDのリストを常時読み込む（お会計されるまで保持）																									
+let orderIds = JSON.parse(localStorage.getItem("order_ids") || "[]");																									
+																									
 window.onload = function() {																									
 document.getElementById('table-modal').classList.remove('hidden');																									
 document.getElementById('loading').classList.add('hidden');																									
@@ -301,6 +304,11 @@ submitBtn.textContent = "注文を確定する";
 closeCartModal();																									
 																									
 if (result && result.status === "success") {																									
+// 発行された注文IDを端末の保存リストに追加する																									
+const newOrderId = result.data.orderId;																									
+orderIds.push(newOrderId);																									
+localStorage.setItem("order_ids", JSON.stringify(orderIds));																									
+																									
 alert("注文が完了しました！キッチンへ送信されました。");																									
 cart = {};																									
 updateCartSummary();																									
@@ -317,19 +325,22 @@ alert("通信エラーが発生しました。");
 }																									
 																									
 function openStatusModal() {																									
-if (!currentTableNo) {																									
-alert("テーブル番号が選択されていません。");																									
-return;																									
-}																									
-																									
 const modal = document.getElementById('status-modal');																									
 const content = document.getElementById('status-content');																									
 const checkoutArea = document.getElementById('checkout-area');																									
 																									
 modal.classList.remove('hidden');																									
+																									
+if (orderIds.length === 0) {																									
+content.innerHTML = '<p class="text-gray-500 text-center py-4">現在、保存されている注文履歴はありません。</p>';																									
+checkoutArea.classList.add('hidden');																									
+return;																									
+}																									
+																									
 content.innerHTML = '<p class="text-gray-500 text-center py-4">注文状況を確認中...</p>';																									
 																									
-fetch(GAS_API_URL + "?action=getOrderByTable&tableNo=" + encodeURIComponent(currentTableNo))																									
+// 保存されている注文IDのリストをサーバーへ送信して、該当するデータだけを照合取得する																									
+fetch(GAS_API_URL + "?action=getOrdersByIds&orderIds=" + encodeURIComponent(JSON.stringify(orderIds)))																									
 .then(res => res.json())																									
 .then(res => {																									
 if (res && res.status === "success" && res.items && res.items.length > 0) {																									
@@ -355,7 +366,7 @@ html += '</div>';
 content.innerHTML = html;																									
 checkoutArea.classList.remove('hidden');																									
 } else {																									
-content.innerHTML = '<p class="text-gray-500 text-center py-4">現在、このテーブルの注文履歴はありません。</p>';																									
+content.innerHTML = '<p class="text-gray-500 text-center py-4">該当する注文履歴が見つかりませんでした。</p>';																									
 checkoutArea.classList.add('hidden');																									
 }																									
 })																									
@@ -369,11 +380,11 @@ document.getElementById('status-modal').classList.add('hidden');
 }																									
 																									
 function requestCheckout() {																									
-if (!currentTableNo) return;																									
+if (orderIds.length === 0) return;																									
 																									
 const payload = {																									
-action: "checkoutByTable",																									
-payload: { tableNo: currentTableNo }																									
+action: "checkoutByIds",																									
+payload: { orderIds: orderIds }																									
 };																									
 																									
 fetch(GAS_API_URL, {																									
@@ -386,6 +397,9 @@ body: JSON.stringify(payload)
 closeStatusModal();																									
 if (res && res.status === "success") {																									
 showReceipt(currentTableNo, res.data.totalPrice, res.data.items);																									
+// お会計が完了したら、保存していた注文IDをクリアする																									
+localStorage.removeItem("order_ids");																									
+orderIds = [];																									
 } else {																									
 alert("お会計処理に失敗しました: " + (res ? res.message : ""));																									
 }																									
