@@ -1,23 +1,14 @@
 <!DOCTYPE html>																									
 <html lang='ja'>																									
 <head>																									
-																									
 <meta charset='UTF-8'>																									
-																									
-<meta																									
-name='viewport'																									
-content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no'																									
->																									
-																									
+<meta name='viewport' content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no'>																									
 <title>モバイルオーダー</title>																									
 																									
 <script src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'></script>																									
 																									
 <style>																									
-																									
-*{																									
-box-sizing:border-box;																									
-}																									
+*{box-sizing:border-box}																									
 																									
 body{																									
 margin:0;																									
@@ -189,6 +180,7 @@ background:white;
 border-top:1px solid #ddd;																									
 display:grid;																									
 grid-template-columns:repeat(4,1fr);																									
+z-index:30;																									
 }																									
 																									
 nav button{																									
@@ -245,14 +237,12 @@ text-align:center;
 border:1px dashed #aaa;																									
 padding:15px;																									
 }																									
-																									
 </style>																									
 </head>																									
 																									
 <body>																									
 																									
 <header>																									
-																									
 <div>																									
 <b>																									
 テーブル:																									
@@ -267,73 +257,49 @@ padding:15px;
 <div id='status'>																									
 接続確認中																									
 </div>																									
-																									
 </header>																									
-																									
 																									
 <main>																									
 																									
 <section id='menuView'>																									
-																									
 <div id='catbar' class='catbar'></div>																									
 																									
 <div id='menuList' class='loading'>																									
 メニューを読み込んでいます...																									
 </div>																									
-																									
 </section>																									
 																									
-																									
 <section id='cartView' class='hidden'>																									
-																									
-<div class='title'>																									
-注文かご																									
-</div>																									
+<div class='title'>注文かご</div>																									
 																									
 <div id='cartList'></div>																									
 																									
 <div class='totalbox'>																									
-																									
 <div class='row total'>																									
 <span>合計</span>																									
+																									
 <span>																									
 ¥<span id='cartTotal'>0</span>																									
 </span>																									
 </div>																									
 																									
-<button																									
-class='mainbtn'																									
-onclick='submitOrder()'																									
->																									
+<button class='mainbtn' onclick='submitOrder()'>																									
 注文を確定する																									
 </button>																									
-																									
 </div>																									
-																									
 </section>																									
-																									
 																									
 <section id='historyView' class='hidden'>																									
-																									
-<div class='title'>																									
-注文履歴																									
-</div>																									
-																									
+<div class='title'>注文履歴</div>																									
 <div id='historyList'></div>																									
-																									
 </section>																									
 																									
-																									
 <section id='checkoutView' class='hidden'>																									
-																									
-<div class='title'>																									
-お会計																									
-</div>																									
+<div class='title'>お会計</div>																									
 																									
 <div id='checkoutList'></div>																									
 																									
 <div class='totalbox'>																									
-																									
 <div class='row total'>																									
 <span>合計</span>																									
 																									
@@ -342,105 +308,56 @@ onclick='submitOrder()'
 </span>																									
 </div>																									
 																									
-<button																									
-class='mainbtn paybtn'																									
-onclick='checkout()'																									
->																									
+<button class='mainbtn paybtn' onclick='checkout()'>																									
 お会計を確定する																									
 </button>																									
-																									
 </div>																									
-																									
 </section>																									
 																									
 </main>																									
 																									
-																									
 <nav>																									
-																									
-<button																									
-id='navMenu'																									
-class='active'																									
-onclick='showView("menu")'																									
->																									
+<button id='navMenu' class='active' onclick='showView("menu")'>																									
 <span>📋</span>																									
 メニュー																									
 </button>																									
 																									
-<button																									
-id='navCart'																									
-onclick='showView("cart")'																									
->																									
+<button id='navCart' onclick='showView("cart")'>																									
 <span>🛒</span>																									
 かご																									
 </button>																									
 																									
-<button																									
-id='navHistory'																									
-onclick='showView("history")'																									
->																									
+<button id='navHistory' onclick='showView("history")'>																									
 <span>⏳</span>																									
 履歴																									
 </button>																									
 																									
-<button																									
-id='navCheckout'																									
-onclick='showView("checkout")'																									
->																									
+<button id='navCheckout' onclick='showView("checkout")'>																									
 <span>💰</span>																									
 会計																									
 </button>																									
-																									
 </nav>																									
 																									
-																									
-<div																									
-id='tableModal'																									
-class='modal hidden'																									
->																									
-																									
+<div id='tableModal' class='modal hidden'>																									
 <div class='modalbox'>																									
 																									
 <div class='title center'>																									
 テーブル番号																									
 </div>																									
 																									
-<button class='tablebtn' onclick='selectTable(1)'>																									
-テーブル 1																									
-</button>																									
-																									
-<button class='tablebtn' onclick='selectTable(2)'>																									
-テーブル 2																									
-</button>																									
-																									
-<button class='tablebtn' onclick='selectTable(3)'>																									
-テーブル 3																									
-</button>																									
-																									
-<button class='tablebtn' onclick='selectTable(4)'>																									
-テーブル 4																									
-</button>																									
-																									
-<button class='tablebtn' onclick='selectTable(5)'>																									
-テーブル 5																									
-</button>																									
+<button class='tablebtn' onclick='selectTable(1)'>テーブル 1</button>																									
+<button class='tablebtn' onclick='selectTable(2)'>テーブル 2</button>																									
+<button class='tablebtn' onclick='selectTable(3)'>テーブル 3</button>																									
+<button class='tablebtn' onclick='selectTable(4)'>テーブル 4</button>																									
+<button class='tablebtn' onclick='selectTable(5)'>テーブル 5</button>																									
 																									
 </div>																									
-																									
 </div>																									
 																									
-																									
-<div																									
-id='receiptModal'																									
-class='modal hidden'																									
->																									
-																									
+<div id='receiptModal' class='modal hidden'>																									
 <div class='modalbox'>																									
 																									
-<div																									
-class='center'																									
-style='font-size:45px'																									
->																									
+<div class='center' style='font-size:45px'>																									
 ✅																									
 </div>																									
 																									
@@ -449,16 +366,12 @@ style='font-size:45px'
 </div>																									
 																									
 <div class='receipt'>																									
-																									
 <div class='row'>																									
 <b>テーブル</b>																									
 <span id='receiptTable'></span>																									
 </div>																									
 																									
-<div																									
-id='receiptItems'																									
-style='margin-top:12px'																									
-></div>																									
+<div id='receiptItems' style='margin-top:12px'></div>																									
 																									
 <hr>																									
 																									
@@ -466,26 +379,16 @@ style='margin-top:12px'
 <b>合計</b>																									
 <b id='receiptTotal'></b>																									
 </div>																									
-																									
 </div>																									
 																									
-<div																									
-id='qr'																									
-class='center'																									
-style='margin-top:18px'																									
-></div>																									
+<div id='qr' class='center' style='margin-top:18px'></div>																									
 																									
-<button																									
-class='mainbtn'																									
-onclick='closeReceipt()'																									
->																									
+<button class='mainbtn' onclick='closeReceipt()'>																									
 閉じる																									
 </button>																									
 																									
 </div>																									
-																									
 </div>																									
-																									
 																									
 <script>																									
 																									
@@ -500,10 +403,9 @@ localStorage.getItem('saizeriya_table_no') ||
 1';																									
 																									
 																									
-window.onload=function(){																									
+document.addEventListener('DOMContentLoaded',function(){																									
 																									
-document.getElementById('tableDisplay').textContent=																									
-tableNo;																									
+document.getElementById('tableDisplay').textContent=tableNo;																									
 																									
 if(!localStorage.getItem('saizeriya_table_no')){																									
 openTable();																									
@@ -511,9 +413,11 @@ openTable();
 																									
 renderCart();																									
 																									
+document.getElementById('status').textContent='通信開始';																									
+																									
 loadMenu();																									
 																									
-};																									
+});																									
 																									
 																									
 function api(action,data){																									
@@ -599,32 +503,15 @@ new Error('JSONP通信エラー')
 const params=																									
 new URLSearchParams();																									
 																									
-params.set(																									
-action',																									
-action																									
-);																									
-																									
-params.set(																									
-callback',																									
-cb																									
-);																									
-																									
-params.set(																									
-data',																									
-JSON.stringify(data||{})																									
-);																									
-																									
-params.set(																									
-_',																									
-String(Date.now())																									
-);																									
-																									
+params.set('action',action);																									
+params.set('callback',cb);																									
+params.set('data',JSON.stringify(data||{}));																									
+params.set('_',String(Date.now()));																									
 																									
 script.src=																									
 API +																									
 ?' +																									
 params.toString();																									
-																									
 																									
 document.body.appendChild(script);																									
 																									
@@ -635,8 +522,7 @@ document.body.appendChild(script);
 																									
 function setStatus(ok){																									
 																									
-const el=																									
-document.getElementById('status');																									
+const el=document.getElementById('status');																									
 																									
 if(ok){																									
 																									
@@ -655,14 +541,13 @@ el.style.background='#dc2626';
 																									
 function loadMenu(){																									
 																									
+document.getElementById('status').textContent='通信開始';																									
+																									
 api('getMenu',{})																									
 																									
 .then(function(res){																									
 																									
-if(																									
-!res ||																									
-res.status!=='success'																									
-){																									
+if(!res || res.status!=='success'){																									
 																									
 throw new Error(																									
 res && res.message																									
@@ -683,12 +568,12 @@ renderMenu();
 																									
 .catch(function(err){																									
 																									
-console.log(err);																									
-																									
 setStatus(false);																									
 																									
 document.getElementById('menuList').innerHTML=																									
-<div class=error>メニュー取得エラー<br>'+safe(err.message)+'</div>';																									
+<div class=error>メニュー取得エラー<br>'+																									
+safe(err.message)+																									
+</div>';																									
 																									
 });																									
 																									
@@ -701,28 +586,24 @@ const list=['all'];
 																									
 menu.forEach(function(item){																									
 																									
-if(																									
-list.indexOf(item.category)===-1																									
-){																									
+if(list.indexOf(item.category)===-1){																									
 list.push(item.category);																									
 }																									
 																									
 });																									
 																									
-const box=																									
-document.getElementById('catbar');																									
+const box=document.getElementById('catbar');																									
 																									
 box.innerHTML='';																									
 																									
 list.forEach(function(cat){																									
 																									
-const btn=																									
-document.createElement('button');																									
+const btn=document.createElement('button');																									
 																									
 btn.textContent=																									
 cat==='all'																									
-?'すべて'																									
-:cat;																									
+? 'すべて'																									
+: cat;																									
 																									
 if(cat===currentCategory){																									
 btn.className='active';																									
@@ -746,13 +627,12 @@ box.appendChild(btn);
 																									
 function renderMenu(){																									
 																									
-const box=																									
-document.getElementById('menuList');																									
+const box=document.getElementById('menuList');																									
 																									
 const list=																									
 currentCategory==='all'																									
-?menu																									
-:menu.filter(function(item){																									
+? menu																									
+: menu.filter(function(item){																									
 return item.category===currentCategory;																									
 });																									
 																									
@@ -771,11 +651,10 @@ list.forEach(function(item){
 																									
 const qty=																									
 cart[item.id]																									
-?cart[item.id].quantity																									
-:0;																									
+? cart[item.id].quantity																									
+: 0;																									
 																									
-const card=																									
-document.createElement('div');																									
+const card=document.createElement('div');																									
 																									
 card.className='card';																									
 																									
@@ -857,11 +736,8 @@ renderCart();
 																									
 function renderCart(){																									
 																									
-const box=																									
-document.getElementById('cartList');																									
-																									
-const items=																									
-Object.values(cart);																									
+const box=document.getElementById('cartList');																									
+const items=Object.values(cart);																									
 																									
 let total=0;																									
 																									
@@ -882,8 +758,7 @@ Number(item.quantity);
 																									
 total+=subtotal;																									
 																									
-const card=																									
-document.createElement('div');																									
+const card=document.createElement('div');																									
 																									
 card.className='card';																									
 																									
@@ -916,24 +791,17 @@ money(total);
 																									
 function submitOrder(){																									
 																									
-const items=																									
-Object.values(cart);																									
+const items=Object.values(cart);																									
 																									
 if(items.length===0){																									
 																									
-alert(																									
-商品を選択してください'																									
-);																									
+alert('商品を選択してください');																									
 																									
 return;																									
 																									
 }																									
 																									
-if(																									
-!confirm(																									
-この内容で注文しますか？'																									
-)																									
-){																									
+if(!confirm('この内容で注文しますか？')){																									
 return;																									
 }																									
 																									
@@ -947,15 +815,12 @@ items:items
 																									
 .then(function(res){																									
 																									
-if(																									
-!res ||																									
-res.status!=='success'																									
-){																									
+if(!res || res.status!=='success'){																									
 																									
 throw new Error(																									
 res && res.message																									
-?res.message																									
-:'注文失敗'																									
+? res.message																									
+: '注文失敗'																									
 );																									
 																									
 }																									
@@ -992,8 +857,7 @@ err.message
 																									
 function loadHistory(){																									
 																									
-const box=																									
-document.getElementById('historyList');																									
+const box=document.getElementById('historyList');																									
 																									
 box.innerHTML=																									
 <div class=loading>読み込み中...</div>';																									
@@ -1007,23 +871,19 @@ tableNo:tableNo
 																									
 .then(function(res){																									
 																									
-if(																									
-!res ||																									
-res.status!=='success'																									
-){																									
+if(!res || res.status!=='success'){																									
 																									
 throw new Error(																									
 res && res.message																									
-?res.message																									
-:'履歴取得失敗'																									
+? res.message																									
+: '履歴取得失敗'																									
 );																									
 																									
 }																									
 																									
 setStatus(true);																									
 																									
-const orders=																									
-res.orders||[];																									
+const orders=res.orders||[];																									
 																									
 box.innerHTML='';																									
 																									
@@ -1038,8 +898,7 @@ return;
 																									
 orders.forEach(function(order){																									
 																									
-const card=																									
-document.createElement('div');																									
+const card=document.createElement('div');																									
 																									
 card.className='card';																									
 																									
@@ -1103,8 +962,7 @@ safe(err.message) +
 																									
 function loadCheckout(){																									
 																									
-const box=																									
-document.getElementById('checkoutList');																									
+const box=document.getElementById('checkoutList');																									
 																									
 box.innerHTML=																									
 <div class=loading>読み込み中...</div>';																									
@@ -1118,15 +976,12 @@ tableNo:tableNo
 																									
 .then(function(res){																									
 																									
-if(																									
-!res ||																									
-res.status!=='success'																									
-){																									
+if(!res || res.status!=='success'){																									
 																									
 throw new Error(																									
 res && res.message																									
-?res.message																									
-:'取得失敗'																									
+? res.message																									
+: '取得失敗'																									
 );																									
 																									
 }																									
@@ -1140,7 +995,6 @@ return order.status!=='会計済み';
 });																									
 																									
 const map={};																									
-																									
 let total=0;																									
 																									
 orders.forEach(function(order){																									
@@ -1149,8 +1003,7 @@ total+=Number(order.total);
 																									
 order.items.forEach(function(item){																									
 																									
-const id=																									
-String(item.id);																									
+const id=String(item.id);																									
 																									
 if(!map[id]){																									
 																									
@@ -1177,8 +1030,7 @@ box.innerHTML='';
 Object.values(map)																									
 .forEach(function(item){																									
 																									
-const card=																									
-document.createElement('div');																									
+const card=document.createElement('div');																									
 																									
 card.className='card';																									
 																									
@@ -1198,9 +1050,7 @@ box.appendChild(card);
 																									
 });																									
 																									
-if(																									
-Object.keys(map).length===0																									
-){																									
+if(Object.keys(map).length===0){																									
 																									
 box.innerHTML=																									
 <div class=loading>未会計の注文はありません</div>';																									
@@ -1236,19 +1086,13 @@ Number(text.replace(/,/g,''));
 																									
 if(total<=0){																									
 																									
-alert(																									
-未会計の注文はありません'																									
-);																									
+alert('未会計の注文はありません');																									
 																									
 return;																									
 																									
 }																									
 																									
-if(																									
-!confirm(																									
-お会計を確定しますか？'																									
-)																									
-){																									
+if(!confirm('お会計を確定しますか？')){																									
 return;																									
 }																									
 																									
@@ -1261,15 +1105,12 @@ tableNo:tableNo
 																									
 .then(function(res){																									
 																									
-if(																									
-!res ||																									
-res.status!=='success'																									
-){																									
+if(!res || res.status!=='success'){																									
 																									
 throw new Error(																									
 res && res.message																									
-?res.message																									
-:'会計失敗'																									
+? res.message																									
+: '会計失敗'																									
 );																									
 																									
 }																									
@@ -1304,15 +1145,13 @@ receipt.tableNo + '番';
 document.getElementById('receiptTotal').textContent=																									
 ¥' + money(receipt.totalAmount);																									
 																									
-const box=																									
-document.getElementById('receiptItems');																									
+const box=document.getElementById('receiptItems');																									
 																									
 box.innerHTML='';																									
 																									
 receipt.items.forEach(function(item){																									
 																									
-const row=																									
-document.createElement('div');																									
+const row=document.createElement('div');																									
 																									
 row.className='row';																									
 																									
@@ -1330,10 +1169,11 @@ box.appendChild(row);
 																									
 });																									
 																									
-const qr=																									
-document.getElementById('qr');																									
+const qr=document.getElementById('qr');																									
 																									
 qr.innerHTML='';																									
+																									
+if(typeof QRCode!=='undefined'){																									
 																									
 new QRCode(																									
 qr,																									
@@ -1349,6 +1189,8 @@ width:120,
 height:120																									
 }																									
 );																									
+																									
+}																									
 																									
 document.getElementById('receiptModal').classList.remove('hidden');																									
 																									
@@ -1457,14 +1299,13 @@ return Number(value||0)
 																									
 function safe(value){																									
 																									
-const div=																									
-document.createElement('div');																									
+const div=document.createElement('div');																									
 																									
 div.textContent=																									
 String(																									
 value==null																									
-?''																									
-:value																									
+? ''																									
+: value																									
 );																									
 																									
 return div.innerHTML;																									
