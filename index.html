@@ -3,48 +3,48 @@
 <head>																									
 <meta charset="UTF-8">																									
 <meta name="viewport" content="width=device-width, initial-scale=1.0">																									
-<title>サイゼリヤ セルフオーダー</title>																									
+<title>モバイルオーダーシステム</title>																									
 <!-- Tailwind CSS -->																									
 <script src="https://cdn.tailwindcss.com"></script>																									
 <!-- QR Code Generator -->																									
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>																									
 </head>																									
-<body class="bg-emerald-900 text-gray-800 pb-20 select-none">																									
+<body class="bg-blue-900 text-gray-800 pb-20 select-none">																									
 																									
 <!-- ================= 1. ウェルカム画面 ================= -->																									
-<div id="screen-welcome" class="fixed inset-0 bg-emerald-800 z-50 flex flex-col justify-between items-center p-6 text-white">																									
+<div id="screen-welcome" class="fixed inset-0 bg-blue-900 z-50 flex flex-col justify-between items-center p-6 text-white">																									
 <div class="w-full text-center pt-8">																									
-<p class="text-xl font-bold tracking-widest text-emerald-100">いらっしゃいませ</p>																									
+<p class="text-xl font-bold tracking-widest text-blue-100">いらっしゃいませ</p>																									
 </div>																									
 <div class="bg-white w-full max-w-sm rounded-3xl p-8 text-center shadow-2xl space-y-6 my-auto">																									
-<div class="border-2 border-emerald-600 rounded-full py-2 px-4 inline-block mx-auto bg-emerald-50">																									
-<span class="text-emerald-800 font-bold text-sm">イタリアンワイン＆カフェレストラン</span>																									
+<div class="border-2 border-blue-600 rounded-full py-2 px-4 inline-block mx-auto bg-blue-50">																									
+<span class="text-blue-800 font-bold text-sm">セルフモバイルオーダー</span>																									
 </div>																									
-<div class="text-4xl font-extrabold text-red-700 tracking-wider">サイゼリヤ</div>																									
-<button onclick="goToPeopleScreen()" class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 rounded-2xl text-xl shadow-lg transition transform active:scale-95">																									
+<div class="text-3xl font-extrabold text-blue-900 tracking-wider">レストラン オーダー</div>																									
+<button onclick="goToPeopleScreen()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 rounded-2xl text-xl shadow-lg transition transform active:scale-95">																									
 注文をはじめる																									
 </button>																									
 </div>																									
-<div class="text-xs text-emerald-300 pb-4">																									
-&copy; Saizeriya Co., Ltd. All rights reserved.																									
+<div class="text-xs text-blue-300 pb-4">																									
+&copy; Mobile Order System. All rights reserved.																									
 </div>																									
 </div>																									
 																									
 <!-- ================= 2. 人数選択画面 ================= -->																									
-<div id="screen-people" class="fixed inset-0 bg-emerald-800 z-40 hidden flex flex-col justify-between p-4 text-white">																									
-<div class="text-center py-4 bg-emerald-700 rounded-xl shadow">																									
+<div id="screen-people" class="fixed inset-0 bg-blue-900 z-40 hidden flex flex-col justify-between p-4 text-white">																									
+<div class="text-center py-4 bg-blue-800 rounded-xl shadow">																									
 <h2 class="text-lg font-bold">何名様(全員)でご利用ですか？</h2>																									
 </div>																									
 <div class="grid grid-cols-3 gap-3 my-auto max-w-md mx-auto w-full px-2">																									
-<button onclick="selectTableAndStart('1人')" class="bg-gray-100 text-emerald-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-emerald-50 transition active:scale-95">1人</button>																									
-<button onclick="selectTableAndStart('2人')" class="bg-gray-100 text-emerald-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-emerald-50 transition active:scale-95">2人</button>																									
-<button onclick="selectTableAndStart('3人')" class="bg-gray-100 text-emerald-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-emerald-50 transition active:scale-95">3人</button>																									
-<button onclick="selectTableAndStart('4人')" class="bg-gray-100 text-emerald-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-emerald-50 transition active:scale-95">4人</button>																									
-<button onclick="selectTableAndStart('5人')" class="bg-gray-100 text-emerald-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-emerald-50 transition active:scale-95">5人</button>																									
-<button onclick="selectTableAndStart('6人')" class="bg-gray-100 text-emerald-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-emerald-50 transition active:scale-95">6人</button>																									
-<button onclick="selectTableAndStart('7人')" class="bg-gray-100 text-emerald-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-emerald-50 transition active:scale-95">7人</button>																									
-<button onclick="selectTableAndStart('8人')" class="bg-gray-100 text-emerald-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-emerald-50 transition active:scale-95">8人</button>																									
-<button onclick="selectTableAndStart('9人以上')" class="bg-gray-100 text-emerald-900 font-bold py-6 rounded-2xl text-lg shadow hover:bg-emerald-50 transition active:scale-95">9人以上</button>																									
+<button onclick="selectTableAndStart('1人')" class="bg-gray-100 text-blue-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-blue-50 transition active:scale-95">1人</button>																									
+<button onclick="selectTableAndStart('2人')" class="bg-gray-100 text-blue-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-blue-50 transition active:scale-95">2人</button>																									
+<button onclick="selectTableAndStart('3人')" class="bg-gray-100 text-blue-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-blue-50 transition active:scale-95">3人</button>																									
+<button onclick="selectTableAndStart('4人')" class="bg-gray-100 text-blue-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-blue-50 transition active:scale-95">4人</button>																									
+<button onclick="selectTableAndStart('5人')" class="bg-gray-100 text-blue-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-blue-50 transition active:scale-95">5人</button>																									
+<button onclick="selectTableAndStart('6人')" class="bg-gray-100 text-blue-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-blue-50 transition active:scale-95">6人</button>																									
+<button onclick="selectTableAndStart('7人')" class="bg-gray-100 text-blue-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-blue-50 transition active:scale-95">7人</button>																									
+<button onclick="selectTableAndStart('8人')" class="bg-gray-100 text-blue-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-blue-50 transition active:scale-95">8人</button>																									
+<button onclick="selectTableAndStart('9人以上')" class="bg-gray-100 text-blue-900 font-bold py-6 rounded-2xl text-lg shadow hover:bg-blue-50 transition active:scale-95">9人以上</button>																									
 </div>																									
 <div></div>																									
 </div>																									
@@ -52,16 +52,16 @@
 <!-- ================= 3. メイン画面（メニュー閲覧・注文） ================= -->																									
 <div id="screen-main" class="max-w-md mx-auto min-h-screen bg-white hidden flex flex-col">																									
 <!-- ヘッダー -->																									
-<header class="bg-emerald-800 text-white p-3 sticky top-0 z-20 shadow flex justify-between items-center">																									
-<span class="text-xs font-bold text-emerald-200">テーブル: <span id="display-table">1</span>番</span>																									
-<span class="text-xs bg-emerald-700 px-2 py-1 rounded text-emerald-100 font-bold">接続中</span>																									
+<header class="bg-blue-900 text-white p-3 sticky top-0 z-20 shadow flex justify-between items-center">																									
+<span class="text-xs font-bold text-blue-200">テーブル: <span id="display-table">1</span>番</span>																									
+<span class="text-xs bg-blue-800 px-2 py-1 rounded text-blue-100 font-bold">接続中</span>																									
 </header>																									
 																									
 <!-- 各タブのコンテナ -->																									
 <div class="flex-grow p-4 pb-28">																									
 <!-- Tab A: メニュー一覧（注文追加） -->																									
 <div id="tab-menu" class="space-y-4">																									
-<div class="text-center py-2 bg-emerald-50 rounded-lg text-emerald-800 text-xs font-bold border border-emerald-200">																									
+<div class="text-center py-2 bg-blue-50 rounded-lg text-blue-900 text-xs font-bold border border-blue-200">																									
 メニューを選んで数量を指定してください																									
 </div>																									
 <div id="menu-container" class="space-y-3"></div>																									
@@ -74,11 +74,11 @@
 <div class="border-t pt-3">																									
 <div class="flex justify-between text-lg font-bold mb-4">																									
 <span>合計金額（税込）</span>																									
-<span class="text-red-700">¥<span id="cart-total">0</span></span>																									
+<span class="text-blue-700">¥<span id="cart-total">0</span></span>																									
 </div>																									
 <div class="flex space-x-2">																									
 <button onclick="switchTab('menu')" class="w-1/2 bg-gray-300 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-400 transition">追加</button>																									
-<button onclick="submitOrder()" class="w-1/2 bg-red-600 text-white py-3 rounded-xl font-bold hover:bg-red-700 transition shadow">注文する</button>																									
+<button onclick="submitOrder()" class="w-1/2 bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition shadow">注文する</button>																									
 </div>																									
 </div>																									
 </div>																									
@@ -110,9 +110,9 @@
 <div class="border-t pt-3">																									
 <div class="flex justify-between text-lg font-bold mb-4">																									
 <span>お支払い総額</span>																									
-<span class="text-red-700">¥<span id="checkout-total">0</span></span>																									
+<span class="text-blue-700">¥<span id="checkout-total">0</span></span>																									
 </div>																									
-<button onclick="requestCheckout()" class="w-full bg-red-600 text-white py-3.5 rounded-xl font-bold text-base hover:bg-red-700 transition shadow">																									
+<button onclick="requestCheckout()" class="w-full bg-blue-600 text-white py-3.5 rounded-xl font-bold text-base hover:bg-blue-700 transition shadow">																									
 お支払いへ進む																									
 </button>																									
 </div>																									
@@ -120,26 +120,26 @@
 </div>																									
 </div>																									
 																									
-<!-- ================= 4. サイゼリヤ風 下部固定ナビバー ================= -->																									
-<nav id="footer-nav" class="fixed bottom-0 left-0 right-0 bg-emerald-800 border-t border-emerald-700 py-2 px-1 grid grid-cols-5 gap-1 shadow-2xl z-30 max-w-md mx-auto hidden">																									
-<button onclick="switchTab('menu')" id="nav-menu" class="flex flex-col items-center justify-center py-1 text-white text-[11px] font-bold rounded-lg bg-emerald-700 shadow-inner">																									
+<!-- ================= 4. 下部固定ナビバー ================= -->																									
+<nav id="footer-nav" class="fixed bottom-0 left-0 right-0 bg-blue-900 border-t border-blue-800 py-2 px-1 grid grid-cols-5 gap-1 shadow-2xl z-30 max-w-md mx-auto hidden">																									
+<button onclick="switchTab('menu')" id="nav-menu" class="flex flex-col items-center justify-center py-1 text-white text-[11px] font-bold rounded-lg bg-blue-800 shadow-inner">																									
 <span class="text-base mb-0.5">➕</span>																									
 <span>注文追加</span>																									
 </button>																									
-<button onclick="switchTab('cart')" id="nav-cart" class="flex flex-col items-center justify-center py-1 text-emerald-200 text-[11px] font-bold rounded-lg relative">																									
+<button onclick="switchTab('cart')" id="nav-cart" class="flex flex-col items-center justify-center py-1 text-blue-200 text-[11px] font-bold rounded-lg relative">																									
 <span class="text-base mb-0.5">🛒</span>																									
 <span>注文かご</span>																									
 <span id="badge-cart" class="absolute top-1 right-3 bg-red-600 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center hidden font-bold">0</span>																									
 </button>																									
-<button onclick="switchTab('history')" id="nav-history" class="flex flex-col items-center justify-center py-1 text-emerald-200 text-[11px] font-bold rounded-lg">																									
+<button onclick="switchTab('history')" id="nav-history" class="flex flex-col items-center justify-center py-1 text-blue-200 text-[11px] font-bold rounded-lg">																									
 <span class="text-base mb-0.5">📋</span>																									
 <span>注文履歴</span>																									
 </button>																									
-<button onclick="switchTab('call')" id="nav-call" class="flex flex-col items-center justify-center py-1 text-emerald-200 text-[11px] font-bold rounded-lg">																									
+<button onclick="switchTab('call')" id="nav-call" class="flex flex-col items-center justify-center py-1 text-blue-200 text-[11px] font-bold rounded-lg">																									
 <span class="text-base mb-0.5">🔔</span>																									
 <span>店員呼出</span>																									
 </button>																									
-<button onclick="switchTab('checkout')" id="nav-checkout" class="flex flex-col items-center justify-center py-1 text-emerald-200 text-[11px] font-bold rounded-lg">																									
+<button onclick="switchTab('checkout')" id="nav-checkout" class="flex flex-col items-center justify-center py-1 text-blue-200 text-[11px] font-bold rounded-lg">																									
 <span class="text-base mb-0.5">💰</span>																									
 <span>会計する</span>																									
 </button>																									
@@ -148,7 +148,7 @@
 <!-- ================= 5. 領収書・完了画面モーダル ================= -->																									
 <div id="receipt-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden flex items-center justify-center p-4">																									
 <div class="bg-white w-full max-w-md rounded-2xl p-6 text-center space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">																									
-<div class="text-emerald-600 text-5xl font-bold">✓</div>																									
+<div class="text-blue-600 text-5xl font-bold">✓</div>																									
 <h2 class="text-xl font-bold text-gray-800">お会計が完了しました</h2>																									
 <p class="text-sm text-gray-500">テーブル: <span id="receipt-table-no" class="font-bold text-gray-700"></span>番</p>																									
 <div class="border border-dashed border-gray-300 p-4 rounded-xl text-left text-sm space-y-2 bg-gray-50">																									
@@ -175,7 +175,7 @@ const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyv4ebasSdelkH2Uczv
 																									
 let menuData = [];																									
 let cart = {};																									
-let currentTableNo = "1"; // デフォルト1番																									
+let currentTableNo = "1";																									
 																									
 function goToPeopleScreen() {																									
 document.getElementById('screen-welcome').classList.add('hidden');																									
@@ -183,7 +183,7 @@ document.getElementById('screen-people').classList.remove('hidden');
 }																									
 																									
 function selectTableAndStart(peopleCount) {																									
-currentTableNo = "1"; // テーブル固定または任意に変更可能																									
+currentTableNo = "1";																									
 document.getElementById('display-table').textContent = currentTableNo;																									
 document.getElementById('screen-people').classList.add('hidden');																									
 document.getElementById('screen-main').classList.remove('hidden');																									
@@ -195,12 +195,12 @@ function switchTab(tabName) {
 ['menu', 'cart', 'history', 'call', 'checkout'].forEach(t => {																									
 document.getElementById('tab-' + t).classList.add('hidden');																									
 const navBtn = document.getElementById('nav-' + t);																									
-navBtn.className = "flex flex-col items-center justify-center py-1 text-emerald-200 text-[11px] font-bold rounded-lg";																									
+navBtn.className = "flex flex-col items-center justify-center py-1 text-blue-200 text-[11px] font-bold rounded-lg";																									
 });																									
 																									
 document.getElementById('tab-' + tabName).classList.remove('hidden');																									
 const activeBtn = document.getElementById('nav-' + tabName);																									
-activeBtn.className = "flex flex-col items-center justify-center py-1 text-white text-[11px] font-bold rounded-lg bg-emerald-700 shadow-inner";																									
+activeBtn.className = "flex flex-col items-center justify-center py-1 text-white text-[11px] font-bold rounded-lg bg-blue-800 shadow-inner";																									
 																									
 if (tabName === 'history') fetchHistory();																									
 if (tabName === 'checkout') fetchCheckoutData();																									
@@ -233,7 +233,7 @@ categories[cat].push(item);
 																									
 Object.keys(categories).forEach(catName => {																									
 const header = document.createElement('h3');																									
-header.className = "text-sm font-bold text-emerald-800 bg-emerald-50 p-2 rounded-lg mt-2";																									
+header.className = "text-sm font-bold text-blue-900 bg-blue-50 p-2 rounded-lg mt-2";																									
 header.textContent = catName;																									
 container.appendChild(header);																									
 																									
@@ -243,12 +243,12 @@ card.className = "bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex 
 card.innerHTML = `																									
 <div>																									
 <div class="font-bold text-gray-800 text-sm">${item.name}</div>																									
-<div class="text-red-700 font-bold text-sm mt-0.5">¥${Number(item.price).toLocaleString()}</div>																									
+<div class="text-blue-700 font-bold text-sm mt-0.5">¥${Number(item.price).toLocaleString()}</div>																									
 </div>																									
 <div class="flex items-center space-x-2">																									
 <button type="button" onclick="changeQuantity('${item.code}', -1)" class="w-8 h-8 rounded-full bg-gray-100 text-gray-700 font-bold flex items-center justify-center hover:bg-gray-200">-</button>																									
 <span id="qty-${item.code}" class="font-bold w-4 text-center text-sm">0</span>																									
-<button type="button" onclick="changeQuantity('${item.code}', 1)" class="w-8 h-8 rounded-full bg-emerald-700 text-white font-bold flex items-center justify-center hover:bg-emerald-800">+</button>																									
+<button type="button" onclick="changeQuantity('${item.code}', 1)" class="w-8 h-8 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center hover:bg-blue-700">+</button>																									
 </div>																									
 `;																									
 container.appendChild(card);																									
