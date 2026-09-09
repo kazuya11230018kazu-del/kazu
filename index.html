@@ -1,21 +1,32 @@
 <!DOCTYPE html>																									
 <html lang='ja'>																									
 <head>																									
+																									
 <meta charset='UTF-8'>																									
-<meta name='viewport' content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no'>																									
+																									
+<meta																									
+name='viewport'																									
+content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no'																									
+>																									
+																									
 <title>モバイルオーダー</title>																									
 																									
 <script src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'></script>																									
 																									
 <style>																									
-*{box-sizing:border-box}																									
+																									
+*{																									
+box-sizing:border-box;																									
+}																									
+																									
 body{																									
 margin:0;																									
 background:#f1f5f9;																									
 color:#1e293b;																									
 font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;																									
-padding-bottom:78px;																									
+padding-bottom:75px;																									
 }																									
+																									
 header{																									
 background:#2563eb;																									
 color:white;																									
@@ -23,10 +34,8 @@ padding:18px 16px;
 display:flex;																									
 justify-content:space-between;																									
 align-items:center;																									
-position:sticky;																									
-top:0;																									
-z-index:20;																									
 }																									
+																									
 header button{																									
 border:0;																									
 background:#1d4ed8;																									
@@ -34,70 +43,79 @@ color:white;
 border-radius:8px;																									
 padding:7px 10px;																									
 }																									
-.status{																									
-background:#10b981;																									
+																									
+#status{																									
+background:#f59e0b;																									
 padding:6px 10px;																									
 border-radius:20px;																									
 font-size:12px;																									
 }																									
+																									
 main{																									
 max-width:500px;																									
 margin:auto;																									
 padding:16px;																									
 }																									
-.hidden{display:none!important}																									
-.title{																									
-font-size:20px;																									
-font-weight:700;																									
-margin-bottom:15px;																									
+																									
+.hidden{																									
+display:none!important;																									
 }																									
+																									
 .catbar{																									
 display:flex;																									
 gap:8px;																									
 overflow-x:auto;																									
 margin-bottom:15px;																									
 }																									
+																									
 .catbar button{																									
-border:1px solid #ddd;																									
 background:white;																									
-padding:10px 16px;																									
-border-radius:22px;																									
+border:1px solid #ddd;																									
+padding:10px 15px;																									
+border-radius:20px;																									
 white-space:nowrap;																									
 }																									
+																									
 .catbar .active{																									
 background:#2563eb;																									
 color:white;																									
 }																									
+																									
 .card{																									
 background:white;																									
 border-radius:15px;																									
 padding:15px;																									
 margin-bottom:12px;																									
-box-shadow:0 1px 5px #0001;																									
 }																									
+																									
 .row{																									
 display:flex;																									
 justify-content:space-between;																									
 align-items:center;																									
 gap:10px;																									
 }																									
+																									
 .name{																									
 font-weight:700;																									
 }																									
+																									
 .small{																									
-font-size:12px;																									
 color:#64748b;																									
+font-size:12px;																									
 }																									
+																									
 .price{																									
-font-weight:700;																									
 color:#2563eb;																									
+font-weight:700;																									
 margin-top:5px;																									
 }																									
+																									
 .qty{																									
 display:flex;																									
 align-items:center;																									
 gap:9px;																									
 }																									
+																									
 .qty button{																									
 width:35px;																									
 height:35px;																									
@@ -105,216 +123,342 @@ border:0;
 border-radius:9px;																									
 font-size:20px;																									
 }																									
-.minus{background:#e2e8f0}																									
+																									
+.minus{																									
+background:#e2e8f0;																									
+}																									
+																									
 .plus{																									
 background:#2563eb;																									
 color:white;																									
 }																									
+																									
+.title{																									
+font-size:20px;																									
+font-weight:700;																									
+margin-bottom:15px;																									
+}																									
+																									
 .totalbox{																									
 background:white;																									
-padding:17px;																									
 border-radius:15px;																									
+padding:17px;																									
 margin-top:15px;																									
 }																									
+																									
 .total{																									
 font-size:20px;																									
 font-weight:700;																									
 }																									
+																									
 .mainbtn{																									
 width:100%;																									
-margin-top:15px;																									
 border:0;																									
 border-radius:12px;																									
 padding:15px;																									
+margin-top:15px;																									
 background:#2563eb;																									
 color:white;																									
 font-size:17px;																									
 font-weight:700;																									
 }																									
-.paybtn{background:#059669}																									
+																									
+.paybtn{																									
+background:#059669;																									
+}																									
+																									
+.loading{																									
+text-align:center;																									
+color:#94a3b8;																									
+padding:55px 0;																									
+}																									
+																									
+.error{																									
+text-align:center;																									
+color:#dc2626;																									
+padding:40px 0;																									
+}																									
+																									
 nav{																									
-height:72px;																									
-background:white;																									
 position:fixed;																									
 bottom:0;																									
 left:0;																									
 right:0;																									
+height:72px;																									
+background:white;																									
+border-top:1px solid #ddd;																									
 display:grid;																									
 grid-template-columns:repeat(4,1fr);																									
-border-top:1px solid #ddd;																									
-z-index:30;																									
 }																									
+																									
 nav button{																									
 border:0;																									
 background:white;																									
 color:#64748b;																									
 font-weight:700;																									
 }																									
-nav .active{color:#2563eb}																									
+																									
+nav .active{																									
+color:#2563eb;																									
+}																									
+																									
 nav span{																									
 display:block;																									
 font-size:21px;																									
 }																									
+																									
 .modal{																									
 position:fixed;																									
 inset:0;																									
 background:#0009;																									
-z-index:100;																									
 display:flex;																									
 align-items:center;																									
 justify-content:center;																									
 padding:20px;																									
+z-index:100;																									
 }																									
+																									
 .modalbox{																									
 background:white;																									
 width:100%;																									
 max-width:360px;																									
-padding:22px;																									
 border-radius:20px;																									
+padding:22px;																									
 }																									
+																									
 .tablebtn{																									
 width:100%;																									
 border:0;																									
-background:#f1f5f9;																									
-margin:5px 0;																									
-padding:14px;																									
 border-radius:12px;																									
+background:#f1f5f9;																									
+padding:14px;																									
+margin:5px 0;																									
 font-size:17px;																									
 font-weight:700;																									
 }																									
-.loading{																									
+																									
+.center{																									
 text-align:center;																									
-color:#94a3b8;																									
-padding:55px 0;																									
 }																									
-.error{																									
-text-align:center;																									
-color:#dc2626;																									
-padding:40px 0;																									
-}																									
-.badge{																									
-font-size:12px;																									
-padding:5px 9px;																									
-border-radius:14px;																									
-background:#fef3c7;																									
-color:#92400e;																									
-}																									
-.paid{																									
-background:#e2e8f0;																									
-color:#475569;																									
-}																									
-.center{text-align:center}																									
+																									
 .receipt{																									
 border:1px dashed #aaa;																									
 padding:15px;																									
-margin-top:15px;																									
 }																									
+																									
 </style>																									
 </head>																									
 																									
 <body>																									
 																									
 <header>																									
+																									
 <div>																									
-<b>テーブル: <span id='tableNo'>1</span>番</b>																									
-<button onclick='openTable()'>変更</button>																									
+<b>																									
+テーブル:																									
+<span id='tableDisplay'>1</span>番																									
+</b>																									
+																									
+<button onclick='openTable()'>																									
+変更																									
+</button>																									
 </div>																									
-<div id='status' class='status'>接続確認中</div>																									
+																									
+<div id='status'>																									
+接続確認中																									
+</div>																									
+																									
 </header>																									
+																									
 																									
 <main>																									
 																									
 <section id='menuView'>																									
+																									
 <div id='catbar' class='catbar'></div>																									
-<div id='menuList' class='loading'>メニューを読み込んでいます...</div>																									
+																									
+<div id='menuList' class='loading'>																									
+メニューを読み込んでいます...																									
+</div>																									
+																									
 </section>																									
 																									
+																									
 <section id='cartView' class='hidden'>																									
-<div class='title'>注文かご</div>																									
+																									
+<div class='title'>																									
+注文かご																									
+</div>																									
+																									
 <div id='cartList'></div>																									
 																									
 <div class='totalbox'>																									
+																									
 <div class='row total'>																									
 <span>合計</span>																									
-<span>¥<span id='cartTotal'>0</span></span>																									
+<span>																									
+¥<span id='cartTotal'>0</span>																									
+</span>																									
 </div>																									
 																									
-<button class='mainbtn' onclick='submitOrder()'>																									
+<button																									
+class='mainbtn'																									
+onclick='submitOrder()'																									
+>																									
 注文を確定する																									
 </button>																									
+																									
 </div>																									
+																									
 </section>																									
+																									
 																									
 <section id='historyView' class='hidden'>																									
-<div class='title'>注文履歴</div>																									
+																									
+<div class='title'>																									
+注文履歴																									
+</div>																									
+																									
 <div id='historyList'></div>																									
+																									
 </section>																									
 																									
+																									
 <section id='checkoutView' class='hidden'>																									
-<div class='title'>お会計</div>																									
+																									
+<div class='title'>																									
+お会計																									
+</div>																									
+																									
 <div id='checkoutList'></div>																									
 																									
 <div class='totalbox'>																									
+																									
 <div class='row total'>																									
-<span>お支払い総額</span>																									
-<span>¥<span id='checkoutTotal'>0</span></span>																									
+<span>合計</span>																									
+																									
+<span>																									
+¥<span id='checkoutTotal'>0</span>																									
+</span>																									
 </div>																									
 																									
-<button class='mainbtn paybtn' onclick='checkout()'>																									
+<button																									
+class='mainbtn paybtn'																									
+onclick='checkout()'																									
+>																									
 お会計を確定する																									
 </button>																									
+																									
 </div>																									
+																									
 </section>																									
 																									
 </main>																									
 																									
+																									
 <nav>																									
-<button id='navMenu' class='active' onclick='showView("menu")'>																									
+																									
+<button																									
+id='navMenu'																									
+class='active'																									
+onclick='showView("menu")'																									
+>																									
 <span>📋</span>																									
 メニュー																									
 </button>																									
 																									
-<button id='navCart' onclick='showView("cart")'>																									
+<button																									
+id='navCart'																									
+onclick='showView("cart")'																									
+>																									
 <span>🛒</span>																									
 かご																									
 </button>																									
 																									
-<button id='navHistory' onclick='showView("history")'>																									
+<button																									
+id='navHistory'																									
+onclick='showView("history")'																									
+>																									
 <span>⏳</span>																									
 履歴																									
 </button>																									
 																									
-<button id='navCheckout' onclick='showView("checkout")'>																									
+<button																									
+id='navCheckout'																									
+onclick='showView("checkout")'																									
+>																									
 <span>💰</span>																									
 会計																									
 </button>																									
+																									
 </nav>																									
 																									
-<div id='tableModal' class='modal hidden'>																									
-<div class='modalbox'>																									
-<div class='title center'>テーブル番号を選択</div>																									
 																									
-<button class='tablebtn' onclick='selectTable(1)'>テーブル 1</button>																									
-<button class='tablebtn' onclick='selectTable(2)'>テーブル 2</button>																									
-<button class='tablebtn' onclick='selectTable(3)'>テーブル 3</button>																									
-<button class='tablebtn' onclick='selectTable(4)'>テーブル 4</button>																									
-<button class='tablebtn' onclick='selectTable(5)'>テーブル 5</button>																									
-</div>																									
-</div>																									
+<div																									
+id='tableModal'																									
+class='modal hidden'																									
+>																									
 																									
-<div id='receiptModal' class='modal hidden'>																									
 <div class='modalbox'>																									
 																									
-<div class='center' style='font-size:45px'>✅</div>																									
-<div class='title center'>お会計完了</div>																									
+<div class='title center'>																									
+テーブル番号																									
+</div>																									
+																									
+<button class='tablebtn' onclick='selectTable(1)'>																									
+テーブル 1																									
+</button>																									
+																									
+<button class='tablebtn' onclick='selectTable(2)'>																									
+テーブル 2																									
+</button>																									
+																									
+<button class='tablebtn' onclick='selectTable(3)'>																									
+テーブル 3																									
+</button>																									
+																									
+<button class='tablebtn' onclick='selectTable(4)'>																									
+テーブル 4																									
+</button>																									
+																									
+<button class='tablebtn' onclick='selectTable(5)'>																									
+テーブル 5																									
+</button>																									
+																									
+</div>																									
+																									
+</div>																									
+																									
+																									
+<div																									
+id='receiptModal'																									
+class='modal hidden'																									
+>																									
+																									
+<div class='modalbox'>																									
+																									
+<div																									
+class='center'																									
+style='font-size:45px'																									
+>																									
+✅																									
+</div>																									
+																									
+<div class='title center'>																									
+お会計完了																									
+</div>																									
 																									
 <div class='receipt'>																									
+																									
 <div class='row'>																									
 <b>テーブル</b>																									
 <span id='receiptTable'></span>																									
 </div>																									
 																									
-<div id='receiptItems' style='margin-top:12px'></div>																									
+<div																									
+id='receiptItems'																									
+style='margin-top:12px'																									
+></div>																									
 																									
 <hr>																									
 																									
@@ -322,16 +466,26 @@ margin-top:15px;
 <b>合計</b>																									
 <b id='receiptTotal'></b>																									
 </div>																									
+																									
 </div>																									
 																									
-<div id='qr' class='center' style='margin-top:18px'></div>																									
+<div																									
+id='qr'																									
+class='center'																									
+style='margin-top:18px'																									
+></div>																									
 																									
-<button class='mainbtn' onclick='closeReceipt()'>																									
+<button																									
+class='mainbtn'																									
+onclick='closeReceipt()'																									
+>																									
 閉じる																									
 </button>																									
 																									
 </div>																									
+																									
 </div>																									
+																									
 																									
 <script>																									
 																									
@@ -340,62 +494,137 @@ const API='https://script.google.com/macros/s/AKfycbxzxAT7w9VscVWSYeCGs0b0BSzw_F
 let menu=[];																									
 let cart={};																									
 let currentCategory='all';																									
-let currentTable=localStorage.getItem('saizeriya_table_no')||'1';																									
+																									
+let tableNo=																									
+localStorage.getItem('saizeriya_table_no') ||																									
+1';																									
 																									
 																									
-window.addEventListener('DOMContentLoaded',function(){																									
+window.onload=function(){																									
 																									
-document.getElementById('tableNo').textContent=currentTable;																									
+document.getElementById('tableDisplay').textContent=																									
+tableNo;																									
 																									
 if(!localStorage.getItem('saizeriya_table_no')){																									
 openTable();																									
 }																									
 																									
 renderCart();																									
+																									
 loadMenu();																									
 																									
-});																									
+};																									
 																									
 																									
 function api(action,data){																									
 																									
 return new Promise(function(resolve,reject){																									
 																									
-const cb='cb_'+Date.now()+'_'+Math.floor(Math.random()*99999);																									
-const script=document.createElement('script');																									
+const cb=																									
+jsonp_' +																									
+Date.now() +																									
+_' +																									
+Math.floor(Math.random()*99999);																									
 																									
-const timer=setTimeout(function(){																									
+const script=																									
+document.createElement('script');																									
+																									
+let finished=false;																									
+																									
+const timer=																									
+setTimeout(function(){																									
+																									
+if(finished){																									
+return;																									
+}																									
+																									
+finished=true;																									
+																									
 cleanup();																									
-reject(new Error('タイムアウト'));																									
+																									
+reject(																									
+new Error('通信タイムアウト')																									
+);																									
+																									
 },15000);																									
 																									
+																									
 function cleanup(){																									
+																									
 clearTimeout(timer);																									
+																									
+try{																									
 delete window[cb];																									
+}catch(e){}																									
 																									
 if(script.parentNode){																									
 script.parentNode.removeChild(script);																									
 }																									
+																									
 }																									
 																									
+																									
 window[cb]=function(result){																									
+																									
+if(finished){																									
+return;																									
+}																									
+																									
+finished=true;																									
+																									
 cleanup();																									
+																									
 resolve(result);																									
+																									
 };																									
+																									
 																									
 script.onerror=function(){																									
+																									
+if(finished){																									
+return;																									
+}																									
+																									
+finished=true;																									
+																									
 cleanup();																									
-reject(new Error('通信エラー'));																									
+																									
+reject(																									
+new Error('JSONP通信エラー')																									
+);																									
+																									
 };																									
 																									
-const params=new URLSearchParams();																									
 																									
-params.set('action',action);																									
-params.set('callback',cb);																									
-params.set('data',JSON.stringify(data||{}));																									
-params.set('_',Date.now());																									
+const params=																									
+new URLSearchParams();																									
 																									
-script.src=API+'?'+params.toString();																									
+params.set(																									
+action',																									
+action																									
+);																									
+																									
+params.set(																									
+callback',																									
+cb																									
+);																									
+																									
+params.set(																									
+data',																									
+JSON.stringify(data||{})																									
+);																									
+																									
+params.set(																									
+_',																									
+String(Date.now())																									
+);																									
+																									
+																									
+script.src=																									
+API +																									
+?' +																									
+params.toString();																									
+																									
 																									
 document.body.appendChild(script);																									
 																									
@@ -404,74 +633,21 @@ document.body.appendChild(script);
 }																									
 																									
 																									
-function connection(ok){																									
+function setStatus(ok){																									
 																									
-const el=document.getElementById('status');																									
+const el=																									
+document.getElementById('status');																									
 																									
 if(ok){																									
+																									
 el.textContent='接続中';																									
 el.style.background='#10b981';																									
+																									
 }else{																									
+																									
 el.textContent='通信エラー';																									
 el.style.background='#dc2626';																									
-}																									
 																									
-}																									
-																									
-																									
-function openTable(){																									
-document.getElementById('tableModal').classList.remove('hidden');																									
-}																									
-																									
-																									
-function selectTable(no){																									
-																									
-currentTable=String(no);																									
-																									
-localStorage.setItem('saizeriya_table_no',currentTable);																									
-																									
-document.getElementById('tableNo').textContent=currentTable;																									
-																									
-document.getElementById('tableModal').classList.add('hidden');																									
-																									
-cart={};																									
-																									
-renderCart();																									
-renderMenu();																									
-																									
-showView('menu');																									
-																									
-}																									
-																									
-																									
-function showView(name){																									
-																									
-const names=['menu','cart','history','checkout'];																									
-																									
-names.forEach(function(x){																									
-																									
-document.getElementById(x+'View').classList.add('hidden');																									
-																									
-const nav=document.getElementById(																									
-nav'+x.charAt(0).toUpperCase()+x.slice(1)																									
-);																									
-																									
-nav.classList.remove('active');																									
-																									
-});																									
-																									
-document.getElementById(name+'View').classList.remove('hidden');																									
-																									
-document.getElementById(																									
-nav'+name.charAt(0).toUpperCase()+name.slice(1)																									
-).classList.add('active');																									
-																									
-if(name==='history'){																									
-loadHistory();																									
-}																									
-																									
-if(name==='checkout'){																									
-loadCheckout();																									
 }																									
 																									
 }																									
@@ -483,11 +659,20 @@ api('getMenu',{})
 																									
 .then(function(res){																									
 																									
-if(!res||res.status!=='success'){																									
-throw new Error('メニュー取得失敗');																									
+if(																									
+!res ||																									
+res.status!=='success'																									
+){																									
+																									
+throw new Error(																									
+res && res.message																									
+? res.message																									
+: 'メニュー取得失敗'																									
+);																									
+																									
 }																									
 																									
-connection(true);																									
+setStatus(true);																									
 																									
 menu=res.data||[];																									
 																									
@@ -498,12 +683,12 @@ renderMenu();
 																									
 .catch(function(err){																									
 																									
-console.error(err);																									
+console.log(err);																									
 																									
-connection(false);																									
+setStatus(false);																									
 																									
 document.getElementById('menuList').innerHTML=																									
-<div class=error>メニューを取得できません</div>';																									
+<div class=error>メニュー取得エラー<br>'+safe(err.message)+'</div>';																									
 																									
 });																									
 																									
@@ -512,34 +697,44 @@ document.getElementById('menuList').innerHTML=
 																									
 function renderCategories(){																									
 																									
-const cats=['all'];																									
+const list=['all'];																									
 																									
 menu.forEach(function(item){																									
 																									
-if(cats.indexOf(item.category)===-1){																									
-cats.push(item.category);																									
+if(																									
+list.indexOf(item.category)===-1																									
+){																									
+list.push(item.category);																									
 }																									
 																									
 });																									
 																									
-const box=document.getElementById('catbar');																									
+const box=																									
+document.getElementById('catbar');																									
 																									
 box.innerHTML='';																									
 																									
-cats.forEach(function(cat){																									
+list.forEach(function(cat){																									
 																									
-const btn=document.createElement('button');																									
+const btn=																									
+document.createElement('button');																									
 																									
-btn.textContent=cat==='all'?'すべて':cat;																									
+btn.textContent=																									
+cat==='all'																									
+?'すべて'																									
+:cat;																									
 																									
 if(cat===currentCategory){																									
 btn.className='active';																									
 }																									
 																									
 btn.onclick=function(){																									
+																									
 currentCategory=cat;																									
+																									
 renderCategories();																									
 renderMenu();																									
+																									
 };																									
 																									
 box.appendChild(btn);																									
@@ -551,9 +746,11 @@ box.appendChild(btn);
 																									
 function renderMenu(){																									
 																									
-const box=document.getElementById('menuList');																									
+const box=																									
+document.getElementById('menuList');																									
 																									
-const list=currentCategory==='all'																									
+const list=																									
+currentCategory==='all'																									
 ?menu																									
 :menu.filter(function(item){																									
 return item.category===currentCategory;																									
@@ -563,7 +760,8 @@ box.innerHTML='';
 																									
 if(list.length===0){																									
 																									
-box.innerHTML='<div class=loading>メニューがありません</div>';																									
+box.innerHTML=																									
+<div class=loading>メニューがありません</div>';																									
 																									
 return;																									
 																									
@@ -571,27 +769,38 @@ return;
 																									
 list.forEach(function(item){																									
 																									
-const qty=cart[item.id]?cart[item.id].quantity:0;																									
+const qty=																									
+cart[item.id]																									
+?cart[item.id].quantity																									
+:0;																									
 																									
-const card=document.createElement('div');																									
+const card=																									
+document.createElement('div');																									
 																									
 card.className='card';																									
 																									
 card.innerHTML=																									
-<div class=row>'+																									
-<div>'+																									
-<div class=small>'+safe(item.category)+'</div>'+																									
-<div class=name>'+safe(item.name)+'</div>'+																									
-<div class=price>¥'+money(item.price)+'</div>'+																									
-</div>'+																									
-<div class=qty>'+																									
-<button class=minus>-</button>'+																									
-<b>'+qty+'</b>'+																									
-<button class=plus>+</button>'+																									
-</div>'+																									
+<div class=row>' +																									
+<div>' +																									
+<div class=small>' +																									
+safe(item.category) +																									
+</div>' +																									
+<div class=name>' +																									
+safe(item.name) +																									
+</div>' +																									
+<div class=price>¥' +																									
+money(item.price) +																									
+</div>' +																									
+</div>' +																									
+<div class=qty>' +																									
+<button class=minus>-</button>' +																									
+<b>' + qty + '</b>' +																									
+<button class=plus>+</button>' +																									
+</div>' +																									
 </div>';																									
 																									
-const buttons=card.querySelectorAll('button');																									
+const buttons=																									
+card.querySelectorAll('button');																									
 																									
 buttons[0].onclick=function(){																									
 changeQty(item.id,-1);																									
@@ -610,7 +819,8 @@ box.appendChild(card);
 																									
 function changeQty(id,delta){																									
 																									
-const item=menu.find(function(x){																									
+const item=																									
+menu.find(function(x){																									
 return String(x.id)===String(id);																									
 });																									
 																									
@@ -647,81 +857,120 @@ renderCart();
 																									
 function renderCart(){																									
 																									
-const box=document.getElementById('cartList');																									
-const items=Object.values(cart);																									
+const box=																									
+document.getElementById('cartList');																									
 																									
-box.innerHTML='';																									
+const items=																									
+Object.values(cart);																									
 																									
 let total=0;																									
 																									
+box.innerHTML='';																									
+																									
 if(items.length===0){																									
 																									
-box.innerHTML='<div class=loading>注文かごは空です</div>';																									
+box.innerHTML=																									
+<div class=loading>注文かごは空です</div>';																									
 																									
-}else{																									
+}																									
 																									
 items.forEach(function(item){																									
 																									
-const subtotal=item.price*item.quantity;																									
+const subtotal=																									
+Number(item.price) *																									
+Number(item.quantity);																									
 																									
 total+=subtotal;																									
 																									
-const card=document.createElement('div');																									
+const card=																									
+document.createElement('div');																									
 																									
 card.className='card';																									
 																									
 card.innerHTML=																									
-<div class=row>'+																									
-<div>'+																									
-<div class=name>'+safe(item.name)+'</div>'+																									
-<div class=small>¥'+money(item.price)+' × '+item.quantity+'</div>'+																									
-</div>'+																									
-<b>¥'+money(subtotal)+'</b>'+																									
+<div class=row>' +																									
+<div>' +																									
+<div class=name>' +																									
+safe(item.name) +																									
+</div>' +																									
+<div class=small>¥' +																									
+money(item.price) +																									
+ × ' +																									
+item.quantity +																									
+</div>' +																									
+</div>' +																									
+<b>¥' +																									
+money(subtotal) +																									
+</b>' +																									
 </div>';																									
 																									
 box.appendChild(card);																									
 																									
 });																									
 																									
-}																									
-																									
-document.getElementById('cartTotal').textContent=money(total);																									
+document.getElementById('cartTotal').textContent=																									
+money(total);																									
 																									
 }																									
 																									
 																									
 function submitOrder(){																									
 																									
-const items=Object.values(cart);																									
+const items=																									
+Object.values(cart);																									
 																									
 if(items.length===0){																									
-alert('商品を選択してください');																									
+																									
+alert(																									
+商品を選択してください'																									
+);																									
+																									
+return;																									
+																									
+}																									
+																									
+if(																									
+!confirm(																									
+この内容で注文しますか？'																									
+)																									
+){																									
 return;																									
 }																									
 																									
-if(!confirm('この内容で注文しますか？')){																									
-return;																									
-}																									
-																									
-api('submitOrder',{																									
-tableNo:currentTable,																									
+api(																									
+submitOrder',																									
+{																									
+tableNo:tableNo,																									
 items:items																									
-})																									
+}																									
+)																									
 																									
 .then(function(res){																									
 																									
-if(!res||res.status!=='success'){																									
-throw new Error(res&&res.message?res.message:'注文失敗');																									
+if(																									
+!res ||																									
+res.status!=='success'																									
+){																									
+																									
+throw new Error(																									
+res && res.message																									
+?res.message																									
+:'注文失敗'																									
+);																									
+																									
 }																									
 																									
-connection(true);																									
+setStatus(true);																									
 																									
-alert('注文しました\n注文番号: '+res.orderId);																									
+alert(																									
+注文しました\n注文番号: ' +																									
+res.orderId																									
+);																									
 																									
 cart={};																									
 																									
-renderCart();																									
 renderMenu();																									
+renderCart();																									
 																									
 showView('history');																									
 																									
@@ -729,9 +978,12 @@ showView('history');
 																									
 .catch(function(err){																									
 																									
-connection(false);																									
+setStatus(false);																									
 																									
-alert('注文エラー\n'+err.message);																									
+alert(																									
+注文エラー\n' +																									
+err.message																									
+);																									
 																									
 });																									
 																									
@@ -740,29 +992,45 @@ alert('注文エラー\n'+err.message);
 																									
 function loadHistory(){																									
 																									
-const box=document.getElementById('historyList');																									
+const box=																									
+document.getElementById('historyList');																									
 																									
-box.innerHTML='<div class=loading>読み込み中...</div>';																									
+box.innerHTML=																									
+<div class=loading>読み込み中...</div>';																									
 																									
-api('getOrderByTable',{																									
-tableNo:currentTable																									
-})																									
+api(																									
+getOrderByTable',																									
+{																									
+tableNo:tableNo																									
+}																									
+)																									
 																									
 .then(function(res){																									
 																									
-if(!res||res.status!=='success'){																									
-throw new Error('履歴取得失敗');																									
+if(																									
+!res ||																									
+res.status!=='success'																									
+){																									
+																									
+throw new Error(																									
+res && res.message																									
+?res.message																									
+:'履歴取得失敗'																									
+);																									
+																									
 }																									
 																									
-connection(true);																									
+setStatus(true);																									
 																									
-const orders=res.orders||[];																									
+const orders=																									
+res.orders||[];																									
 																									
 box.innerHTML='';																									
 																									
 if(orders.length===0){																									
 																									
-box.innerHTML='<div class=loading>注文履歴はありません</div>';																									
+box.innerHTML=																									
+<div class=loading>注文履歴はありません</div>';																									
 																									
 return;																									
 																									
@@ -770,38 +1038,48 @@ return;
 																									
 orders.forEach(function(order){																									
 																									
-const card=document.createElement('div');																									
+const card=																									
+document.createElement('div');																									
 																									
 card.className='card';																									
 																									
-let itemsHtml='';																									
+let html=																									
+<div class=row>' +																									
+<span class=small>' +																									
+safe(order.orderDate) +																									
+</span>' +																									
+<b>' +																									
+safe(order.status) +																									
+</b>' +																									
+</div>' +																									
+<hr>';																									
 																									
 order.items.forEach(function(item){																									
 																									
-itemsHtml+=																									
-<div class=row>'+																									
-<span>'+safe(item.name)+' × '+item.quantity+'</span>'+																									
-<span>¥'+money(item.subtotal)+'</span>'+																									
+html+=																									
+<div class=row>' +																									
+<span>' +																									
+safe(item.name) +																									
+ × ' +																									
+item.quantity +																									
+</span>' +																									
+<span>¥' +																									
+money(item.subtotal) +																									
+</span>' +																									
 </div>';																									
 																									
 });																									
 																									
-const badge=order.status==='会計済み'																									
-?'badge paid'																									
-:'badge';																									
-																									
-card.innerHTML=																									
-<div class=row>'+																									
-<span class=small>'+safe(order.orderDate)+'</span>'+																									
-<span class=\''+badge+'\'>'+safe(order.status)+'</span>'+																									
-</div>'+																									
-<hr>'+																									
-itemsHtml+																									
-<hr>'+																									
-<div class=row>'+																									
-<b>小計</b>'+																									
-<b>¥'+money(order.total)+'</b>'+																									
+html+=																									
+<hr>' +																									
+<div class=row>' +																									
+<b>小計</b>' +																									
+<b>¥' +																									
+money(order.total) +																									
+</b>' +																									
 </div>';																									
+																									
+card.innerHTML=html;																									
 																									
 box.appendChild(card);																									
 																									
@@ -809,11 +1087,14 @@ box.appendChild(card);
 																									
 })																									
 																									
-.catch(function(){																									
+.catch(function(err){																									
 																									
-connection(false);																									
+setStatus(false);																									
 																									
-box.innerHTML='<div class=error>注文履歴を取得できません</div>';																									
+box.innerHTML=																									
+<div class=error>' +																									
+safe(err.message) +																									
+</div>';																									
 																									
 });																									
 																									
@@ -822,27 +1103,44 @@ box.innerHTML='<div class=error>注文履歴を取得できません</div>';
 																									
 function loadCheckout(){																									
 																									
-const box=document.getElementById('checkoutList');																									
+const box=																									
+document.getElementById('checkoutList');																									
 																									
-box.innerHTML='<div class=loading>読み込み中...</div>';																									
+box.innerHTML=																									
+<div class=loading>読み込み中...</div>';																									
 																									
-api('getOrderByTable',{																									
-tableNo:currentTable																									
-})																									
+api(																									
+getOrderByTable',																									
+{																									
+tableNo:tableNo																									
+}																									
+)																									
 																									
 .then(function(res){																									
 																									
-if(!res||res.status!=='success'){																									
-throw new Error('会計取得失敗');																									
+if(																									
+!res ||																									
+res.status!=='success'																									
+){																									
+																									
+throw new Error(																									
+res && res.message																									
+?res.message																									
+:'取得失敗'																									
+);																									
+																									
 }																									
 																									
-connection(true);																									
+setStatus(true);																									
 																									
-const orders=(res.orders||[]).filter(function(order){																									
+const orders=																									
+(res.orders||[])																									
+.filter(function(order){																									
 return order.status!=='会計済み';																									
 });																									
 																									
 const map={};																									
+																									
 let total=0;																									
 																									
 orders.forEach(function(order){																									
@@ -851,7 +1149,8 @@ total+=Number(order.total);
 																									
 order.items.forEach(function(item){																									
 																									
-const id=String(item.id);																									
+const id=																									
+String(item.id);																									
 																									
 if(!map[id]){																									
 																									
@@ -863,8 +1162,11 @@ subtotal:0
 																									
 }																									
 																									
-map[id].quantity+=Number(item.quantity);																									
-map[id].subtotal+=Number(item.subtotal);																									
+map[id].quantity+=																									
+Number(item.quantity);																									
+																									
+map[id].subtotal+=																									
+Number(item.subtotal);																									
 																									
 });																									
 																									
@@ -872,41 +1174,52 @@ map[id].subtotal+=Number(item.subtotal);
 																									
 box.innerHTML='';																									
 																									
-const items=Object.values(map);																									
+Object.values(map)																									
+.forEach(function(item){																									
 																									
-if(items.length===0){																									
-																									
-box.innerHTML='<div class=loading>未会計の注文はありません</div>';																									
-																									
-}else{																									
-																									
-items.forEach(function(item){																									
-																									
-const card=document.createElement('div');																									
+const card=																									
+document.createElement('div');																									
 																									
 card.className='card';																									
 																									
 card.innerHTML=																									
-<div class=row>'+																									
-<b>'+safe(item.name)+' × '+item.quantity+'</b>'+																									
-<b>¥'+money(item.subtotal)+'</b>'+																									
+<div class=row>' +																									
+<b>' +																									
+safe(item.name) +																									
+ × ' +																									
+item.quantity +																									
+</b>' +																									
+<b>¥' +																									
+money(item.subtotal) +																									
+</b>' +																									
 </div>';																									
 																									
 box.appendChild(card);																									
 																									
 });																									
 																									
+if(																									
+Object.keys(map).length===0																									
+){																									
+																									
+box.innerHTML=																									
+<div class=loading>未会計の注文はありません</div>';																									
+																									
 }																									
 																									
-document.getElementById('checkoutTotal').textContent=money(total);																									
+document.getElementById('checkoutTotal').textContent=																									
+money(total);																									
 																									
 })																									
 																									
-.catch(function(){																									
+.catch(function(err){																									
 																									
-connection(false);																									
+setStatus(false);																									
 																									
-box.innerHTML='<div class=error>会計情報を取得できません</div>';																									
+box.innerHTML=																									
+<div class=error>' +																									
+safe(err.message) +																									
+</div>';																									
 																									
 });																									
 																									
@@ -915,43 +1228,68 @@ box.innerHTML='<div class=error>会計情報を取得できません</div>';
 																									
 function checkout(){																									
 																									
-const total=Number(																									
-document.getElementById('checkoutTotal').textContent.replace(/,/g,'')																									
-);																									
+const text=																									
+document.getElementById('checkoutTotal').textContent;																									
+																									
+const total=																									
+Number(text.replace(/,/g,''));																									
 																									
 if(total<=0){																									
 																									
-alert('未会計の注文はありません');																									
+alert(																									
+未会計の注文はありません'																									
+);																									
 																									
 return;																									
 																									
 }																									
 																									
-if(!confirm('お会計を確定しますか？')){																									
+if(																									
+!confirm(																									
+お会計を確定しますか？'																									
+)																									
+){																									
 return;																									
 }																									
 																									
-api('checkoutByTable',{																									
-tableNo:currentTable																									
-})																									
+api(																									
+checkoutByTable',																									
+{																									
+tableNo:tableNo																									
+}																									
+)																									
 																									
 .then(function(res){																									
 																									
-if(!res||res.status!=='success'){																									
-throw new Error(res&&res.message?res.message:'会計失敗');																									
+if(																									
+!res ||																									
+res.status!=='success'																									
+){																									
+																									
+throw new Error(																									
+res && res.message																									
+?res.message																									
+:'会計失敗'																									
+);																									
+																									
 }																									
 																									
-connection(true);																									
+setStatus(true);																									
 																									
-showReceipt(res.receipt);																									
+showReceipt(																									
+res.receipt																									
+);																									
 																									
 })																									
 																									
 .catch(function(err){																									
 																									
-connection(false);																									
+setStatus(false);																									
 																									
-alert('会計エラー\n'+err.message);																									
+alert(																									
+会計エラー\n' +																									
+err.message																									
+);																									
 																									
 });																									
 																									
@@ -961,40 +1299,56 @@ alert('会計エラー\n'+err.message);
 function showReceipt(receipt){																									
 																									
 document.getElementById('receiptTable').textContent=																									
-receipt.tableNo+'番';																									
+receipt.tableNo + '番';																									
 																									
 document.getElementById('receiptTotal').textContent=																									
-¥'+money(receipt.totalAmount);																									
+¥' + money(receipt.totalAmount);																									
 																									
-const box=document.getElementById('receiptItems');																									
+const box=																									
+document.getElementById('receiptItems');																									
 																									
 box.innerHTML='';																									
 																									
 receipt.items.forEach(function(item){																									
 																									
-const row=document.createElement('div');																									
+const row=																									
+document.createElement('div');																									
 																									
 row.className='row';																									
 																									
 row.innerHTML=																									
-<span>'+safe(item.name)+' × '+item.quantity+'</span>'+																									
-<span>¥'+money(item.subtotal)+'</span>';																									
+<span>' +																									
+safe(item.name) +																									
+ × ' +																									
+item.quantity +																									
+</span>' +																									
+<span>¥' +																									
+money(item.subtotal) +																									
+</span>';																									
 																									
 box.appendChild(row);																									
 																									
 });																									
 																									
-const qr=document.getElementById('qr');																									
+const qr=																									
+document.getElementById('qr');																									
 																									
 qr.innerHTML='';																									
 																									
-new QRCode(qr,{																									
-text:'RECEIPT='+receipt.receiptId+																									
-&TABLE='+receipt.tableNo+																									
-&TOTAL='+receipt.totalAmount,																									
+new QRCode(																									
+qr,																									
+{																									
+text:																									
+RECEIPT=' +																									
+receipt.receiptId +																									
+&TABLE=' +																									
+receipt.tableNo +																									
+&TOTAL=' +																									
+receipt.totalAmount,																									
 width:120,																									
 height:120																									
-});																									
+}																									
+);																									
 																									
 document.getElementById('receiptModal').classList.remove('hidden');																									
 																									
@@ -1010,16 +1364,108 @@ showView('menu');
 }																									
 																									
 																									
+function openTable(){																									
+																									
+document.getElementById('tableModal').classList.remove('hidden');																									
+																									
+}																									
+																									
+																									
+function selectTable(no){																									
+																									
+tableNo=String(no);																									
+																									
+localStorage.setItem(																									
+saizeriya_table_no',																									
+tableNo																									
+);																									
+																									
+document.getElementById('tableDisplay').textContent=																									
+tableNo;																									
+																									
+document.getElementById('tableModal').classList.add('hidden');																									
+																									
+cart={};																									
+																									
+renderCart();																									
+renderMenu();																									
+																									
+showView('menu');																									
+																									
+}																									
+																									
+																									
+function showView(name){																									
+																									
+const names=[																									
+menu',																									
+cart',																									
+history',																									
+checkout'																									
+];																									
+																									
+names.forEach(function(x){																									
+																									
+document																									
+.getElementById(x+'View')																									
+.classList																									
+.add('hidden');																									
+																									
+document																									
+.getElementById(																									
+nav' +																									
+x.charAt(0).toUpperCase() +																									
+x.slice(1)																									
+)																									
+.classList																									
+.remove('active');																									
+																									
+});																									
+																									
+document																									
+.getElementById(name+'View')																									
+.classList																									
+.remove('hidden');																									
+																									
+document																									
+.getElementById(																									
+nav' +																									
+name.charAt(0).toUpperCase() +																									
+name.slice(1)																									
+)																									
+.classList																									
+.add('active');																									
+																									
+if(name==='history'){																									
+loadHistory();																									
+}																									
+																									
+if(name==='checkout'){																									
+loadCheckout();																									
+}																									
+																									
+}																									
+																									
+																									
 function money(value){																									
-return Number(value||0).toLocaleString('ja-JP');																									
+																									
+return Number(value||0)																									
+.toLocaleString('ja-JP');																									
+																									
 }																									
 																									
 																									
 function safe(value){																									
 																									
-const div=document.createElement('div');																									
+const div=																									
+document.createElement('div');																									
 																									
-div.textContent=String(value==null?'':value);																									
+div.textContent=																									
+String(																									
+value==null																									
+?''																									
+:value																									
+);																									
 																									
 return div.innerHTML;																									
 																									
