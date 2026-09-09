@@ -329,7 +329,6 @@ const checkoutArea = document.getElementById('checkout-area');
 modal.classList.remove('hidden');																									
 content.innerHTML = '<p class="text-gray-500 text-center py-4">注文状況を確認中...</p>';																									
 																									
-// 選択中のテーブル番号に一致する注文をスプレッドシートから取得																									
 fetch(GAS_API_URL + "?action=getOrderByTable&tableNo=" + encodeURIComponent(currentTableNo))																									
 .then(res => res.json())																									
 .then(res => {																									
