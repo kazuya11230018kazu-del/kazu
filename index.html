@@ -329,7 +329,7 @@ const checkoutArea = document.getElementById('checkout-area');
 modal.classList.remove('hidden');																									
 content.innerHTML = '<p class="text-gray-500 text-center py-4">注文状況を確認中...</p>';																									
 																									
-fetch(GAS_API_URL + "?action=getOrderByTable&tableNo=" + currentTableNo)																									
+fetch(GAS_API_URL + "?action=getOrderByTable&tableNo=" + encodeURIComponent(currentTableNo))																									
 .then(res => res.json())																									
 .then(res => {																									
 if (res && res.status === "success" && res.items && res.items.length > 0) {																									
@@ -421,8 +421,7 @@ summaryContainer.appendChild(div);
 document.getElementById('qrcode').innerHTML = "";																									
 new QRCode(document.getElementById("qrcode"), { text: "CHECKOUT-" + tableNo + "-" + Date.now(), width: 120, height: 120 });																									
 																									
-document.getElementById('receipt-modal').classList.add('hidden'); // まずこのモーダルを閉じてから																									
-document.getElementById('receipt-modal').classList.remove('hidden'); // 領収書モーダルを表示																									
+document.getElementById('receipt-modal').classList.remove('hidden');																									
 }																									
 </script>																									
 </body>																									
