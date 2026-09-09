@@ -3,117 +3,158 @@
 <head>																									
 <meta charset="UTF-8">																									
 <meta name="viewport" content="width=device-width, initial-scale=1.0">																									
-<title>モバイルオーダー</title>																									
+<title>サイゼリヤ セルフオーダー</title>																									
 <!-- Tailwind CSS -->																									
 <script src="https://cdn.tailwindcss.com"></script>																									
 <!-- QR Code Generator -->																									
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>																									
 </head>																									
-<body class="bg-gray-50 text-gray-800 pb-28">																									
+<body class="bg-emerald-900 text-gray-800 pb-20 select-none">																									
 																									
-<!-- ヘッダー -->																									
-<header class="bg-indigo-600 text-white p-4 sticky top-0 z-10 shadow-md flex justify-between items-center">																									
-<div>																									
-<h1 class="text-lg font-bold">モバイルオーダー</h1>																									
-<p class="text-xs text-indigo-200">テーブル: <span id="display-table" class="font-bold">未設定</span></p>																									
+<!-- ================= 1. ウェルカム画面 ================= -->																									
+<div id="screen-welcome" class="fixed inset-0 bg-emerald-800 z-50 flex flex-col justify-between items-center p-6 text-white">																									
+<div class="w-full text-center pt-8">																									
+<p class="text-xl font-bold tracking-widest text-emerald-100">いらっしゃいませ</p>																									
 </div>																									
-<div class="flex items-center space-x-2">																									
-<button onclick="openStatusModal()" class="text-xs bg-indigo-500 px-3 py-1.5 rounded-lg font-bold hover:bg-indigo-400 transition shadow">																									
-注文状況・会計																									
+<div class="bg-white w-full max-w-sm rounded-3xl p-8 text-center shadow-2xl space-y-6 my-auto">																									
+<div class="border-2 border-emerald-600 rounded-full py-2 px-4 inline-block mx-auto bg-emerald-50">																									
+<span class="text-emerald-800 font-bold text-sm">イタリアンワイン＆カフェレストラン</span>																									
+</div>																									
+<div class="text-4xl font-extrabold text-red-700 tracking-wider">サイゼリヤ</div>																									
+<button onclick="goToPeopleScreen()" class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 rounded-2xl text-xl shadow-lg transition transform active:scale-95">																									
+注文をはじめる																									
 </button>																									
-<div class="text-xs bg-green-500 px-2 py-1 rounded text-white">接続完了</div>																									
 </div>																									
+<div class="text-xs text-emerald-300 pb-4">																									
+&copy; Saizeriya Co., Ltd. All rights reserved.																									
+</div>																									
+</div>																									
+																									
+<!-- ================= 2. 人数選択画面 ================= -->																									
+<div id="screen-people" class="fixed inset-0 bg-emerald-800 z-40 hidden flex flex-col justify-between p-4 text-white">																									
+<div class="text-center py-4 bg-emerald-700 rounded-xl shadow">																									
+<h2 class="text-lg font-bold">何名様(全員)でご利用ですか？</h2>																									
+</div>																									
+<div class="grid grid-cols-3 gap-3 my-auto max-w-md mx-auto w-full px-2">																									
+<button onclick="selectTableAndStart('1人')" class="bg-gray-100 text-emerald-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-emerald-50 transition active:scale-95">1人</button>																									
+<button onclick="selectTableAndStart('2人')" class="bg-gray-100 text-emerald-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-emerald-50 transition active:scale-95">2人</button>																									
+<button onclick="selectTableAndStart('3人')" class="bg-gray-100 text-emerald-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-emerald-50 transition active:scale-95">3人</button>																									
+<button onclick="selectTableAndStart('4人')" class="bg-gray-100 text-emerald-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-emerald-50 transition active:scale-95">4人</button>																									
+<button onclick="selectTableAndStart('5人')" class="bg-gray-100 text-emerald-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-emerald-50 transition active:scale-95">5人</button>																									
+<button onclick="selectTableAndStart('6人')" class="bg-gray-100 text-emerald-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-emerald-50 transition active:scale-95">6人</button>																									
+<button onclick="selectTableAndStart('7人')" class="bg-gray-100 text-emerald-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-emerald-50 transition active:scale-95">7人</button>																									
+<button onclick="selectTableAndStart('8人')" class="bg-gray-100 text-emerald-900 font-bold py-6 rounded-2xl text-xl shadow hover:bg-emerald-50 transition active:scale-95">8人</button>																									
+<button onclick="selectTableAndStart('9人以上')" class="bg-gray-100 text-emerald-900 font-bold py-6 rounded-2xl text-lg shadow hover:bg-emerald-50 transition active:scale-95">9人以上</button>																									
+</div>																									
+<div></div>																									
+</div>																									
+																									
+<!-- ================= 3. メイン画面（メニュー閲覧・注文） ================= -->																									
+<div id="screen-main" class="max-w-md mx-auto min-h-screen bg-white hidden flex flex-col">																									
+<!-- ヘッダー -->																									
+<header class="bg-emerald-800 text-white p-3 sticky top-0 z-20 shadow flex justify-between items-center">																									
+<span class="text-xs font-bold text-emerald-200">テーブル: <span id="display-table">1</span>番</span>																									
+<span class="text-xs bg-emerald-700 px-2 py-1 rounded text-emerald-100 font-bold">接続中</span>																									
 </header>																									
 																									
-<!-- メインコンテンツ -->																									
-<main class="max-w-md mx-auto p-4">																									
-<!-- テーブル番号選択モーダル -->																									
-<div id="table-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">																									
-<div class="bg-white w-full max-w-sm rounded-2xl p-6 text-center space-y-4 shadow-xl">																									
-<h2 class="text-xl font-bold text-gray-800">テーブル番号をお選びください</h2>																									
-<p class="text-sm text-gray-500">お座りのテーブル番号を選択し、決定ボタンを押してください</p>																									
-																									
-<!-- 1〜5番を選択するボタン群 -->																									
-<div class="grid grid-cols-1 gap-2.5 py-1">																									
-<button type="button" onclick="selectTempTable('1')" id="t-btn-1" class="table-select-btn w-full bg-gray-50 hover:bg-indigo-50 text-gray-700 border border-gray-200 font-bold py-3.5 rounded-xl text-lg transition shadow-sm">1番テーブル</button>																									
-<button type="button" onclick="selectTempTable('2')" id="t-btn-2" class="table-select-btn w-full bg-gray-50 hover:bg-indigo-50 text-gray-700 border border-gray-200 font-bold py-3.5 rounded-xl text-lg transition shadow-sm">2番テーブル</button>																									
-<button type="button" onclick="selectTempTable('3')" id="t-btn-3" class="table-select-btn w-full bg-gray-50 hover:bg-indigo-50 text-gray-700 border border-gray-200 font-bold py-3.5 rounded-xl text-lg transition shadow-sm">3番テーブル</button>																									
-<button type="button" onclick="selectTempTable('4')" id="t-btn-4" class="table-select-btn w-full bg-gray-50 hover:bg-indigo-50 text-gray-700 border border-gray-200 font-bold py-3.5 rounded-xl text-lg transition shadow-sm">4番テーブル</button>																									
-<button type="button" onclick="selectTempTable('5')" id="t-btn-5" class="table-select-btn w-full bg-gray-50 hover:bg-indigo-50 text-gray-700 border border-gray-200 font-bold py-3.5 rounded-xl text-lg transition shadow-sm">5番テーブル</button>																									
+<!-- 各タブのコンテナ -->																									
+<div class="flex-grow p-4 pb-28">																									
+<!-- Tab A: メニュー一覧（注文追加） -->																									
+<div id="tab-menu" class="space-y-4">																									
+<div class="text-center py-2 bg-emerald-50 rounded-lg text-emerald-800 text-xs font-bold border border-emerald-200">																									
+メニューを選んで数量を指定してください																									
+</div>																									
+<div id="menu-container" class="space-y-3"></div>																									
 </div>																									
 																									
-<button type="button" onclick="confirmTable()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl text-lg transition shadow-md mt-2">																									
-決定する																									
-</button>																									
-</div>																									
-</div>																									
-																									
-<div id="loading" class="text-center py-10 hidden">																									
-<p class="text-gray-500">メニューを読み込んでいます...</p>																									
-</div>																									
-																									
-<div id="menu-container" class="space-y-4 hidden"></div>																									
-</main>																									
-																									
-<!-- 注文カート -->																									
-<div id="cart-bar" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg hidden max-w-md mx-auto flex justify-between items-center z-20">																									
-<div>																									
-<p class="text-sm text-gray-500">合計点数: <span id="cart-count" class="font-bold text-gray-800">0</span>点</p>																									
-<p class="text-lg font-bold text-indigo-600">¥<span id="cart-total">0</span></p>																									
-</div>																									
-<button onclick="openCartModal()" class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold shadow hover:bg-indigo-700 transition">																									
-カートを確認する																									
-</button>																									
-</div>																									
-																									
-<!-- カート確認モーダル -->																									
-<div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">																									
-<div class="bg-white w-full max-w-lg rounded-2xl max-h-[90vh] flex flex-col overflow-hidden p-4 space-y-4">																									
-<div class="p-4 border-b flex justify-between items-center">																									
-<h2 class="text-lg font-bold">注文内容の確認</h2>																									
-<button onclick="closeCartModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>																									
-</div>																									
-<div id="cart-items-list" class="overflow-y-auto flex-grow space-y-3 max-h-60"></div>																									
-<div class="border-t pt-2">																									
-<div class="flex justify-between mb-4 text-lg font-bold">																									
+<!-- Tab B: 注文かご -->																									
+<div id="tab-cart" class="space-y-4 hidden">																									
+<h2 class="text-base font-bold text-gray-700 border-b pb-2">注文かごの中身</h2>																									
+<div id="cart-items-list" class="space-y-3 max-h-[60vh] overflow-y-auto"></div>																									
+<div class="border-t pt-3">																									
+<div class="flex justify-between text-lg font-bold mb-4">																									
 <span>合計金額（税込）</span>																									
-<span class="text-indigo-600">¥<span id="modal-total">0</span></span>																									
+<span class="text-red-700">¥<span id="cart-total">0</span></span>																									
 </div>																									
-<button onclick="submitOrder()" id="submit-btn" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow">																									
-注文を確定する																									
-</button>																									
-</div>																									
-</div>																									
-</div>																									
-																									
-<!-- 注文状況・お会計モーダル -->																									
-<div id="status-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">																									
-<div class="bg-white w-full max-w-md rounded-2xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">																									
-<div class="flex justify-between items-center border-b pb-3">																									
-<h2 class="text-lg font-bold">注文状況・お会計</h2>																									
-<button onclick="closeStatusModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>																									
-</div>																									
-<div id="status-content" class="space-y-3 text-sm">																									
-<p class="text-gray-500 text-center py-4">現在、保存されている注文はありません。</p>																									
-</div>																									
-<div id="checkout-area" class="pt-2 hidden">																									
-<button onclick="requestCheckout()" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 transition shadow">																									
-お会計する（領収書発行）																									
-</button>																									
+<div class="flex space-x-2">																									
+<button onclick="switchTab('menu')" class="w-1/2 bg-gray-300 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-400 transition">追加</button>																									
+<button onclick="submitOrder()" class="w-1/2 bg-red-600 text-white py-3 rounded-xl font-bold hover:bg-red-700 transition shadow">注文する</button>																									
 </div>																									
 </div>																									
 </div>																									
 																									
-<!-- 注文完了・領収書モーダル -->																									
-<div id="receipt-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">																									
-<div class="bg-white w-full max-w-md rounded-2xl p-6 text-center space-y-4 max-h-[90vh] overflow-y-auto">																									
-<div class="text-green-600 text-5xl font-bold">✓</div>																									
-<h2 class="text-xl font-bold">お会計が完了しました</h2>																									
+<!-- Tab C: 注文履歴 -->																									
+<div id="tab-history" class="space-y-4 hidden">																									
+<h2 class="text-base font-bold text-gray-700 border-b pb-2">注文履歴・状況</h2>																									
+<div id="history-items-list" class="space-y-3 max-h-[65vh] overflow-y-auto">																									
+<p class="text-gray-400 text-center py-8 text-sm">読み込み中...</p>																									
+</div>																									
+</div>																									
+																									
+<!-- Tab D: 店員呼出 -->																									
+<div id="tab-call" class="space-y-6 text-center py-10 hidden">																									
+<div class="text-5xl">🔔</div>																									
+<h2 class="text-xl font-bold text-gray-800">従業員の呼び出し</h2>																									
+<p class="text-sm text-gray-500 px-4">ご要望やご不明な点がある場合は、ボタンを押して従業員をお呼びください。</p>																									
+<button onclick="callStaff()" class="mx-auto bg-amber-600 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow hover:bg-amber-700 transition">																									
+店員を呼び出す																									
+</button>																									
+</div>																									
+																									
+<!-- Tab E: 会計する -->																									
+<div id="tab-checkout" class="space-y-4 hidden">																									
+<h2 class="text-base font-bold text-gray-700 border-b pb-2">お会計の確認</h2>																									
+<div id="checkout-items-list" class="space-y-3 max-h-[55vh] overflow-y-auto">																									
+<p class="text-gray-400 text-center py-8 text-sm">読み込み中...</p>																									
+</div>																									
+<div class="border-t pt-3">																									
+<div class="flex justify-between text-lg font-bold mb-4">																									
+<span>お支払い総額</span>																									
+<span class="text-red-700">¥<span id="checkout-total">0</span></span>																									
+</div>																									
+<button onclick="requestCheckout()" class="w-full bg-red-600 text-white py-3.5 rounded-xl font-bold text-base hover:bg-red-700 transition shadow">																									
+お支払いへ進む																									
+</button>																									
+</div>																									
+</div>																									
+</div>																									
+</div>																									
+																									
+<!-- ================= 4. サイゼリヤ風 下部固定ナビバー ================= -->																									
+<nav id="footer-nav" class="fixed bottom-0 left-0 right-0 bg-emerald-800 border-t border-emerald-700 py-2 px-1 grid grid-cols-5 gap-1 shadow-2xl z-30 max-w-md mx-auto hidden">																									
+<button onclick="switchTab('menu')" id="nav-menu" class="flex flex-col items-center justify-center py-1 text-white text-[11px] font-bold rounded-lg bg-emerald-700 shadow-inner">																									
+<span class="text-base mb-0.5">➕</span>																									
+<span>注文追加</span>																									
+</button>																									
+<button onclick="switchTab('cart')" id="nav-cart" class="flex flex-col items-center justify-center py-1 text-emerald-200 text-[11px] font-bold rounded-lg relative">																									
+<span class="text-base mb-0.5">🛒</span>																									
+<span>注文かご</span>																									
+<span id="badge-cart" class="absolute top-1 right-3 bg-red-600 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center hidden font-bold">0</span>																									
+</button>																									
+<button onclick="switchTab('history')" id="nav-history" class="flex flex-col items-center justify-center py-1 text-emerald-200 text-[11px] font-bold rounded-lg">																									
+<span class="text-base mb-0.5">📋</span>																									
+<span>注文履歴</span>																									
+</button>																									
+<button onclick="switchTab('call')" id="nav-call" class="flex flex-col items-center justify-center py-1 text-emerald-200 text-[11px] font-bold rounded-lg">																									
+<span class="text-base mb-0.5">🔔</span>																									
+<span>店員呼出</span>																									
+</button>																									
+<button onclick="switchTab('checkout')" id="nav-checkout" class="flex flex-col items-center justify-center py-1 text-emerald-200 text-[11px] font-bold rounded-lg">																									
+<span class="text-base mb-0.5">💰</span>																									
+<span>会計する</span>																									
+</button>																									
+</nav>																									
+																									
+<!-- ================= 5. 領収書・完了画面モーダル ================= -->																									
+<div id="receipt-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden flex items-center justify-center p-4">																									
+<div class="bg-white w-full max-w-md rounded-2xl p-6 text-center space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">																									
+<div class="text-emerald-600 text-5xl font-bold">✓</div>																									
+<h2 class="text-xl font-bold text-gray-800">お会計が完了しました</h2>																									
 <p class="text-sm text-gray-500">テーブル: <span id="receipt-table-no" class="font-bold text-gray-700"></span>番</p>																									
 <div class="border border-dashed border-gray-300 p-4 rounded-xl text-left text-sm space-y-2 bg-gray-50">																									
-<div class="text-center font-bold border-b pb-2">デジタル領収書</div>																									
+<div class="text-center font-bold border-b pb-2 text-gray-700">デジタル領収書</div>																									
 <div id="receipt-items-summary" class="py-2 space-y-1 border-b"></div>																									
-<div class="flex justify-between font-bold text-base pt-1">																									
+<div class="flex justify-between font-bold text-base pt-1 text-gray-800">																									
 <span>合計金額</span>																									
 <span id="receipt-total">¥0</span>																									
 </div>																									
@@ -123,81 +164,95 @@
 <span class="text-xs text-gray-400">お会計確認用QRコード</span>																									
 </div>																									
 <button onclick="location.reload()" class="w-full bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition">																									
-新しい注文をする																									
+最初に戻る																									
 </button>																									
 </div>																									
 </div>																									
 																									
 <script>																									
+// ★GASのWebアプリURL																									
 const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyv4ebasSdelkH2Uczvq53snfkmmOTWF0wSgb023ca8MYn01j02TdxfAiLRDTJjUKgSAg/exec";																									
 																									
 let menuData = [];																									
 let cart = {};																									
-let currentTableNo = "";																									
-let tempSelectedTable = "";																									
+let currentTableNo = "1"; // デフォルト1番																									
 																									
-window.onload = function() {																									
-document.getElementById('table-modal').classList.remove('hidden');																									
-document.getElementById('loading').classList.add('hidden');																									
+function goToPeopleScreen() {																									
+document.getElementById('screen-welcome').classList.add('hidden');																									
+document.getElementById('screen-people').classList.remove('hidden');																									
+}																									
+																									
+function selectTableAndStart(peopleCount) {																									
+currentTableNo = "1"; // テーブル固定または任意に変更可能																									
+document.getElementById('display-table').textContent = currentTableNo;																									
+document.getElementById('screen-people').classList.add('hidden');																									
+document.getElementById('screen-main').classList.remove('hidden');																									
+document.getElementById('footer-nav').classList.remove('hidden');																									
 fetchMenu();																									
-};																									
+}																									
 																									
-function selectTempTable(tableNo) {																									
-tempSelectedTable = String(tableNo);																									
-document.querySelectorAll('.table-select-btn').forEach(btn => {																									
-btn.className = "table-select-btn w-full bg-gray-50 hover:bg-indigo-50 text-gray-700 border border-gray-200 font-bold py-3.5 rounded-xl text-lg transition shadow-sm";																									
+function switchTab(tabName) {																									
+['menu', 'cart', 'history', 'call', 'checkout'].forEach(t => {																									
+document.getElementById('tab-' + t).classList.add('hidden');																									
+const navBtn = document.getElementById('nav-' + t);																									
+navBtn.className = "flex flex-col items-center justify-center py-1 text-emerald-200 text-[11px] font-bold rounded-lg";																									
 });																									
-const selectedBtn = document.getElementById('t-btn-' + tableNo);																									
-if (selectedBtn) {																									
-selectedBtn.className = "table-select-btn w-full bg-indigo-600 text-white border border-indigo-600 font-bold py-3.5 rounded-xl text-lg transition shadow-md";																									
-}																									
-}																									
 																									
-function confirmTable() {																									
-if (!tempSelectedTable) {																									
-alert("テーブル番号を選択してください。");																									
-return;																									
-}																									
-currentTableNo = tempSelectedTable;																									
-document.getElementById('display-table').textContent = currentTableNo + "番";																									
-document.getElementById('table-modal').classList.add('hidden');																									
+document.getElementById('tab-' + tabName).classList.remove('hidden');																									
+const activeBtn = document.getElementById('nav-' + tabName);																									
+activeBtn.className = "flex flex-col items-center justify-center py-1 text-white text-[11px] font-bold rounded-lg bg-emerald-700 shadow-inner";																									
+																									
+if (tabName === 'history') fetchHistory();																									
+if (tabName === 'checkout') fetchCheckoutData();																									
 }																									
 																									
 function fetchMenu() {																									
 fetch(GAS_API_URL + "?action=getMenu")																									
-.then(response => response.json())																									
+.then(res => res.json())																									
 .then(result => {																									
 if (result && result.status === "success") {																									
 menuData = result.data || [];																									
 renderMenu();																									
 } else {																									
-alert("メニューの取得に失敗しました: " + (result ? result.message : "不明なエラー"));																									
+alert("メニュー取得エラー: " + (result ? result.message : ""));																									
 }																									
 })																									
-.catch(error => { console.error(error); });																									
+.catch(err => { console.error(err); });																									
 }																									
 																									
 function renderMenu() {																									
 const container = document.getElementById('menu-container');																									
-container.classList.remove('hidden');																									
 container.innerHTML = '';																									
 																									
-menuData.forEach((item) => {																									
+const categories = {};																									
+menuData.forEach(item => {																									
+const cat = item.category || "その他";																									
+if (!categories[cat]) categories[cat] = [];																									
+categories[cat].push(item);																									
+});																									
+																									
+Object.keys(categories).forEach(catName => {																									
+const header = document.createElement('h3');																									
+header.className = "text-sm font-bold text-emerald-800 bg-emerald-50 p-2 rounded-lg mt-2";																									
+header.textContent = catName;																									
+container.appendChild(header);																									
+																									
+categories[catName].forEach(item => {																									
 const card = document.createElement('div');																									
-card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center";																									
+card.className = "bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center";																									
 card.innerHTML = `																									
 <div>																									
-<h3 class="font-bold text-gray-800">${item.name}</h3>																									
-<p class="text-indigo-600 font-bold mt-1">¥${Number(item.price).toLocaleString()}</p>																									
-<p class="text-xs text-gray-400 mt-1">${item.category || ''}</p>																									
+<div class="font-bold text-gray-800 text-sm">${item.name}</div>																									
+<div class="text-red-700 font-bold text-sm mt-0.5">¥${Number(item.price).toLocaleString()}</div>																									
 </div>																									
-<div class="flex items-center space-x-3">																									
-<button type="button" onclick="changeQuantity('${item.code}', -1)" class="w-8 h-8 rounded-full bg-gray-100 text-gray-600 font-bold flex items-center justify-center">-</button>																									
-<span id="qty-${item.code}" class="font-bold w-4 text-center">0</span>																									
-<button type="button" onclick="changeQuantity('${item.code}', 1)" class="w-8 h-8 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center">+</button>																									
+<div class="flex items-center space-x-2">																									
+<button type="button" onclick="changeQuantity('${item.code}', -1)" class="w-8 h-8 rounded-full bg-gray-100 text-gray-700 font-bold flex items-center justify-center hover:bg-gray-200">-</button>																									
+<span id="qty-${item.code}" class="font-bold w-4 text-center text-sm">0</span>																									
+<button type="button" onclick="changeQuantity('${item.code}', 1)" class="w-8 h-8 rounded-full bg-emerald-700 text-white font-bold flex items-center justify-center hover:bg-emerald-800">+</button>																									
 </div>																									
 `;																									
 container.appendChild(card);																									
+});																									
 });																									
 }																									
 																									
@@ -205,10 +260,7 @@ function changeQuantity(code, delta) {
 const item = menuData.find(m => m.code === code);																									
 if (!item) return;																									
 																									
-if (!cart[code]) {																									
-cart[code] = { ...item, quantity: 0 };																									
-}																									
-																									
+if (!cart[code]) cart[code] = { ...item, quantity: 0 };																									
 cart[code].quantity += delta;																									
 if (cart[code].quantity < 0) cart[code].quantity = 0;																									
 																									
@@ -216,77 +268,59 @@ const qtyElem = document.getElementById(`qty-${code}`);
 if (qtyElem) qtyElem.textContent = cart[code].quantity;																									
 if (cart[code].quantity === 0) delete cart[code];																									
 																									
-updateCartSummary();																									
+updateCartBadge();																									
+updateCartView();																									
 }																									
 																									
-function updateCartSummary() {																									
+function updateCartBadge() {																									
 let totalCount = 0;																									
-let totalPrice = 0;																									
-																									
-Object.values(cart).forEach(item => {																									
-totalCount += item.quantity;																									
-totalPrice += Number(item.price) * item.quantity;																									
-});																									
-																									
-document.getElementById('cart-count').textContent = totalCount;																									
-document.getElementById('cart-total').textContent = totalPrice.toLocaleString();																									
-																									
-const cartBar = document.getElementById('cart-bar');																									
+Object.values(cart).forEach(i => totalCount += i.quantity);																									
+const badge = document.getElementById('badge-cart');																									
 if (totalCount > 0) {																									
-cartBar.classList.remove('hidden');																									
+badge.textContent = totalCount;																									
+badge.classList.remove('hidden');																									
 } else {																									
-cartBar.classList.add('hidden');																									
+badge.classList.add('hidden');																									
 }																									
 }																									
 																									
-function openCartModal() {																									
-if (!currentTableNo) {																									
-alert("テーブル番号が選択されていません。");																									
-return;																									
-}																									
-																									
-const listContainer = document.getElementById('cart-items-list');																									
-listContainer.innerHTML = '';																									
+function updateCartView() {																									
+const list = document.getElementById('cart-items-list');																									
+list.innerHTML = '';																									
 let totalPrice = 0;																									
+let totalCount = 0;																									
 																									
 Object.values(cart).forEach(item => {																									
-const subtotal = Number(item.price) * item.quantity;																									
-totalPrice += subtotal;																									
+const sub = Number(item.price) * item.quantity;																									
+totalPrice += sub;																									
+totalCount += item.quantity;																									
 																									
 const row = document.createElement('div');																									
-row.className = "flex justify-between items-center border-b pb-2";																									
+row.className = "flex justify-between items-center border-b pb-2 text-sm";																									
 row.innerHTML = `																									
 <div>																									
-<div class="font-bold">${item.name}</div>																									
+<div class="font-bold text-gray-800">${item.name}</div>																									
 <div class="text-xs text-gray-500">¥${Number(item.price).toLocaleString()} × ${item.quantity}</div>																									
 </div>																									
-<div class="font-bold">¥${subtotal.toLocaleString()}</div>																									
+<div class="font-bold text-gray-800">¥${sub.toLocaleString()}</div>																									
 `;																									
-listContainer.appendChild(row);																									
+list.appendChild(row);																									
 });																									
 																									
-document.getElementById('modal-total').textContent = totalPrice.toLocaleString();																									
-document.getElementById('cart-modal').classList.remove('hidden');																									
+if (totalCount === 0) {																									
+list.innerHTML = '<p class="text-gray-400 text-center py-6 text-sm">注文かごに商品は入っていません。</p>';																									
 }																									
 																									
-function closeCartModal() {																									
-document.getElementById('cart-modal').classList.add('hidden');																									
+document.getElementById('cart-total').textContent = totalPrice.toLocaleString();																									
 }																									
 																									
 function submitOrder() {																									
 const itemsArray = Object.values(cart).filter(item => item.quantity > 0);																									
 if (itemsArray.length === 0) return;																									
 																									
-const submitBtn = document.getElementById('submit-btn');																									
-submitBtn.disabled = true;																									
-submitBtn.textContent = "送信中...";																									
-																									
 const payload = {																									
 action: "submitOrder",																									
-payload: {																									
-tableNo: currentTableNo,																									
-items: itemsArray																									
-}																									
+payload: { tableNo: currentTableNo, items: itemsArray }																									
 };																									
 																									
 fetch(GAS_API_URL, {																									
@@ -294,83 +328,91 @@ method: "POST",
 headers: { "Content-Type": "text/plain;charset=utf-8" },																									
 body: JSON.stringify(payload)																									
 })																									
-.then(response => response.json())																									
+.then(res => res.json())																									
 .then(result => {																									
-submitBtn.disabled = false;																									
-submitBtn.textContent = "注文を確定する";																									
-closeCartModal();																									
-																									
 if (result && result.status === "success") {																									
-alert("注文が完了しました！キッチンへ送信されました。");																									
+alert("注文を送信しました！");																									
 cart = {};																									
-updateCartSummary();																									
+document.querySelectorAll('[id^="qty-"]').forEach(el => el.textContent = '0');																									
+updateCartBadge();																									
+updateCartView();																									
+switchTab('history');																									
 } else {																									
-alert("送信失敗: " + (result ? result.message : "不明なエラー"));																									
+alert("送信失敗: " + (result ? result.message : ""));																									
 }																									
 })																									
-.catch(error => {																									
-submitBtn.disabled = false;																									
-submitBtn.textContent = "注文を確定する";																									
-closeCartModal();																									
-alert("通信エラーが発生しました。");																									
-});																									
+.catch(err => alert("通信エラーが発生しました。"));																									
 }																									
 																									
-function openStatusModal() {																									
-if (!currentTableNo) {																									
-alert("テーブル番号が選択されていません。");																									
-return;																									
-}																									
-																									
-const modal = document.getElementById('status-modal');																									
-const content = document.getElementById('status-content');																									
-const checkoutArea = document.getElementById('checkout-area');																									
-																									
-modal.classList.remove('hidden');																									
-content.innerHTML = '<p class="text-gray-500 text-center py-4">注文状況を確認中...</p>';																									
+function fetchHistory() {																									
+const list = document.getElementById('history-items-list');																									
+list.innerHTML = '<p class="text-gray-400 text-center py-4 text-sm">履歴を読み込んでいます...</p>';																									
 																									
 fetch(GAS_API_URL + "?action=getOrderByTable&tableNo=" + encodeURIComponent(currentTableNo))																									
 .then(res => res.json())																									
 .then(res => {																									
 if (res && res.status === "success" && res.items && res.items.length > 0) {																									
-let html = '<div class="space-y-3 max-h-60 overflow-y-auto">';																									
-																									
+let html = '';																									
 res.items.forEach(i => {																									
-let badgeColor = "bg-yellow-100 text-yellow-800";																									
-if (i.cookStatus === "調理中") badgeColor = "bg-blue-100 text-blue-800";																									
-if (i.cookStatus === "提供済み" || i.cookStatus === "完了") badgeColor = "bg-green-100 text-green-800";																									
-if (i.cookStatus === "会計済み") badgeColor = "bg-gray-100 text-gray-800";																									
+let badge = "bg-yellow-100 text-yellow-800";																									
+if (i.cookStatus === "調理中") badge = "bg-blue-100 text-blue-800";																									
+if (i.cookStatus === "提供済み") badge = "bg-green-100 text-green-800";																									
 																									
 html += `																									
-<div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border">																									
+<div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border text-sm">																									
 <div>																									
-<div class="font-bold">${i.name} × ${i.quantity}</div>																									
-<div class="text-xs text-gray-500">¥${Number(i.price).toLocaleString()} (テーブル: ${i.tableNo}番)</div>																									
+<div class="font-bold text-gray-800">${i.name} × ${i.quantity}</div>																									
+<div class="text-xs text-gray-500">¥${Number(i.price).toLocaleString()}</div>																									
 </div>																									
-<span class="text-xs px-2.5 py-1 rounded-full font-bold ${badgeColor}">${i.cookStatus}</span>																									
+<span class="text-xs px-2 py-1 rounded-full font-bold ${badge}">${i.cookStatus}</span>																									
 </div>																									
 `;																									
 });																									
-html += '</div>';																									
-content.innerHTML = html;																									
-checkoutArea.classList.remove('hidden');																									
+list.innerHTML = html;																									
 } else {																									
-content.innerHTML = '<p class="text-gray-500 text-center py-4">現在、このテーブルの注文履歴はありません。</p>';																									
-checkoutArea.classList.add('hidden');																									
+list.innerHTML = '<p class="text-gray-400 text-center py-8 text-sm">注文履歴はありません。</p>';																									
 }																									
 })																									
-.catch(err => {																									
-content.innerHTML = '<p class="text-red-500 text-center py-4">情報の取得に失敗しました。</p>';																									
-});																									
+.catch(err => list.innerHTML = '<p class="text-red-500 text-center py-4 text-sm">取得に失敗しました。</p>');																									
 }																									
 																									
-function closeStatusModal() {																									
-document.getElementById('status-modal').classList.add('hidden');																									
+function fetchCheckoutData() {																									
+const list = document.getElementById('checkout-items-list');																									
+list.innerHTML = '<p class="text-gray-400 text-center py-4 text-sm">計算中...</p>';																									
+																									
+fetch(GAS_API_URL + "?action=getOrderByTable&tableNo=" + encodeURIComponent(currentTableNo))																									
+.then(res => res.json())																									
+.then(res => {																									
+if (res && res.status === "success" && res.items && res.items.length > 0) {																									
+let html = '';																									
+let total = 0;																									
+res.items.forEach(i => {																									
+const sub = Number(i.price) * i.quantity;																									
+total += sub;																									
+html += `																									
+<div class="flex justify-between items-center border-b pb-2 text-sm">																									
+<div>																									
+<div class="font-bold text-gray-800">${i.name} × ${i.quantity}</div>																									
+</div>																									
+<div class="font-bold text-gray-800">¥${sub.toLocaleString()}</div>																									
+</div>																									
+`;																									
+});																									
+list.innerHTML = html;																									
+document.getElementById('checkout-total').textContent = total.toLocaleString();																									
+} else {																									
+list.innerHTML = '<p class="text-gray-400 text-center py-8 text-sm">お会計対象の注文はありません。</p>';																									
+document.getElementById('checkout-total').textContent = "0";																									
+}																									
+})																									
+.catch(err => list.innerHTML = '<p class="text-red-500 text-center py-4 text-sm">取得に失敗しました。</p>');																									
+}																									
+																									
+function callStaff() {																									
+alert("従業員を呼び出しました。少々お待ちください。");																									
 }																									
 																									
 function requestCheckout() {																									
-if (!currentTableNo) return;																									
-																									
 const payload = {																									
 action: "checkoutByTable",																									
 payload: { tableNo: currentTableNo }																									
@@ -383,43 +425,38 @@ body: JSON.stringify(payload)
 })																									
 .then(res => res.json())																									
 .then(res => {																									
-closeStatusModal();																									
 if (res && res.status === "success") {																									
 showReceipt(currentTableNo, res.data.totalPrice, res.data.items);																									
 } else {																									
 alert("お会計処理に失敗しました: " + (res ? res.message : ""));																									
 }																									
 })																									
-.catch(err => {																									
-alert("通信エラーが発生しました。");																									
-});																									
+.catch(err => alert("通信エラーが発生しました。"));																									
 }																									
 																									
 function showReceipt(tableNo, totalPrice, itemsArray) {																									
-document.getElementById('receipt-table-no').textContent = tableNo || "-";																									
+document.getElementById('receipt-table-no').textContent = tableNo;																									
 document.getElementById('receipt-total').textContent = "¥" + totalPrice.toLocaleString();																									
 																									
-const summaryContainer = document.getElementById('receipt-items-summary');																									
-summaryContainer.innerHTML = '';																									
+const summary = document.getElementById('receipt-items-summary');																									
+summary.innerHTML = '';																									
 																									
-const mergedItems = {};																									
-itemsArray.forEach(item => {																									
-if (!mergedItems[item.name]) {																									
-mergedItems[item.name] = { price: item.price, quantity: 0 };																									
-}																									
-mergedItems[item.name].quantity += item.quantity;																									
+const merged = {};																									
+itemsArray.forEach(i => {																									
+if (!merged[i.name]) merged[i.name] = { price: i.price, quantity: 0 };																									
+merged[i.name].quantity += i.quantity;																									
 });																									
 																									
-Object.keys(mergedItems).forEach(name => {																									
-const item = mergedItems[name];																									
+Object.keys(merged).forEach(name => {																									
+const item = merged[name];																									
 const div = document.createElement('div');																									
 div.className = "flex justify-between text-xs";																									
 div.innerHTML = `<span>${name} x${item.quantity}</span><span>¥${(item.price * item.quantity).toLocaleString()}</span>`;																									
-summaryContainer.appendChild(div);																									
+summary.appendChild(div);																									
 });																									
 																									
 document.getElementById('qrcode').innerHTML = "";																									
-new QRCode(document.getElementById("qrcode"), { text: "CHECKOUT-" + tableNo + "-" + Date.now(), width: 120, height: 120 });																									
+new QRCode(document.getElementById("qrcode"), { text: "CHECKOUT-" + tableNo + "-" + Date.now(), width: 100, height: 100 });																									
 																									
 document.getElementById('receipt-modal').classList.remove('hidden');																									
 }																									
