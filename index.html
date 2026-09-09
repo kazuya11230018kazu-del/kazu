@@ -1,1189 +1,864 @@
-<!DOCTYPE html>																									
-<html lang='ja'>																									
-																									
-<head>																									
-																									
-<meta charset='UTF-8'>																									
-																									
-<meta																									
-name='viewport'																									
-content='width=device-width,initial-scale=1'																									
->																									
-																									
-<title>モバイルオーダー</title>																									
-																									
-<script src='https://cdn.tailwindcss.com'></script>																									
-																									
-<script src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'></script>																									
-																									
-</head>																									
-																									
-																									
-<body class='bg-gray-50 text-gray-800 pb-28'>																									
-																									
-																									
-<header class='bg-indigo-600 text-white p-4 sticky top-0 z-10 shadow-md flex justify-between items-center'>																									
-																									
-<div>																									
-																									
-<h1 class='text-lg font-bold'>																									
-モバイルオーダー																									
-</h1>																									
-																									
-<p class='text-xs text-indigo-200'>																									
-																									
-テーブル:																									
-																									
-<span																									
-id='display-table'																									
-class='font-bold'																									
->																									
-未設定																									
-</span>																									
-																									
-</p>																									
-																									
-</div>																									
-																									
-																									
-<div class='flex items-center space-x-2'>																									
-																									
-<button																									
-onclick='openStatusModal()'																									
-class='text-xs bg-indigo-500 px-3 py-1.5 rounded-lg font-bold'																									
->																									
-注文状況・会計																									
-</button>																									
-																									
-<div																									
-id='status-badge'																									
-class='text-xs bg-yellow-500 px-2 py-1 rounded text-white'																									
->																									
-接続確認中																									
-</div>																									
-																									
-</div>																									
-																									
-</header>																									
-																									
-																									
-<main class='max-w-md mx-auto p-4'>																									
-																									
-																									
-<div																									
-id='table-modal'																									
-class='fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4'																									
->																									
-																									
-<div class='bg-white w-full max-w-sm rounded-2xl p-6 text-center space-y-4 shadow-xl'>																									
-																									
-<h2 class='text-xl font-bold'>																									
-テーブル番号を入力																									
-</h2>																									
-																									
-<p class='text-sm text-gray-500'>																									
-お座りのテーブル番号を入力してください																									
-</p>																									
-																									
-<input																									
-type='number'																									
-id='table-input'																									
-placeholder='例: 3'																									
-class='w-full border border-gray-300 rounded-xl p-3 text-center text-xl font-bold'																									
->																									
-																									
-<button																									
-onclick='setTableNumber()'																									
-class='w-full bg-indigo-600 text-white py-3 rounded-xl font-bold'																									
->																									
-注文を始める																									
-</button>																									
-																									
-</div>																									
-																									
-</div>																									
-																									
-																									
-<div																									
-id='loading'																									
-class='text-center py-10'																									
->																									
-<p class='text-gray-500'>																									
-メニューを読み込んでいます...																									
-</p>																									
-</div>																									
-																									
-																									
-<div																									
-id='menu-container'																									
-class='space-y-4 hidden'																									
->																									
-</div>																									
-																									
-</main>																									
-																									
-																									
-<div																									
-id='cart-bar'																									
-class='fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-lg hidden max-w-md mx-auto flex justify-between items-center z-20'																									
->																									
-																									
-<div>																									
-																									
-<p class='text-sm text-gray-500'>																									
-合計点数:																									
-<span id='cart-count'>0</span>点																									
-</p>																									
-																									
-<p class='text-lg font-bold text-indigo-600'>																									
-¥<span id='cart-total'>0</span>																									
-</p>																									
-																									
-</div>																									
-																									
-																									
-<button																									
-onclick='openCartModal()'																									
-class='bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold'																									
->																									
-カートを確認する																									
-</button>																									
-																									
-</div>																									
-																									
-																									
-<div																									
-id='cart-modal'																									
-class='fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-end sm:items-center justify-center'																									
->																									
-																									
-<div class='bg-white w-full max-w-lg rounded-t-2xl sm:rounded-2xl max-h-[90vh] overflow-y-auto'>																									
-																									
-<div class='p-4 border-b flex justify-between'>																									
-																									
-<h2 class='font-bold'>																									
-注文内容																									
-</h2>																									
-																									
-<button onclick='closeCartModal()'>																									
-×																									
-</button>																									
-																									
-</div>																									
-																									
-																									
-<div																									
-id='cart-items-list'																									
-class='p-4 space-y-3'																									
->																									
-</div>																									
-																									
-																									
-<div class='p-4 border-t'>																									
-																									
-<div class='flex justify-between font-bold'>																									
-																									
-<span>																									
-合計																									
-</span>																									
-																									
-<span class='text-indigo-600'>																									
-¥<span id='modal-total'>0</span>																									
-</span>																									
-																									
-</div>																									
-																									
-																									
-<button																									
-id='submit-btn'																									
-onclick='submitOrder()'																									
-class='w-full bg-indigo-600 text-white py-3 rounded-xl font-bold mt-4'																									
->																									
-注文を確定する																									
-</button>																									
-																									
-</div>																									
-																									
-</div>																									
-																									
-</div>																									
-																									
-																									
-<div																									
-id='status-modal'																									
-class='fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4'																									
->																									
-																									
-<div class='bg-white w-full max-w-md rounded-2xl p-6 max-h-[90vh] overflow-y-auto'>																									
-																									
-<div class='flex justify-between border-b pb-3'>																									
-																									
-<h2 class='font-bold'>																									
-注文状況・お会計																									
-</h2>																									
-																									
-<button onclick='closeStatusModal()'>																									
-×																									
-</button>																									
-																									
-</div>																									
-																									
-																									
-<div																									
-id='status-content'																									
-class='space-y-3 mt-4'																									
->																									
-</div>																									
-																									
-																									
-<div																									
-id='checkout-area'																									
-class='hidden mt-4'																									
->																									
-																									
-<button																									
-onclick='requestCheckout()'																									
-class='w-full bg-green-600 text-white py-3 rounded-xl font-bold'																									
->																									
-お会計する																									
-</button>																									
-																									
-</div>																									
-																									
-</div>																									
-																									
-</div>																									
-																									
-																									
-<div																									
-id='receipt-modal'																									
-class='fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4'																									
->																									
-																									
-<div class='bg-white w-full max-w-md rounded-2xl p-6 text-center'>																									
-																									
-<div class='text-green-600 text-5xl'>																									
-✓																									
-</div>																									
-																									
-<h2 class='text-xl font-bold mt-2'>																									
-お会計・領収書																									
-</h2>																									
-																									
-																									
-<p class='text-sm mt-2'>																									
-注文ID:																									
-<span id='receipt-order-id'></span>																									
-</p>																									
-																									
-																									
-<div class='border border-dashed p-4 rounded-xl mt-4 text-left'>																									
-																									
-<div																									
-id='receipt-items-summary'																									
-class='space-y-1'																									
->																									
-</div>																									
-																									
-<hr class='my-3'>																									
-																									
-<div class='flex justify-between font-bold'>																									
-																									
-<span>																									
-合計																									
-</span>																									
-																									
-<span id='receipt-total'>																									
-¥0																									
-</span>																									
-																									
-</div>																									
-																									
-</div>																									
-																									
-																									
-<div																									
-id='qrcode'																									
-class='flex justify-center mt-4'																									
->																									
-</div>																									
-																									
-																									
-<button																									
-onclick='closeReceipt()'																									
-class='w-full bg-gray-200 py-3 rounded-xl font-bold mt-4'																									
->																									
-閉じる																									
-</button>																									
-																									
-</div>																									
-																									
-</div>																									
-																									
-																									
-<script>																									
-																									
-const GAS_API_URL=																									
-https://script.google.com/macros/s/AKfycbxzxAT7w9VscVWSYeCGs0b0BSzw_FSV58ijndShy6Jrn_27p0Abw4O3bru6KK_vCCK2iQ/exec';																									
-																									
-																									
-let menuData=[];																									
-let cart={};																									
-																									
-let currentTableNo=																									
-localStorage.getItem('order_table_no')||'';																									
-																									
-let currentOrderId=																									
-localStorage.getItem('order_id')||'';																									
-																									
-																									
-document.addEventListener(																									
-DOMContentLoaded',																									
-function(){																									
-																									
-if(currentTableNo){																									
-																									
-document																									
-.getElementById('table-modal')																									
-.classList																									
-.add('hidden');																									
-																									
-document																									
-.getElementById('display-table')																									
-.textContent=																									
-currentTableNo+'番';																									
-																									
-}																									
-																									
-fetchMenu();																									
-																									
-}																									
-);																									
-																									
-																									
-function setConnection(ok){																									
-																									
-const badge=																									
-document.getElementById(																									
-status-badge'																									
-);																									
-																									
-if(ok){																									
-																									
-badge.textContent=																									
-接続完了';																									
-																									
-badge.className=																									
-text-xs bg-green-500 px-2 py-1 rounded text-white';																									
-																									
-}else{																									
-																									
-badge.textContent=																									
-通信エラー';																									
-																									
-badge.className=																									
-text-xs bg-red-500 px-2 py-1 rounded text-white';																									
-																									
-}																									
-																									
-}																									
-																									
-																									
-function setTableNumber(){																									
-																									
-const val=																									
-document																									
-.getElementById('table-input')																									
-.value																									
-.trim();																									
-																									
-if(!val){																									
-																									
-alert(																									
-テーブル番号を入力してください'																									
-);																									
-																									
-return;																									
-																									
-}																									
-																									
-currentTableNo=val;																									
-																									
-localStorage.setItem(																									
-order_table_no',																									
-currentTableNo																									
-);																									
-																									
-document																									
-.getElementById('display-table')																									
-.textContent=																									
-currentTableNo+'番';																									
-																									
-document																									
-.getElementById('table-modal')																									
-.classList																									
-.add('hidden');																									
-																									
-}																									
-																									
-																									
-function fetchMenu(){																									
-																									
-fetch(																									
-GAS_API_URL+																									
-?action=getMenu'																									
-)																									
-																									
-.then(function(response){																									
-																									
-return response.json();																									
-																									
-})																									
-																									
-.then(function(result){																									
-																									
-document																									
-.getElementById('loading')																									
-.classList																									
-.add('hidden');																									
-																									
-if(																									
-result.status==='success'																									
-){																									
-																									
-setConnection(true);																									
-																									
-menuData=																									
-result.data||[];																									
-																									
-renderMenu();																									
-																									
-}else{																									
-																									
-throw new Error(																									
-result.message||																									
-メニュー取得失敗'																									
-);																									
-																									
-}																									
-																									
-})																									
-																									
-.catch(function(error){																									
-																									
-setConnection(false);																									
-																									
-document																									
-.getElementById('loading')																									
-.innerHTML=																									
-<p class="text-red-500">'+																									
-error.message+																									
-</p>';																									
-																									
-});																									
-																									
-}																									
-																									
-																									
-function renderMenu(){																									
-																									
-const container=																									
-document.getElementById(																									
-menu-container'																									
-);																									
-																									
-container																									
-.classList																									
-.remove('hidden');																									
-																									
-container.innerHTML='';																									
-																									
-																									
-menuData.forEach(																									
-function(item){																									
-																									
-const card=																									
-document.createElement(																									
-div'																									
-);																									
-																									
-card.className=																									
-bg-white p-4 rounded-xl shadow-sm border flex justify-between items-center';																									
-																									
-																									
-card.innerHTML=																									
-<div>'+																									
-<h3 class="font-bold">'+																									
-item.name+																									
-</h3>'+																									
-<p class="text-indigo-600 font-bold">¥'+																									
-Number(item.price).toLocaleString()+																									
-</p>'+																									
-<p class="text-xs text-gray-400">'+																									
-(item.category||'')+																									
-</p>'+																									
-</div>'+																									
-<div class="flex items-center space-x-3">'+																									
-<button class="minus w-8 h-8 rounded-full bg-gray-100">-</button>'+																									
-<span class="qty font-bold">0</span>'+																									
-<button class="plus w-8 h-8 rounded-full bg-indigo-600 text-white">+</button>'+																									
-</div>';																									
-																									
-																									
-const minus=																									
-card.querySelector(																									
-.minus'																									
-);																									
-																									
-const plus=																									
-card.querySelector(																									
-.plus'																									
-);																									
-																									
-const qty=																									
-card.querySelector(																									
-.qty'																									
-);																									
-																									
-																									
-minus.onclick=																									
-function(){																									
-																									
-changeQuantity(																									
-item,																									
--1,																									
-qty																									
-);																									
-																									
-};																									
-																									
-																									
-plus.onclick=																									
-function(){																									
-																									
-changeQuantity(																									
-item,																									
-1,																									
-qty																									
-);																									
-																									
-};																									
-																									
-																									
-container.appendChild(																									
-card																									
-);																									
-																									
-}																									
-);																									
-																									
-}																									
-																									
-																									
-function changeQuantity(																									
-item,																									
-delta,																									
-qtyElement																									
-){																									
-																									
-const code=																									
-String(item.code);																									
-																									
-if(!cart[code]){																									
-																									
-cart[code]={																									
-code:item.code,																									
-name:item.name,																									
-price:Number(item.price),																									
-category:item.category,																									
-quantity:0																									
-};																									
-																									
-}																									
-																									
-cart[code].quantity+=																									
-delta;																									
-																									
-if(																									
-cart[code].quantity<=0																									
-){																									
-																									
-delete cart[code];																									
-																									
-qtyElement.textContent=																									
-0';																									
-																									
-}else{																									
-																									
-qtyElement.textContent=																									
-cart[code].quantity;																									
-																									
-}																									
-																									
-updateCartSummary();																									
-																									
-}																									
-																									
-																									
-function updateCartSummary(){																									
-																									
-let count=0;																									
-let total=0;																									
-																									
-Object																									
-.values(cart)																									
-.forEach(																									
-function(item){																									
-																									
-count+=																									
-item.quantity;																									
-																									
-total+=																									
-item.price*																									
-item.quantity;																									
-																									
-}																									
-);																									
-																									
-document																									
-.getElementById('cart-count')																									
-.textContent=																									
-count;																									
-																									
-document																									
-.getElementById('cart-total')																									
-.textContent=																									
-total.toLocaleString();																									
-																									
-																									
-const bar=																									
-document.getElementById(																									
-cart-bar'																									
-);																									
-																									
-if(count>0){																									
-																									
-bar.classList.remove(																									
-hidden'																									
-);																									
-																									
-}else{																									
-																									
-bar.classList.add(																									
-hidden'																									
-);																									
-																									
-}																									
-																									
-}																									
-																									
-																									
-function openCartModal(){																									
-																									
-const container=																									
-document.getElementById(																									
-cart-items-list'																									
-);																									
-																									
-container.innerHTML='';																									
-																									
-let total=0;																									
-																									
-																									
-Object																									
-.values(cart)																									
-.forEach(																									
-function(item){																									
-																									
-const subtotal=																									
-item.price*																									
-item.quantity;																									
-																									
-total+=subtotal;																									
-																									
-const row=																									
-document.createElement(																									
-div'																									
-);																									
-																									
-row.className=																									
-flex justify-between border-b pb-2';																									
-																									
-row.innerHTML=																									
-<div>'+																									
-<b>'+																									
-item.name+																									
-</b>'+																									
-<div class="text-xs text-gray-500">¥'+																									
-item.price+																									
- × '+																									
-item.quantity+																									
-</div>'+																									
-</div>'+																									
-<b>¥'+																									
-subtotal.toLocaleString()+																									
-</b>';																									
-																									
-container.appendChild(																									
-row																									
-);																									
-																									
-}																									
-);																									
-																									
-																									
-document																									
-.getElementById('modal-total')																									
-.textContent=																									
-total.toLocaleString();																									
-																									
-document																									
-.getElementById('cart-modal')																									
-.classList																									
-.remove('hidden');																									
-																									
-}																									
-																									
-																									
-function closeCartModal(){																									
-																									
-document																									
-.getElementById('cart-modal')																									
-.classList																									
-.add('hidden');																									
-																									
-}																									
-																									
-																									
-function submitOrder(){																									
-																									
-const items=																									
-Object.values(cart);																									
-																									
-if(																									
-items.length===0																									
-){																									
-																									
-return;																									
-																									
-}																									
-																									
-																									
-const button=																									
-document.getElementById(																									
-submit-btn'																									
-);																									
-																									
-button.disabled=true;																									
-button.textContent=																									
-送信中...';																									
-																									
-																									
-fetch(																									
-GAS_API_URL,																									
-{																									
-method:'POST',																									
-																									
-body:																									
-JSON.stringify({																									
-action:'submitOrder',																									
-payload:{																									
-tableNo:currentTableNo,																									
-items:items																									
-}																									
-})																									
-}																									
-)																									
-																									
-.then(function(response){																									
-																									
-return response.json();																									
-																									
-})																									
-																									
-.then(function(result){																									
-																									
-button.disabled=false;																									
-button.textContent=																									
-注文を確定する';																									
-																									
-																									
-if(																									
-result.status!=='success'																									
-){																									
-																									
-throw new Error(																									
-result.message||																									
-注文失敗'																									
-);																									
-																									
-}																									
-																									
-currentOrderId=																									
-result.data.orderId;																									
-																									
-localStorage.setItem(																									
-order_id',																									
-currentOrderId																									
-);																									
-																									
-cart={};																									
-																									
-updateCartSummary();																									
-																									
-closeCartModal();																									
-																									
-alert(																									
-注文が完了しました'																									
-);																									
-																									
-openStatusModal();																									
-																									
-})																									
-																									
-.catch(function(error){																									
-																									
-button.disabled=false;																									
-button.textContent=																									
-注文を確定する';																									
-																									
-alert(																									
-注文エラー: '+																									
-error.message																									
-);																									
-																									
-});																									
-																									
-}																									
-																									
-																									
-function openStatusModal(){																									
-																									
-const modal=																									
-document.getElementById(																									
-status-modal'																									
-);																									
-																									
-const content=																									
-document.getElementById(																									
-status-content'																									
-);																									
-																									
-const checkout=																									
-document.getElementById(																									
-checkout-area'																									
-);																									
-																									
-modal.classList.remove(																									
-hidden'																									
-);																									
-																									
-																									
-if(																									
-!currentOrderId																									
-){																									
-																									
-content.innerHTML=																									
-<p class="text-gray-500 text-center">まだ注文履歴がありません。</p>';																									
-																									
-checkout.classList.add(																									
-hidden'																									
-);																									
-																									
-return;																									
-																									
-}																									
-																									
-																									
-content.innerHTML=																									
-<p class="text-gray-500 text-center">注文状況を確認中...</p>';																									
-																									
-																									
-fetch(																									
-GAS_API_URL+																									
-?action=getOrderStatus&orderId='+																									
-encodeURIComponent(																									
-currentOrderId																									
-)																									
-)																									
-																									
-.then(function(response){																									
-																									
-return response.json();																									
-																									
-})																									
-																									
-.then(function(result){																									
-																									
-if(																									
-result.status!=='success'																									
-){																									
-																									
-throw new Error(																									
-result.message||																									
-取得失敗'																									
-);																									
-																									
-}																									
-																									
-																									
-const items=																									
-result.items||[];																									
-																									
-if(																									
-items.length===0																									
-){																									
-																									
-content.innerHTML=																									
-<p class="text-gray-500 text-center">注文情報がありません。</p>';																									
-																									
-checkout.classList.add(																									
-hidden'																									
-);																									
-																									
-return;																									
-																									
-}																									
-																									
-																									
-let html=																									
-<p class="text-xs text-gray-500">注文ID: <b>'+																									
-currentOrderId+																									
-</b></p>';																									
-																									
-																									
-items.forEach(																									
-function(item){																									
-																									
-html+=																									
-<div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border mt-2">'+																									
-<div>'+																									
-<b>'+																									
-item.name+																									
- × '+																									
-item.quantity+																									
-</b>'+																									
-<div class="text-xs">¥'+																									
-Number(item.price).toLocaleString()+																									
-</div>'+																									
-</div>'+																									
-<span class="text-xs bg-yellow-100 px-2 py-1 rounded">'+																									
-item.cookStatus+																									
-</span>'+																									
-</div>';																									
-																									
-}																									
-);																									
-																									
-																									
-content.innerHTML=																									
-html;																									
-																									
-checkout.classList.remove(																									
-hidden'																									
-);																									
-																									
-})																									
-																									
-.catch(function(error){																									
-																									
-content.innerHTML=																									
-<p class="text-red-500 text-center">'+																									
-error.message+																									
-</p>';																									
-																									
-});																									
-																									
-}																									
-																									
-																									
-function closeStatusModal(){																									
-																									
-document																									
-.getElementById('status-modal')																									
-.classList																									
-.add('hidden');																									
-																									
-}																									
-																									
-																									
-function requestCheckout(){																									
-																									
-if(																									
-!currentOrderId																									
-){																									
-																									
-return;																									
-																									
-}																									
-																									
-																									
-fetch(																									
-GAS_API_URL,																									
-{																									
-method:'POST',																									
-																									
-body:																									
-JSON.stringify({																									
-action:'checkout',																									
-payload:{																									
-orderId:																									
-currentOrderId																									
-}																									
-})																									
-}																									
-)																									
-																									
-.then(function(response){																									
-																									
-return response.json();																									
-																									
-})																									
-																									
-.then(function(result){																									
-																									
-if(																									
-result.status!=='success'																									
-){																									
-																									
-throw new Error(																									
-result.message||																									
-会計失敗'																									
-);																									
-																									
-}																									
-																									
-																									
-closeStatusModal();																									
-																									
-showReceipt(																									
-result.data.orderId,																									
-result.data.totalPrice,																									
-result.data.items																									
-);																									
-																									
-})																									
-																									
-.catch(function(error){																									
-																									
-alert(																									
-会計エラー: '+																									
-error.message																									
-);																									
-																									
-});																									
-																									
-}																									
-																									
-																									
-function showReceipt(																									
-orderId,																									
-total,																									
-items																									
-){																									
-																									
-document																									
-.getElementById('receipt-order-id')																									
-.textContent=																									
-orderId;																									
-																									
-document																									
-.getElementById('receipt-total')																									
-.textContent=																									
-¥'+																									
-Number(total)																									
-.toLocaleString();																									
-																									
-																									
-const container=																									
-document.getElementById(																									
-receipt-items-summary'																									
-);																									
-																									
-container.innerHTML='';																									
-																									
-																									
-items.forEach(																									
-function(item){																									
-																									
-const subtotal=																									
-item.price*																									
-item.quantity;																									
-																									
-const row=																									
-document.createElement(																									
-div'																									
-);																									
-																									
-row.className=																									
-flex justify-between text-xs';																									
-																									
-row.innerHTML=																									
-<span>'+																									
-item.name+																									
- × '+																									
-item.quantity+																									
-</span>'+																									
-<span>¥'+																									
-subtotal.toLocaleString()+																									
-</span>';																									
-																									
-container.appendChild(																									
-row																									
-);																									
-																									
-}																									
-);																									
-																									
-																									
-const qr=																									
-document.getElementById(																									
-qrcode'																									
-);																									
-																									
-qr.innerHTML='';																									
-																									
-if(																									
-typeof QRCode!=='undefined'																									
-){																									
-																									
-new QRCode(																									
-qr,																									
-{																									
-text:orderId,																									
-width:120,																									
-height:120																									
-}																									
-);																									
-																									
-}																									
-																									
-																									
-document																									
-.getElementById('receipt-modal')																									
-.classList																									
-.remove('hidden');																									
-																									
-																									
-localStorage.removeItem(																									
-order_id'																									
-);																									
-																									
-currentOrderId='';																									
-																									
-}																									
-																									
-																									
-function closeReceipt(){																									
-																									
-document																									
-.getElementById('receipt-modal')																									
-.classList																									
-.add('hidden');																									
-																									
-}																									
-																									
-</script>																									
-																									
-</body>																									
-</html>																									
+<!DOCTYPE html>
+<html lang='ja'>
+
+<head>
+
+<meta charset='UTF-8'>
+
+<meta
+  name='viewport'
+  content='width=device-width,initial-scale=1'
+>
+
+<title>モバイルオーダー</title>
+
+<script src='https://cdn.tailwindcss.com'></script>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'></script>
+
+</head>
+
+
+<body class='bg-gray-50 text-gray-800 pb-28'>
+
+
+<header class='bg-indigo-600 text-white p-4 sticky top-0 z-10 shadow-md flex justify-between items-center'>
+
+<div>
+
+<h1 class='text-lg font-bold'>
+モバイルオーダー
+</h1>
+
+<p class='text-xs text-indigo-200'>
+
+テーブル:
+
+<span
+  id='display-table'
+  class='font-bold'
+>
+未設定
+</span>
+
+</p>
+
+</div>
+
+
+<div class='flex items-center space-x-2'>
+
+<button
+  onclick='openStatusModal()'
+  class='text-xs bg-indigo-500 px-3 py-1.5 rounded-lg font-bold'
+>
+注文状況・会計
+</button>
+
+<div
+  id='status-badge'
+  class='text-xs bg-yellow-500 px-2 py-1 rounded text-white'
+>
+接続確認中
+</div>
+
+</div>
+
+</header>
+
+
+<main class='max-w-md mx-auto p-4'>
+
+
+<div
+  id='table-modal'
+  class='fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4'
+>
+
+<div class='bg-white w-full max-w-sm rounded-2xl p-6 text-center space-y-4 shadow-xl'>
+
+<h2 class='text-xl font-bold'>
+テーブル番号を入力
+</h2>
+
+<p class='text-sm text-gray-500'>
+お座りのテーブル番号を入力してください
+</p>
+
+<input
+  type='number'
+  id='table-input'
+  placeholder='例: 3'
+  class='w-full border border-gray-300 rounded-xl p-3 text-center text-xl font-bold'
+>
+
+<button
+  onclick='setTableNumber()'
+  class='w-full bg-indigo-600 text-white py-3 rounded-xl font-bold'
+>
+注文を始める
+</button>
+
+</div>
+
+</div>
+
+
+<div
+  id='loading'
+  class='text-center py-10'
+>
+<p class='text-gray-500'>
+メニューを読み込んでいます...
+</p>
+</div>
+
+
+<div
+  id='menu-container'
+  class='space-y-4 hidden'
+>
+</div>
+
+</main>
+
+
+<div
+  id='cart-bar'
+  class='fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-lg hidden max-w-md mx-auto flex justify-between items-center z-20'
+>
+
+<div>
+
+<p class='text-sm text-gray-500'>
+合計点数:
+<span id='cart-count'>0</span>点
+</p>
+
+<p class='text-lg font-bold text-indigo-600'>
+¥<span id='cart-total'>0</span>
+</p>
+
+</div>
+
+
+<button
+  onclick='openCartModal()'
+  class='bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold'
+>
+カートを確認する
+</button>
+
+</div>
+
+
+<div
+  id='cart-modal'
+  class='fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-end sm:items-center justify-center'
+>
+
+<div class='bg-white w-full max-w-lg rounded-t-2xl sm:rounded-2xl max-h-[90vh] overflow-y-auto'>
+
+<div class='p-4 border-b flex justify-between'>
+
+<h2 class='font-bold'>
+注文内容
+</h2>
+
+<button onclick='closeCartModal()'>
+×
+</button>
+
+</div>
+
+
+<div
+  id='cart-items-list'
+  class='p-4 space-y-3'
+>
+</div>
+
+
+<div class='p-4 border-t'>
+
+<div class='flex justify-between font-bold'>
+
+<span>
+合計
+</span>
+
+<span class='text-indigo-600'>
+¥<span id='modal-total'>0</span>
+</span>
+
+</div>
+
+
+<button
+  id='submit-btn'
+  onclick='submitOrder()'
+  class='w-full bg-indigo-600 text-white py-3 rounded-xl font-bold mt-4'
+>
+注文を確定する
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div
+  id='status-modal'
+  class='fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4'
+>
+
+<div class='bg-white w-full max-w-md rounded-2xl p-6 max-h-[90vh] overflow-y-auto'>
+
+<div class='flex justify-between border-b pb-3'>
+
+<h2 class='font-bold'>
+注文状況・お会計
+</h2>
+
+<button onclick='closeStatusModal()'>
+×
+</button>
+
+</div>
+
+
+<div
+  id='status-content'
+  class='space-y-3 mt-4'
+>
+</div>
+
+
+<div
+  id='checkout-area'
+  class='hidden mt-4'
+>
+
+<button
+  onclick='requestCheckout()'
+  class='w-full bg-green-600 text-white py-3 rounded-xl font-bold'
+>
+お会計する
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div
+  id='receipt-modal'
+  class='fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4'
+>
+
+<div class='bg-white w-full max-w-md rounded-2xl p-6 text-center'>
+
+<div class='text-green-600 text-5xl'>
+✓
+</div>
+
+<h2 class='text-xl font-bold mt-2'>
+お会計・領収書
+</h2>
+
+
+<p class='text-sm mt-2'>
+注文ID:
+<span id='receipt-order-id'></span>
+</p>
+
+
+<div class='border border-dashed p-4 rounded-xl mt-4 text-left'>
+
+<div
+  id='receipt-items-summary'
+  class='space-y-1'
+>
+</div>
+
+<hr class='my-3'>
+
+<div class='flex justify-between font-bold'>
+
+<span>
+合計
+</span>
+
+<span id='receipt-total'>
+¥0
+</span>
+
+</div>
+
+</div>
+
+
+<div
+  id='qrcode'
+  class='flex justify-center mt-4'
+>
+</div>
+
+
+<button
+  onclick='closeReceipt()'
+  class='w-full bg-gray-200 py-3 rounded-xl font-bold mt-4'
+>
+閉じる
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+const GAS_API_URL=
+'https://script.google.com/macros/s/AKfycbxzxAT7w9VscVWSYeCGs0b0BSzw_FSV58ijndShy6Jrn_27p0Abw4O3bru6KK_vCCK2iQ/exec';
+
+
+let menuData=[];
+let cart={};
+
+let currentTableNo=
+localStorage.getItem('order_table_no')||'';
+
+let currentOrderId=
+localStorage.getItem('order_id')||'';
+
+
+document.addEventListener(
+'DOMContentLoaded',
+function(){
+
+if(currentTableNo){
+
+document
+.getElementById('table-modal')
+.classList
+.add('hidden');
+
+document
+.getElementById('display-table')
+.textContent=
+currentTableNo+'番';
+
+}
+
+fetchMenu();
+
+}
+);
+
+
+function setConnection(ok){
+
+const badge=
+document.getElementById(
+'status-badge'
+);
+
+if(ok){
+
+badge.textContent=
+'接続完了';
+
+badge.className=
+'text-xs bg-green-500 px-2 py-1 rounded text-white';
+
+}else{
+
+badge.textContent=
+'通信エラー';
+
+badge.className=
+'text-xs bg-red-500 px-2 py-1 rounded text-white';
+
+}
+
+}
+
+
+function setTableNumber(){
+
+const val=
+document
+.getElementById('table-input')
+.value
+.trim();
+
+if(!val){
+
+alert(
+'テーブル番号を入力してください'
+);
+
+return;
+
+}
+
+currentTableNo=val;
+
+localStorage.setItem(
+'order_table_no',
+currentTableNo
+);
+
+document
+.getElementById('display-table')
+.textContent=
+currentTableNo+'番';
+
+document
+.getElementById('table-modal')
+.classList
+.add('hidden');
+
+}
+
+
+function fetchMenu(){
+
+fetch(
+GAS_API_URL+
+'?action=getMenu'
+)
+
+.then(function(response){
+
+return response.json();
+
+})
+
+.then(function(result){
+
+document
+.getElementById('loading')
+.classList
+.add('hidden');
+
+if(
+result.status==='success'
+){
+
+setConnection(true);
+
+menuData=
+result.data||[];
+
+renderMenu();
+
+}else{
+
+throw new Error(
+result.message||
+'メニュー取得失敗'
+);
+
+}
+
+})
+
+.catch(function(error){
+
+setConnection(false);
+
+document
+.getElementById('loading')
+.innerHTML=
+'<p class="text-red-500">'+
+error.message+
+'</p>';
+
+});
+
+}
+
+
+function renderMenu(){
+
+const container=
+document.getElementById(
+'menu-container'
+);
+
+container
+.classList
+.remove('hidden');
+
+container.innerHTML='';
+
+
+menuData.forEach(
+function(item){
+
+const card=
+document.createElement(
+'div'
+);
+
+card.className=
+'bg-white p-4 rounded-xl shadow-sm border flex justify-between items-center';
+
+
+card.innerHTML=
+'<div>'+
+'<h3 class="font-bold">'+
+item.name+
+'</h3>'+
+'<p class="text-indigo-600 font-bold">¥'+
+Number(item.price).toLocaleString()+
+'</p>'+
+'<p class="text-xs text-gray-400">'+
+(item.category||'')+
+'</p>'+
+'</div>'+
+'<div class="flex items-center space-x-3">'+
+'<button class="minus w-8 h-8 rounded-full bg-gray-100">-</button>'+
+'<span class="qty font-bold">0</span>'+
+'<button class="plus w-8 h-8 rounded-full bg-indigo-600 text-white">+</button>'+
+'</div>';
+
+
+const minus=
+card.querySelector(
+'.minus'
+);
+
+const plus=
+card.querySelector(
+'.plus'
+);
+
+const qty=
+card.querySelector(
+'.qty'
+);
+
+
+minus.onclick=
+function(){
+
+changeQuantity(
+item,
+-1,
+qty
+);
+
+};
+
+
+plus.onclick=
+function(){
+
+changeQuantity(
+item,
+1,
+qty
+);
+
+};
+
+
+container.appendChild(
+card
+);
+
+}
+);
+
+}
+
+
+function changeQuantity(
+item,
+delta,
+qtyElement
+){
+
+const code=
+String(item.code);
+
+if(!cart[code]){
+
+cart[code]={
+code:item.code,
+name:item.name,
+price:Number(item.price),
+category:item.category,
+quantity:0
+};
+
+}
+
+cart[code].quantity+=
+delta;
+
+if(
+cart[code].quantity<=0
+){
+
+delete cart[code];
+
+qtyElement.textContent=
+'0';
+
+}else{
+
+qtyElement.textContent=
+cart[code].quantity;
+
+}
+
+updateCartSummary();
+
+}
+
+
+function updateCartSummary(){
+
+let count=0;
+let total=0;
+
+Object
+.values(cart)
+.forEach(
+function(item){
+
+count+=
+item.quantity;
+
+total+=
+item.price*
+item.quantity;
+
+}
+);
+
+document
+.getElementById('cart-count')
+.textContent=
+count;
+
+document
+.getElementById('cart-total')
+.textContent=
+total.toLocaleString();
+
+
+const bar=
+document.getElementById(
+'cart-bar'
+);
+
+if(count>0){
+
+bar.classList.remove(
+'hidden'
+);
+
+}else{
+
+bar.classList.add(
+'hidden'
+);
+
+}
+
+}
+
+
+function openCartModal(){
+
+const container=
+document.getElementById(
+'cart-items-list'
+);
+
+container.innerHTML='';
+
+let total=0;
+
+
+Object
+.values(cart)
+.forEach(
+function(item){
+
+const subtotal=
+item.price*
+item.quantity;
+
+total+=subtotal;
+
+const row=
+document.createElement(
+'div'
+);
+
+row.className=
+'flex justify-between border-b pb-2';
+
+row.innerHTML=
+'<div>'+
+'<b>'+
+item.name+
+'</b>'+
+'<div class="text-xs text-gray-500">¥'+
+item.price+
+' × '+
+item.quantity+
+'</div>'+
+'</div>'+
+'<b>¥'+
+subtotal.toLocaleString()+
+'</b>';
+
+container.appendChild(
+row
+);
+
+}
+);
+
+
+document
+.getElementById('modal-total')
+.textContent=
+total.toLocaleString();
+
+document
+.getElementById('cart-modal')
+.classList
+.remove('hidden');
+
+}
+
+
+function closeCartModal(){
+
+document
+.getElementById('cart-modal')
+.classList
+.add('hidden');
+
+}
+
+
+function submitOrder(){
+
+const items=
+Object.values(cart);
+
+if(
+items.length===0
+){
+
+return;
+
+}
+
+
+const button=
+document.getElementById(
+'submit-btn'
+);
+
+button.disabled=true;
+button.textContent=
+'送信中...';
+
+
+fetch(
+GAS_API_URL,
+{
+method:'POST',
+
+body:
+JSON.stringify({
+action:'submitOrder',
+payload:{
+tableNo:currentTableNo,
+items:items
+}
+})
+}
+)
+
+.then(function(response){
+
+return response.json();
+
+})
+
+.then(function(result){
+
+button.disabled=false;
+button.textContent=
+'注文を確定する';
+
+
+if(
+result.status!=='success'
+){
+
+throw new Error(
+result.message||
+'注文失敗'
+);
+
+}
+
+currentOrderId=
+result.data.orderId;
+
+localStorage.setItem(
+'order_id',
+currentOrderId
+);
+
+cart={};
+
+updateCartSummary();
+
+closeCartModal();
+
+alert(
+'注文が完了しました'
+);
+
+openStatusModal();
+
+})
+
+.catch(function(error){
+
+button.disabled=false;
+button.textContent=
+'注文を確定する';
+
+alert(
+'注文エラー: '+
+error.message
+);
+
+});
+
+}
+
+
+function openStatusModal(){
+
+const modal=
+document.getElementById(
+'status-mo
