@@ -2,505 +2,2076 @@
 <html lang="ja">																									
 <head>																									
 <meta charset="UTF-8">																									
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">																									
+<meta																									
+name="viewport"																									
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"																									
+>																									
+																									
 <title>モバイルオーダーシステム</title>																									
+																									
 <script src="https://cdn.tailwindcss.com"></script>																									
+																									
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>																									
 </head>																									
+																									
 <body class="bg-slate-100 text-slate-800 pb-24 select-none antialiased">																									
 																									
-<!-- ヘッダー -->																									
+																									
+<!-- ==================================================																									
+ヘッダー																									
+#ERROR!																									
+																									
 <header class="bg-blue-600 text-white p-4 sticky top-0 z-30 shadow-md flex justify-between items-center">																									
+																									
 <div class="flex items-center space-x-2">																									
-<span class="text-lg font-bold">テーブル: <span id="current-table-display">1</span>番</span>																									
-<button onclick="openTableModal()" class="text-xs bg-blue-700 hover:bg-blue-800 px-2 py-1 rounded transition">変更</button>																									
+																									
+<span class="text-lg font-bold">																									
+テーブル:																									
+<span id="current-table-display">1</span>番																									
+</span>																									
+																									
+<button																									
+onclick="openTableModal()"																									
+class="text-xs bg-blue-700 hover:bg-blue-800 px-2 py-1 rounded transition"																									
+>																									
+変更																									
+</button>																									
+																									
 </div>																									
+																									
+																									
 <div class="flex items-center space-x-2">																									
-<span id="connection-status" class="text-xs bg-emerald-500 px-2.5 py-1 rounded-full font-medium">接続中</span>																									
+																									
+<span																									
+id="connection-status"																									
+class="text-xs bg-amber-500 px-2.5 py-1 rounded-full font-medium"																									
+>																									
+接続確認中																									
+</span>																									
+																									
 </div>																									
+																									
 </header>																									
 																									
-<!-- メインコンテンツ領域 -->																									
+																									
+																									
+<!-- ==================================================																									
+メイン																									
+#ERROR!																									
+																									
 <main class="max-w-md mx-auto p-4">																									
 																									
-<!-- ================= 1. メニュー画面 ================= -->																									
+																									
+<!-- ==================================================																									
+1. メニュー																									
+#ERROR!																									
+																									
 <section id="view-menu" class="space-y-4">																									
-<!-- カテゴリタブ -->																									
-<div id="category-tabs" class="flex space-x-2 overflow-x-auto pb-2 scrollbar-none">																									
-<button onclick="filterCategory('all')" class="cat-btn px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-bold whitespace-nowrap shadow-sm transition">すべて</button>																									
+																									
+<div																									
+id="category-tabs"																									
+class="flex space-x-2 overflow-x-auto pb-2"																									
+>																									
+																									
+<button																									
+onclick="filterCategory('all')"																									
+class="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-bold whitespace-nowrap shadow-sm"																									
+>																									
+すべて																									
+</button>																									
+																									
 </div>																									
-<!-- メニューリスト -->																									
+																									
+																									
 <div id="menu-list" class="space-y-3">																									
-<p class="text-center text-slate-400 py-10">メニューを読み込んでいます...</p>																									
+																									
+<p class="text-center text-slate-400 py-10">																									
+メニューを読み込んでいます...																									
+</p>																									
+																									
 </div>																									
+																									
 </section>																									
 																									
-<!-- ================= 2. 注文かご（カート）画面 ================= -->																									
+																									
+																									
+<!-- ==================================================																									
+2. カート																									
+#ERROR!																									
+																									
 <section id="view-cart" class="space-y-4 hidden">																									
-<h2 class="text-lg font-bold text-slate-700 border-b pb-2">注文かごの中身</h2>																									
-<div id="cart-items-list" class="space-y-3"></div>																									
-<div class="bg-white p-4 rounded-2xl shadow-sm border space-y-3 mt-4">																									
-<div class="flex justify-between text-lg font-bold">																									
-<span>合計金額（税込）</span>																									
-<span class="text-blue-600">¥<span id="cart-total">0</span></span>																									
+																									
+<h2 class="text-lg font-bold text-slate-700 border-b pb-2">																									
+注文かごの中身																									
+</h2>																									
+																									
+																									
+<div																									
+id="cart-items-list"																									
+class="space-y-3"																									
+>																									
 </div>																									
-<button onclick="submitOrder()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-bold text-base shadow-md transition active:scale-95">																									
+																									
+																									
+<div class="bg-white p-4 rounded-2xl shadow-sm border space-y-3 mt-4">																									
+																									
+<div class="flex justify-between text-lg font-bold">																									
+																									
+<span>																									
+合計金額（税込）																									
+</span>																									
+																									
+<span class="text-blue-600">																									
+¥<span id="cart-total">0</span>																									
+</span>																									
+																									
+</div>																									
+																									
+																									
+<button																									
+onclick="submitOrder()"																									
+class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-bold text-base shadow-md transition active:scale-95"																									
+>																									
 注文を確定する																									
 </button>																									
+																									
 </div>																									
+																									
 </section>																									
 																									
-<!-- ================= 3. 注文履歴画面 ================= -->																									
+																									
+																									
+<!-- ==================================================																									
+3. 注文履歴																									
+#ERROR!																									
+																									
 <section id="view-history" class="space-y-4 hidden">																									
+																									
 <div class="flex justify-between items-center border-b pb-2">																									
-<h2 class="text-lg font-bold text-slate-700">注文履歴・状況</h2>																									
-<button onclick="fetchHistory()" class="text-xs bg-slate-200 hover:bg-slate-300 px-3 py-1.5 rounded-lg font-medium transition">更新</button>																									
+																									
+<h2 class="text-lg font-bold text-slate-700">																									
+注文履歴・状況																									
+</h2>																									
+																									
+<button																									
+onclick="fetchHistory()"																									
+class="text-xs bg-slate-200 hover:bg-slate-300 px-3 py-1.5 rounded-lg font-medium"																									
+>																									
+更新																									
+</button>																									
+																									
 </div>																									
-<div id="history-container" class="space-y-4">																									
-<p class="text-center text-slate-400 py-10">履歴を読み込んでいます...</p>																									
+																									
+																									
+<div																									
+id="history-container"																									
+class="space-y-4"																									
+>																									
+																									
+<p class="text-center text-slate-400 py-10">																									
+履歴を読み込んでいます...																									
+</p>																									
+																									
 </div>																									
+																									
 </section>																									
 																									
-<!-- ================= 4. 会計・領収書画面 ================= -->																									
+																									
+																									
+<!-- ==================================================																									
+4. 会計																									
+#ERROR!																									
+																									
 <section id="view-checkout" class="space-y-4 hidden">																									
-<h2 class="text-lg font-bold text-slate-700 border-b pb-2">お会計の確認</h2>																									
-<div id="checkout-summary-list" class="space-y-3">																									
-<p class="text-center text-slate-400 py-10">読み込んでいます...</p>																									
+																									
+<h2 class="text-lg font-bold text-slate-700 border-b pb-2">																									
+お会計の確認																									
+</h2>																									
+																									
+																									
+<div																									
+id="checkout-summary-list"																									
+class="space-y-3"																									
+>																									
+																									
+<p class="text-center text-slate-400 py-10">																									
+読み込んでいます...																									
+</p>																									
+																									
 </div>																									
+																									
+																									
 <div class="bg-white p-4 rounded-2xl shadow-sm border space-y-4 mt-4">																									
+																									
 <div class="flex justify-between text-xl font-bold">																									
-<span>お支払い総額</span>																									
-<span class="text-blue-600">¥<span id="checkout-total">0</span></span>																									
+																									
+<span>																									
+お支払い総額																									
+</span>																									
+																									
+<span class="text-blue-600">																									
+¥<span id="checkout-total">0</span>																									
+</span>																									
+																									
 </div>																									
-<button onclick="requestCheckout()" id="checkout-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-xl font-bold text-lg shadow-md transition active:scale-95">																									
+																									
+																									
+<button																									
+onclick="requestCheckout()"																									
+id="checkout-btn"																									
+class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-xl font-bold text-lg shadow-md transition active:scale-95"																									
+>																									
 お会計を確定する																									
 </button>																									
+																									
 </div>																									
+																									
 </section>																									
 																									
 </main>																									
 																									
-<!-- ================= 下部固定ナビゲーションバー ================= -->																									
+																									
+																									
+<!-- ==================================================																									
+下部ナビ																									
+#ERROR!																									
+																									
 <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 py-2 px-4 grid grid-cols-4 gap-1 shadow-lg z-30 max-w-md mx-auto">																									
-<button onclick="switchTab('menu')" id="nav-menu" class="nav-btn flex flex-col items-center justify-center py-1 text-blue-600 text-xs font-bold rounded-xl transition">																									
-<span class="text-xl mb-0.5">📋</span>																									
-<span>メニュー</span>																									
+																									
+<button																									
+onclick="switchTab('menu')"																									
+id="nav-menu"																									
+class="nav-btn flex flex-col items-center justify-center py-1 text-blue-600 text-xs font-bold rounded-xl"																									
+>																									
+																									
+<span class="text-xl mb-0.5">																									
+📋																									
+</span>																									
+																									
+<span>																									
+メニュー																									
+</span>																									
+																									
 </button>																									
-<button onclick="switchTab('cart')" id="nav-cart" class="nav-btn flex flex-col items-center justify-center py-1 text-slate-400 text-xs font-bold rounded-xl relative transition">																									
-<span class="text-xl mb-0.5">🛒</span>																									
-<span>かご</span>																									
-<span id="cart-badge" class="absolute top-0.5 right-4 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center hidden font-bold">0</span>																									
+																									
+																									
+<button																									
+onclick="switchTab('cart')"																									
+id="nav-cart"																									
+class="nav-btn flex flex-col items-center justify-center py-1 text-slate-400 text-xs font-bold rounded-xl relative"																									
+>																									
+																									
+<span class="text-xl mb-0.5">																									
+🛒																									
+</span>																									
+																									
+<span>																									
+かご																									
+</span>																									
+																									
+																									
+<span																									
+id="cart-badge"																									
+class="absolute top-0.5 right-4 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center hidden font-bold"																									
+>																									
+0																									
+</span>																									
+																									
 </button>																									
-<button onclick="switchTab('history')" id="nav-history" class="nav-btn flex flex-col items-center justify-center py-1 text-slate-400 text-xs font-bold rounded-xl transition">																									
-<span class="text-xl mb-0.5">⏳</span>																									
-<span>履歴</span>																									
+																									
+																									
+<button																									
+onclick="switchTab('history')"																									
+id="nav-history"																									
+class="nav-btn flex flex-col items-center justify-center py-1 text-slate-400 text-xs font-bold rounded-xl"																									
+>																									
+																									
+<span class="text-xl mb-0.5">																									
+⏳																									
+</span>																									
+																									
+<span>																									
+履歴																									
+</span>																									
+																									
 </button>																									
-<button onclick="switchTab('checkout')" id="nav-checkout" class="nav-btn flex flex-col items-center justify-center py-1 text-slate-400 text-xs font-bold rounded-xl transition">																									
-<span class="text-xl mb-0.5">💰</span>																									
-<span>会計</span>																									
+																									
+																									
+<button																									
+onclick="switchTab('checkout')"																									
+id="nav-checkout"																									
+class="nav-btn flex flex-col items-center justify-center py-1 text-slate-400 text-xs font-bold rounded-xl"																									
+>																									
+																									
+<span class="text-xl mb-0.5">																									
+💰																									
+</span>																									
+																									
+<span>																									
+会計																									
+</span>																									
+																									
 </button>																									
+																									
 </nav>																									
 																									
-<!-- ================= テーブル番号選択モーダル ================= -->																									
-<div id="table-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">																									
-<div class="bg-white w-full max-w-xs rounded-3xl p-6 text-center space-y-4 shadow-2xl animate-scale-up">																									
-<h3 class="text-lg font-bold text-slate-800">テーブル番号を選択</h3>																									
+																									
+																									
+<!-- ==================================================																									
+テーブル選択																									
+#ERROR!																									
+																									
+<div																									
+id="table-modal"																									
+class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm"																									
+>																									
+																									
+<div class="bg-white w-full max-w-xs rounded-3xl p-6 text-center space-y-4 shadow-2xl">																									
+																									
+<h3 class="text-lg font-bold text-slate-800">																									
+テーブル番号を選択																									
+</h3>																									
+																									
+																									
 <div class="grid grid-cols-1 gap-2.5">																									
-<button onclick="selectTable(1)" class="py-3.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-600 font-bold rounded-2xl text-lg transition">テーブル 1</button>																									
-<button onclick="selectTable(2)" class="py-3.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-600 font-bold rounded-2xl text-lg transition">テーブル 2</button>																									
-<button onclick="selectTable(3)" class="py-3.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-600 font-bold rounded-2xl text-lg transition">テーブル 3</button>																									
-<button onclick="selectTable(4)" class="py-3.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-600 font-bold rounded-2xl text-lg transition">テーブル 4</button>																									
-<button onclick="selectTable(5)" class="py-3.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-600 font-bold rounded-2xl text-lg transition">テーブル 5</button>																									
-</div>																									
-</div>																									
+																									
+<button																									
+onclick="selectTable(1)"																									
+class="py-3.5 bg-slate-100 font-bold rounded-2xl text-lg"																									
+>																									
+テーブル 1																									
+</button>																									
+																									
+<button																									
+onclick="selectTable(2)"																									
+class="py-3.5 bg-slate-100 font-bold rounded-2xl text-lg"																									
+>																									
+テーブル 2																									
+</button>																									
+																									
+<button																									
+onclick="selectTable(3)"																									
+class="py-3.5 bg-slate-100 font-bold rounded-2xl text-lg"																									
+>																									
+テーブル 3																									
+</button>																									
+																									
+<button																									
+onclick="selectTable(4)"																									
+class="py-3.5 bg-slate-100 font-bold rounded-2xl text-lg"																									
+>																									
+テーブル 4																									
+</button>																									
+																									
+<button																									
+onclick="selectTable(5)"																									
+class="py-3.5 bg-slate-100 font-bold rounded-2xl text-lg"																									
+>																									
+テーブル 5																									
+</button>																									
+																									
 </div>																									
 																									
-<!-- ================= 領収書モーダル ================= -->																									
-<div id="receipt-modal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">																									
+</div>																									
+																									
+</div>																									
+																									
+																									
+																									
+<!-- ==================================================																									
+領収書																									
+#ERROR!																									
+																									
+<div																									
+id="receipt-modal"																									
+class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm"																									
+>																									
+																									
 <div class="bg-white w-full max-w-sm rounded-3xl p-6 text-center space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">																									
-<div class="text-emerald-500 text-5xl font-bold">✓</div>																									
-<h3 class="text-xl font-bold text-slate-800">お会計が完了しました</h3>																									
+																									
+<div class="text-emerald-500 text-5xl font-bold">																									
+✓																									
+</div>																									
+																									
+																									
+<h3 class="text-xl font-bold text-slate-800">																									
+お会計が完了しました																									
+</h3>																									
+																									
+																									
 <div class="border border-dashed border-slate-300 p-4 rounded-2xl text-left text-sm space-y-2 bg-slate-50">																									
+																									
 <div class="flex justify-between font-bold text-slate-600 border-b pb-2">																									
-<span>テーブル番号</span>																									
-<span id="receipt-table">-</span>																									
+																									
+<span>																									
+テーブル番号																									
+</span>																									
+																									
+<span id="receipt-table">																									
+-																									
+</span>																									
+																									
 </div>																									
-<div id="receipt-items" class="py-2 space-y-1 border-b text-xs"></div>																									
+																									
+																									
+<div																									
+id="receipt-items"																									
+class="py-2 space-y-1 border-b text-xs"																									
+>																									
+</div>																									
+																									
+																									
 <div class="flex justify-between font-bold text-base pt-1 text-slate-800">																									
-<span>お支払い合計</span>																									
-<span id="receipt-total" class="text-blue-600">¥0</span>																									
+																									
+<span>																									
+お支払い合計																									
+</span>																									
+																									
+<span																									
+id="receipt-total"																									
+class="text-blue-600"																									
+>																									
+¥0																									
+</span>																									
+																									
 </div>																									
+																									
 </div>																									
+																									
+																									
 <div class="flex flex-col items-center justify-center space-y-1 pt-1">																									
-<div id="qrcode" class="p-2 bg-white border rounded-xl shadow-sm inline-block"></div>																									
-<span class="text-[10px] text-slate-400">お会計確認用QRコード</span>																									
+																									
+<div																									
+id="qrcode"																									
+class="p-2 bg-white border rounded-xl shadow-sm inline-block"																									
+>																									
 </div>																									
-<button onclick="closeReceiptModal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-bold shadow-md transition">																									
-閉じる（トップへ戻る）																									
+																									
+<span class="text-[10px] text-slate-400">																									
+お会計確認用QRコード																									
+</span>																									
+																									
+</div>																									
+																									
+																									
+<button																									
+onclick="closeReceiptModal()"																									
+class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-bold shadow-md"																									
+>																									
+閉じる																									
 </button>																									
+																									
 </div>																									
+																									
 </div>																									
+																									
+																									
 																									
 <script>																									
-// JSONP方式用エンドポイント																									
-const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxzxAT7w9VscVWSYeCGs0b0BSzw_FSV58ijndShy6Jrn_27p0Abw4O3bru6KK_vCCK2iQ/exec";																									
+																									
+/* ==================================================																									
+GAS URL																									
+#ERROR!																									
+																									
+const GAS_API_URL =																									
+https://script.google.com/macros/s/AKfycbxzxAT7w9VscVWSYeCGs0b0BSzw_FSV58ijndShy6Jrn_27p0Abw4O3bru6KK_vCCK2iQ/exec;																									
+																									
+																									
+/* ==================================================																									
+データ																									
+#ERROR!																									
 																									
 let menuData = [];																									
+																									
 let currentCategory = "all";																									
-let cart = {}; // { id: { id, name, price, quantity } }																									
-let currentTableNo = localStorage.getItem("saizeriya_table_no") || "1";																									
+																									
+let cart = {};																									
+																									
+let currentTableNo =																									
+localStorage.getItem("saizeriya_table_no") || "1";																									
+																									
+																									
+																									
+/* ==================================================																									
+起動																									
+#ERROR!																									
 																									
 window.addEventListener("DOMContentLoaded", () => {																									
-document.getElementById("current-table-display").textContent = currentTableNo;																									
-if (!localStorage.getItem("saizeriya_table_no")) {																									
+																									
+document.getElementById(																									
+current-table-display																									
+).textContent = currentTableNo;																									
+																									
+																									
+if (																									
+!localStorage.getItem(																									
+saizeriya_table_no																									
+)																									
+) {																									
+																									
 openTableModal();																									
+																									
 }																									
+																									
+																									
+updateCartBadge();																									
+																									
+updateCartView();																									
+																									
 fetchMenu();																									
+																									
 });																									
 																									
-// JSONP汎用通信関数																									
-function callJSONP(action, payload = {}, callbackName = "") {																									
-return new Promise((resolve, reject) => {																									
-const cbName = callbackName || "jsonp_cb_" + Math.random().toString(36.substring(2));																									
-const script = document.createElement("script");																									
 																									
-window[cbName] = (response) => {																									
-delete window[cbName];																									
-document.body.removeChild(script);																									
-resolve(response);																									
-};																									
 																									
-script.onerror = () => {																									
-delete window[cbName];																									
-if (script.parentNode) document.body.removeChild(script);																									
-reject(new Error("JSONP通信エラー"));																									
-};																									
+/* ==================================================																									
+接続表示																									
+#ERROR!																									
 																									
-const params = new URLSearchParams({																									
-action: action,																									
-callback: cbName,																									
-data: JSON.stringify(payload)																									
-});																									
+function setConnectionStatus(ok) {																									
 																									
-script.src = `${GAS_API_URL}?${params.toString()}`;																									
-document.body.appendChild(script);																									
-});																									
-}																									
+const el =																									
+document.getElementById(																									
+connection-status																									
+);																									
 																									
-// テーブル選択																									
-function openTableModal() {																									
-document.getElementById("table-modal").classList.remove("hidden");																									
-}																									
-function selectTable(no) {																									
-currentTableNo = String(no);																									
-localStorage.setItem("saizeriya_table_no", currentTableNo);																									
-document.getElementById("current-table-display").textContent = currentTableNo;																									
-document.getElementById("table-modal").classList.add("hidden");																									
-cart = {};																									
-updateCartUI();																									
-switchTab('menu');																									
-}																									
 																									
-// タブ切り替え																									
-function switchTab(tabId) {																									
-['menu', 'cart', 'history', 'checkout'].forEach(t => {																									
-document.getElementById(`view-${t}`).classList.add('hidden');																									
-const nav = document.getElementById(`nav-${t}`);																									
-nav.classList.remove('text-blue-600', 'font-bold');																									
-nav.classList.add('text-slate-400');																									
-});																									
-document.getElementById(`view-${tabId}`).classList.remove('hidden');																									
-const activeNav = document.getElementById(`nav-${tabId}`);																									
-activeNav.classList.remove('text-slate-400');																									
-activeNav.classList.add('text-blue-600', 'font-bold');																									
+if (ok) {																									
 																									
-if (tabId === 'history') fetchHistory();																									
-if (tabId === 'checkout') fetchCheckoutData();																									
-}																									
+el.textContent =																									
+接続中;																									
 																									
-// メニュー取得																									
-function fetchMenu() {																									
-callJSONP("getMenu")																									
-.then(res => {																									
-if (res && res.status === "success") {																									
-menuData = res.data || [];																									
-renderCategoryTabs();																									
-renderMenu();																									
+el.className =																									
+text-xs bg-emerald-500 px-2.5 py-1 rounded-full font-medium;																									
+																									
 } else {																									
-alert("メニューの取得に失敗しました");																									
-}																									
-})																									
-.catch(() => alert("ネットワークエラーが発生しました"));																									
+																									
+el.textContent =																									
+通信エラー;																									
+																									
+el.className =																									
+text-xs bg-red-500 px-2.5 py-1 rounded-full font-medium;																									
+																									
 }																									
 																									
-// カテゴリタブ描画																									
-function renderCategoryTabs() {																									
-const container = document.getElementById("category-tabs");																									
-const categories = ["all", ...new Set(menuData.map(i => i.category))];																									
-container.innerHTML = categories.map(cat => `																									
-<button onclick="filterCategory('${cat}')" class="cat-btn px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap shadow-sm transition ${cat === currentCategory ? 'bg-blue-600 text-white' : 'bg-white text-slate-600 border'}">																									
-${cat === 'all' ? 'すべて' : cat}																									
-</button>																									
-`).join('');																									
 }																									
+																									
+																									
+																									
+/* ==================================================																									
+JSONP																									
+#ERROR!																									
+																									
+function callJSONP(																									
+action,																									
+payload = {}																									
+) {																									
+																									
+return new Promise(																									
+(resolve, reject) => {																									
+																									
+const cbName =																									
+jsonp_cb_ +																									
+Date.now() +																									
+_ +																									
+Math.random()																									
+.toString(36)																									
+.substring(2);																									
+																									
+																									
+const script =																									
+document.createElement(																									
+script																									
+);																									
+																									
+																									
+const timeout =																									
+setTimeout(() => {																									
+																									
+cleanup();																									
+																									
+reject(																									
+new Error(																									
+通信がタイムアウトしました																									
+)																									
+);																									
+																									
+}, 15000);																									
+																									
+																									
+function cleanup() {																									
+																									
+clearTimeout(timeout);																									
+																									
+if (																									
+window[cbName]																									
+) {																									
+																									
+delete window[cbName];																									
+																									
+}																									
+																									
+																									
+if (																									
+script.parentNode																									
+) {																									
+																									
+script.parentNode																									
+.removeChild(script);																									
+																									
+}																									
+																									
+}																									
+																									
+																									
+window[cbName] =																									
+function(response) {																									
+																									
+cleanup();																									
+																									
+resolve(response);																									
+																									
+};																									
+																									
+																									
+script.onerror =																									
+function() {																									
+																									
+cleanup();																									
+																									
+reject(																									
+new Error(																									
+JSONP通信エラー																									
+)																									
+);																									
+																									
+};																									
+																									
+																									
+const params =																									
+new URLSearchParams({																									
+																									
+action: action,																									
+																									
+callback: cbName,																									
+																									
+data:																									
+JSON.stringify(																									
+payload																									
+),																									
+																									
+_: Date.now()																									
+																									
+});																									
+																									
+																									
+script.src =																									
+GAS_API_URL +																									
+? +																									
+params.toString();																									
+																									
+																									
+document.body																									
+.appendChild(script);																									
+																									
+}																									
+);																									
+																									
+}																									
+																									
+																									
+																									
+/* ==================================================																									
+テーブル																									
+#ERROR!																									
+																									
+function openTableModal() {																									
+																									
+document																									
+.getElementById(																									
+table-modal																									
+)																									
+.classList																									
+.remove("hidden");																									
+																									
+}																									
+																									
+																									
+																									
+function selectTable(no) {																									
+																									
+currentTableNo =																									
+String(no);																									
+																									
+																									
+localStorage.setItem(																									
+saizeriya_table_no,																									
+currentTableNo																									
+);																									
+																									
+																									
+document.getElementById(																									
+current-table-display																									
+).textContent =																									
+currentTableNo;																									
+																									
+																									
+document																									
+.getElementById(																									
+table-modal																									
+)																									
+.classList																									
+.add("hidden");																									
+																									
+																									
+cart = {};																									
+																									
+updateCartBadge();																									
+																									
+updateCartView();																									
+																									
+renderMenu();																									
+																									
+switchTab("menu");																									
+																									
+}																									
+																									
+																									
+																									
+/* ==================================================																									
+タブ																									
+#ERROR!																									
+																									
+function switchTab(tabId) {																									
+																									
+[																									
+menu,																									
+cart,																									
+history,																									
+checkout																									
+].forEach(t => {																									
+																									
+document																									
+.getElementById(																									
+view- + t																									
+)																									
+.classList																									
+.add("hidden");																									
+																									
+																									
+const nav =																									
+document.getElementById(																									
+nav- + t																									
+);																									
+																									
+																									
+nav.classList																									
+.remove(																									
+text-blue-600,																									
+font-bold																									
+);																									
+																									
+																									
+nav.classList																									
+.add(																									
+text-slate-400																									
+);																									
+																									
+});																									
+																									
+																									
+document																									
+.getElementById(																									
+view- + tabId																									
+)																									
+.classList																									
+.remove("hidden");																									
+																									
+																									
+const activeNav =																									
+document.getElementById(																									
+nav- + tabId																									
+);																									
+																									
+																									
+activeNav.classList																									
+.remove(																									
+text-slate-400																									
+);																									
+																									
+																									
+activeNav.classList																									
+.add(																									
+text-blue-600,																									
+font-bold																									
+);																									
+																									
+																									
+if (																									
+tabId === "history"																									
+) {																									
+																									
+fetchHistory();																									
+																									
+}																									
+																									
+																									
+if (																									
+tabId === "checkout"																									
+) {																									
+																									
+fetchCheckoutData();																									
+																									
+}																									
+																									
+}																									
+																									
+																									
+																									
+/* ==================================================																									
+メニュー取得																									
+#ERROR!																									
+																									
+function fetchMenu() {																									
+																									
+const container =																									
+document.getElementById(																									
+menu-list																									
+);																									
+																									
+																									
+container.innerHTML =																									
+<p class="text-center text-slate-400 py-10">メニューを読み込んでいます...</p>';																									
+																									
+																									
+callJSONP(																									
+getMenu																									
+)																									
+																									
+.then(res => {																									
+																									
+if (																									
+res &&																									
+res.status === "success"																									
+) {																									
+																									
+setConnectionStatus(true);																									
+																									
+menuData =																									
+res.data || [];																									
+																									
+renderCategoryTabs();																									
+																									
+renderMenu();																									
+																									
+} else {																									
+																									
+setConnectionStatus(false);																									
+																									
+container.innerHTML =																									
+<p class="text-center text-red-500 py-10">メニューの取得に失敗しました</p>';																									
+																									
+}																									
+																									
+})																									
+																									
+.catch(err => {																									
+																									
+console.error(err);																									
+																									
+setConnectionStatus(false);																									
+																									
+container.innerHTML =																									
+<p class="text-center text-red-500 py-10">通信エラーが発生しました</p>';																									
+																									
+});																									
+																									
+}																									
+																									
+																									
+																									
+/* ==================================================																									
+カテゴリ																									
+#ERROR!																									
+																									
+function renderCategoryTabs() {																									
+																									
+const container =																									
+document.getElementById(																									
+category-tabs																									
+);																									
+																									
+																									
+const categories =																									
+[																									
+all,																									
+...new Set(																									
+menuData.map(																									
+item =>																									
+item.category																									
+)																									
+)																									
+];																									
+																									
+																									
+container.innerHTML =																									
+categories.map(cat => {																									
+																									
+const active =																									
+cat === currentCategory;																									
+																									
+																									
+return `																									
+																									
+<button																									
+onclick='filterCategory(${JSON.stringify(cat)})'																									
+class="px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap shadow-sm transition ${																									
+active																									
+? "bg-blue-600 text-white"																									
+: "bg-white text-slate-600 border"																									
+}"																									
+>																									
+																									
+${																									
+cat === "all"																									
+? "すべて"																									
+: escapeHtml(cat)																									
+}																									
+																									
+</button>																									
+																									
+`;																									
+																									
+}).join("");																									
+																									
+}																									
+																									
+																									
 																									
 function filterCategory(cat) {																									
-currentCategory = cat;																									
+																									
+currentCategory =																									
+cat;																									
+																									
 renderCategoryTabs();																									
+																									
 renderMenu();																									
+																									
 }																									
 																									
-// メニューリスト描画																									
+																									
+																									
+/* ==================================================																									
+メニュー表示																									
+#ERROR!																									
+																									
 function renderMenu() {																									
-const container = document.getElementById("menu-list");																									
-const filtered = currentCategory === 'all' ? menuData : menuData.filter(i => i.category === currentCategory);																									
 																									
-if (filtered.length === 0) {																									
-container.innerHTML = `<p class="text-center text-slate-400 py-10">メニューがありません</p>`;																									
+const container =																									
+document.getElementById(																									
+menu-list																									
+);																									
+																									
+																									
+const filtered =																									
+currentCategory === "all"																									
+? menuData																									
+: menuData.filter(																									
+item =>																									
+item.category ===																									
+currentCategory																									
+);																									
+																									
+																									
+if (																									
+filtered.length === 0																									
+) {																									
+																									
+container.innerHTML =																									
+<p class="text-center text-slate-400 py-10">メニューがありません</p>';																									
+																									
 return;																									
+																									
 }																									
 																									
-container.innerHTML = filtered.map(item => {																									
-const qty = cart[item.id] ? cart[item.id].quantity : 0;																									
+																									
+container.innerHTML =																									
+filtered.map(item => {																									
+																									
+const qty =																									
+cart[item.id]																									
+? cart[item.id].quantity																									
+: 0;																									
+																									
+																									
 return `																									
+																									
 <div class="bg-white p-4 rounded-2xl shadow-sm border flex justify-between items-center">																									
+																									
 <div class="space-y-1 pr-2">																									
-<span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md font-medium">${item.category}</span>																									
-<div class="font-bold text-slate-800 text-base">${item.name}</div>																									
-<div class="text-blue-600 font-extrabold text-sm">¥${Number(item.price).toLocaleString()}</div>																									
+																									
+<span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md font-medium">																									
+${escapeHtml(item.category)}																									
+</span>																									
+																									
+																									
+<div class="font-bold text-slate-800 text-base">																									
+${escapeHtml(item.name)}																									
 </div>																									
+																									
+																									
+<div class="text-blue-600 font-extrabold text-sm">																									
+¥${Number(item.price).toLocaleString("ja-JP")}																									
+</div>																									
+																									
+</div>																									
+																									
+																									
 <div class="flex items-center space-x-3 bg-slate-50 p-1.5 rounded-xl border">																									
-<button onclick="changeQuantity('${item.id}', -1)" class="w-8 h-8 rounded-lg bg-white shadow-sm text-slate-700 font-bold flex items-center justify-center hover:bg-slate-100 transition active:scale-95">-</button>																									
-<span id="qty-${item.id}" class="font-bold w-5 text-center text-sm">${qty}</span>																									
-<button onclick="changeQuantity('${item.id}', 1)" class="w-8 h-8 rounded-lg bg-blue-600 text-white font-bold flex items-center justify-center hover:bg-blue-700 transition active:scale-95">+</button>																									
+																									
+<button																									
+onclick='changeQuantity(${JSON.stringify(String(item.id))}, -1)'																									
+class="w-8 h-8 rounded-lg bg-white shadow-sm text-slate-700 font-bold"																									
+>																									
+-																									
+</button>																									
+																									
+																									
+<span																									
+id="qty-${escapeAttribute(item.id)}"																									
+class="font-bold w-5 text-center text-sm"																									
+>																									
+${qty}																									
+</span>																									
+																									
+																									
+<button																									
+onclick='changeQuantity(${JSON.stringify(String(item.id))}, 1)'																									
+class="w-8 h-8 rounded-lg bg-blue-600 text-white font-bold"																									
+>																									
+#ERROR!																									
+</button>																									
+																									
 </div>																									
+																									
 </div>																									
+																									
 `;																									
-}).join('');																									
+																									
+}).join("");																									
+																									
 }																									
 																									
-// 数量変更																									
-function changeQuantity(id, delta) {																									
-const item = menuData.find(i => i.id === id);																									
-if (!item) return;																									
 																									
-if (!cart[id]) {																									
-if (delta < 0) return;																									
-cart[id] = { id: item.id, name: item.name, price: item.price, quantity: 0 };																									
+																									
+/* ==================================================																									
+数量																									
+#ERROR!																									
+																									
+function changeQuantity(																									
+id,																									
+delta																									
+) {																									
+																									
+const item =																									
+menuData.find(																									
+item =>																									
+String(item.id) ===																									
+String(id)																									
+);																									
+																									
+																									
+if (!item) {																									
+																									
+return;																									
+																									
 }																									
-cart[id].quantity += delta;																									
-if (cart[id].quantity <= 0) {																									
+																									
+																									
+if (																									
+!cart[id]																									
+) {																									
+																									
+if (																									
+delta < 0																									
+) {																									
+																									
+return;																									
+																									
+}																									
+																									
+																									
+cart[id] = {																									
+																									
+id:																									
+item.id,																									
+																									
+name:																									
+item.name,																									
+																									
+price:																									
+Number(item.price),																									
+																									
+quantity:																									
+0																									
+																									
+};																									
+																									
+}																									
+																									
+																									
+cart[id].quantity +=																									
+delta;																									
+																									
+																									
+if (																									
+cart[id].quantity <= 0																									
+) {																									
+																									
 delete cart[id];																									
+																									
 }																									
 																									
-const qtyEl = document.getElementById(`qty-${id}`);																									
-if (qtyEl) qtyEl.textContent = cart[id] ? cart[id].quantity : 0;																									
+																									
+renderMenu();																									
 																									
 updateCartBadge();																									
+																									
 updateCartView();																									
+																									
 }																									
+																									
+																									
+																									
+/* ==================================================																									
+カート表示																									
+#ERROR!																									
 																									
 function updateCartBadge() {																									
+																									
 let totalCount = 0;																									
-Object.values(cart).forEach(i => totalCount += i.quantity);																									
-const badge = document.getElementById("cart-badge");																									
-if (totalCount > 0) {																									
-badge.textContent = totalCount;																									
-badge.classList.remove("hidden");																									
+																									
+																									
+Object.values(																									
+cart																									
+).forEach(item => {																									
+																									
+totalCount +=																									
+Number(																									
+item.quantity																									
+);																									
+																									
+});																									
+																									
+																									
+const badge =																									
+document.getElementById(																									
+cart-badge																									
+);																									
+																									
+																									
+if (																									
+totalCount > 0																									
+) {																									
+																									
+badge.textContent =																									
+totalCount;																									
+																									
+badge.classList																									
+.remove("hidden");																									
+																									
 } else {																									
-badge.classList.add("hidden");																									
+																									
+badge.classList																									
+.add("hidden");																									
+																									
 }																									
+																									
 }																									
+																									
+																									
 																									
 function updateCartView() {																									
-const container = document.getElementById("cart-items-list");																									
-const items = Object.values(cart);																									
+																									
+const container =																									
+document.getElementById(																									
+cart-items-list																									
+);																									
+																									
+																									
+const items =																									
+Object.values(																									
+cart																									
+);																									
+																									
+																									
 let total = 0;																									
 																									
-if (items.length === 0) {																									
-container.innerHTML = `<p class="text-center text-slate-400 py-10">注文かごは空です</p>`;																									
-document.getElementById("cart-total").textContent = "0";																									
+																									
+if (																									
+items.length === 0																									
+) {																									
+																									
+container.innerHTML =																									
+<p class="text-center text-slate-400 py-10">注文かごは空です</p>';																									
+																									
+																									
+document																									
+.getElementById(																									
+cart-total																									
+)																									
+.textContent =																									
+0;																									
+																									
+																									
 return;																									
+																									
 }																									
 																									
-container.innerHTML = items.map(item => {																									
-const subtotal = item.price * item.quantity;																									
-total += subtotal;																									
+																									
+container.innerHTML =																									
+items.map(item => {																									
+																									
+const subtotal =																									
+Number(item.price) *																									
+Number(item.quantity);																									
+																									
+																									
+total +=																									
+subtotal;																									
+																									
+																									
 return `																									
+																									
 <div class="bg-white p-4 rounded-2xl shadow-sm border flex justify-between items-center">																									
+																									
 <div>																									
-<div class="font-bold text-slate-800">${item.name}</div>																									
-<div class="text-xs text-slate-500">¥${item.price} × ${item.quantity}</div>																									
+																									
+<div class="font-bold text-slate-800">																									
+${escapeHtml(item.name)}																									
 </div>																									
+																									
+<div class="text-xs text-slate-500">																									
+¥${Number(item.price).toLocaleString("ja-JP")}																									
+×																									
+${item.quantity}																									
+</div>																									
+																									
+</div>																									
+																									
+																									
 <div class="flex items-center space-x-3">																									
-<span class="font-bold text-blue-600">¥${subtotal.toLocaleString()}</span>																									
-<button onclick="changeQuantity('${item.id}', -1)" class="text-red-500 text-xs font-bold bg-red-50 px-2.5 py-1 rounded-lg">削除</button>																									
+																									
+<span class="font-bold text-blue-600">																									
+¥${subtotal.toLocaleString("ja-JP")}																									
+</span>																									
+																									
+																									
+<button																									
+onclick='changeQuantity(${JSON.stringify(String(item.id))}, -1)'																									
+class="text-red-500 text-xs font-bold bg-red-50 px-2.5 py-1 rounded-lg"																									
+>																									
+1個減らす																									
+</button>																									
+																									
 </div>																									
+																									
 </div>																									
+																									
 `;																									
-}).join('');																									
 																									
-document.getElementById("cart-total").textContent = total.toLocaleString();																									
+}).join("");																									
+																									
+																									
+document																									
+.getElementById(																									
+cart-total																									
+)																									
+.textContent =																									
+total.toLocaleString(																									
+ja-JP																									
+);																									
+																									
 }																									
 																									
-// 注文確定																									
+																									
+																									
+/* ==================================================																									
+注文																									
+#ERROR!																									
+																									
 function submitOrder() {																									
-const items = Object.values(cart);																									
-if (items.length === 0) return alert("かごに商品が入っていません");																									
 																									
-callJSONP("submitOrder", { tableNo: currentTableNo, items: items })																									
-.then(res => {																									
-if (res && res.status === "success") {																									
-alert("注文を確定しました！");																									
-cart = {};																									
-updateCartBadge();																									
-updateCartView();																									
-switchTab('history');																									
-} else {																									
-alert("注文に失敗しました: " + (res.message || ""));																									
-}																									
-})																									
-.catch(() => alert("通信エラーが発生しました"));																									
-}																									
+const items =																									
+Object.values(																									
+cart																									
+);																									
 																									
-// 注文履歴取得																									
-function fetchHistory() {																									
-const container = document.getElementById("history-container");																									
-container.innerHTML = `<p class="text-center text-slate-400 py-10">履歴を読み込んでいます...</p>`;																									
 																									
-callJSONP("getOrderByTable", { tableNo: currentTableNo })																									
-.then(res => {																									
-if (res && res.status === "success") {																									
-const orders = res.orders || [];																									
-if (orders.length === 0) {																									
-container.innerHTML = `<p class="text-center text-slate-400 py-10">注文履歴はありません</p>";																									
+if (																									
+items.length === 0																									
+) {																									
+																									
+alert(																									
+かごに商品が入っていません																									
+);																									
+																									
 return;																									
+																									
 }																									
 																									
-container.innerHTML = orders.map(order => {																									
-let badgeColor = "bg-amber-100 text-amber-800";																									
-if (order.status === "提供済み") badgeColor = "bg-blue-100 text-blue-800";																									
-if (order.status === "完了") badgeColor = "bg-emerald-100 text-emerald-800";																									
-if (order.status === "会計済み") badgeColor = "bg-slate-200 text-slate-600";																									
+																									
+if (																									
+!confirm(																									
+この内容で注文しますか？																									
+)																									
+) {																									
+																									
+return;																									
+																									
+}																									
+																									
+																									
+callJSONP(																									
+submitOrder,																									
+{																									
+																									
+tableNo:																									
+currentTableNo,																									
+																									
+items:																									
+items																									
+																									
+}																									
+)																									
+																									
+.then(res => {																									
+																									
+if (																									
+res &&																									
+res.status === "success"																									
+) {																									
+																									
+setConnectionStatus(true);																									
+																									
+																									
+alert(																									
+注文を確定しました！\n注文番号:  +																									
+res.orderId																									
+);																									
+																									
+																									
+cart = {};																									
+																									
+updateCartBadge();																									
+																									
+updateCartView();																									
+																									
+renderMenu();																									
+																									
+switchTab(																									
+history																									
+);																									
+																									
+} else {																									
+																									
+alert(																									
+注文に失敗しました\n +																									
+(																									
+res.message ||																									
+																									
+)																									
+);																									
+																									
+}																									
+																									
+})																									
+																									
+.catch(err => {																									
+																									
+console.error(err);																									
+																									
+setConnectionStatus(false);																									
+																									
+alert(																									
+通信エラーが発生しました																									
+);																									
+																									
+});																									
+																									
+}																									
+																									
+																									
+																									
+/* ==================================================																									
+履歴																									
+#ERROR!																									
+																									
+function fetchHistory() {																									
+																									
+const container =																									
+document.getElementById(																									
+history-container																									
+);																									
+																									
+																									
+container.innerHTML =																									
+<p class="text-center text-slate-400 py-10">履歴を読み込んでいます...</p>';																									
+																									
+																									
+callJSONP(																									
+getOrderByTable,																									
+{																									
+																									
+tableNo:																									
+currentTableNo																									
+																									
+}																									
+)																									
+																									
+.then(res => {																									
+																									
+if (																									
+!res ||																									
+res.status !== "success"																									
+) {																									
+																									
+container.innerHTML =																									
+<p class="text-center text-red-500 py-10">履歴の取得に失敗しました</p>';																									
+																									
+return;																									
+																									
+}																									
+																									
+																									
+setConnectionStatus(true);																									
+																									
+																									
+const orders =																									
+res.orders || [];																									
+																									
+																									
+if (																									
+orders.length === 0																									
+) {																									
+																									
+container.innerHTML =																									
+<p class="text-center text-slate-400 py-10">注文履歴はありません</p>';																									
+																									
+return;																									
+																									
+}																									
+																									
+																									
+container.innerHTML =																									
+orders.map(order => {																									
+																									
+let badgeColor =																									
+bg-amber-100 text-amber-800;																									
+																									
+																									
+if (																									
+order.status === "提供済み"																									
+) {																									
+																									
+badgeColor =																									
+bg-blue-100 text-blue-800;																									
+																									
+}																									
+																									
+																									
+if (																									
+order.status === "完了"																									
+) {																									
+																									
+badgeColor =																									
+bg-emerald-100 text-emerald-800;																									
+																									
+}																									
+																									
+																									
+if (																									
+order.status === "会計済み"																									
+) {																									
+																									
+badgeColor =																									
+bg-slate-200 text-slate-600;																									
+																									
+}																									
+																									
+																									
+const itemHtml =																									
+order.items.map(item => {																									
 																									
 return `																									
-<div class="bg-white p-4 rounded-2xl shadow-sm border space-y-3">																									
-<div class="flex justify-between items-center text-xs text-slate-400 border-b pb-2">																									
-<span>${order.orderDate}</span>																									
-<span class="px-2.5 py-1 rounded-full font-bold ${badgeColor}">${order.status}</span>																									
-</div>																									
-<div class="space-y-2">																									
-${order.items.map(i => `																									
+																									
 <div class="flex justify-between text-sm">																									
-<span class="text-slate-700 font-medium">${i.name} × ${i.quantity}</span>																									
-<span class="text-slate-600">¥${i.subtotal.toLocaleString()}</span>																									
+																									
+<span class="text-slate-700 font-medium">																									
+${escapeHtml(item.name)}																									
+×																									
+${item.quantity}																									
+</span>																									
+																									
+<span class="text-slate-600">																									
+¥${Number(item.subtotal).toLocaleString("ja-JP")}																									
+</span>																									
+																									
 </div>																									
-`).join('')}																									
-</div>																									
-<div class="flex justify-between text-sm font-bold pt-2 border-t text-slate-800">																									
-<span>小計</span>																									
-<span class="text-blue-600">¥${order.total.toLocaleString()}</span>																									
-</div>																									
-</div>																									
+																									
 `;																									
-}).join('');																									
-} else {																									
-container.innerHTML = `<p class="text-center text-red-500 py-10">履歴の取得に失敗しました</p>`;																									
-}																									
+																									
+}).join("");																									
+																									
+																									
+return `																									
+																									
+<div class="bg-white p-4 rounded-2xl shadow-sm border space-y-3">																									
+																									
+<div class="flex justify-between items-center text-xs text-slate-400 border-b pb-2">																									
+																									
+<div>																									
+																									
+<div>																									
+${escapeHtml(order.orderDate)}																									
+</div>																									
+																									
+<div class="mt-1">																									
+${escapeHtml(order.orderId)}																									
+</div>																									
+																									
+</div>																									
+																									
+																									
+<span class="px-2.5 py-1 rounded-full font-bold ${badgeColor}">																									
+${escapeHtml(order.status)}																									
+</span>																									
+																									
+</div>																									
+																									
+																									
+<div class="space-y-2">																									
+${itemHtml}																									
+</div>																									
+																									
+																									
+<div class="flex justify-between text-sm font-bold pt-2 border-t text-slate-800">																									
+																									
+<span>																									
+小計																									
+</span>																									
+																									
+<span class="text-blue-600">																									
+¥${Number(order.total).toLocaleString("ja-JP")}																									
+</span>																									
+																									
+</div>																									
+																									
+</div>																									
+																									
+`;																									
+																									
+}).join("");																									
+																									
 })																									
-.catch(() => container.innerHTML = `<p class="text-center text-red-500 py-10">通信エラーが発生しました</p>`);																									
+																									
+.catch(err => {																									
+																									
+console.error(err);																									
+																									
+setConnectionStatus(false);																									
+																									
+																									
+container.innerHTML =																									
+<p class="text-center text-red-500 py-10">通信エラーが発生しました</p>';																									
+																									
+});																									
+																									
 }																									
 																									
-// 会計画面データ取得																									
+																									
+																									
+/* ==================================================																									
+会計画面																									
+#ERROR!																									
+																									
 function fetchCheckoutData() {																									
-const container = document.getElementById("checkout-summary-list");																									
-container.innerHTML = `<p class="text-center text-slate-400 py-10">読み込んでいます...</p>`;																									
 																									
-callJSONP("getOrderByTable", { tableNo: currentTableNo })																									
-.then(res => {																									
-if (res && res.status === "success") {																									
-// 未会計の注文のみ対象																									
-const activeOrders = (res.orders || []).filter(o => o.status !== "会計済み");																									
-if (activeOrders.length === 0) {																									
-container.innerHTML = `<p class="text-center text-slate-400 py-10">お会計対象の注文はありません</p>`;																									
-document.getElementById("checkout-total").textContent = "0";																									
-return;																									
+const container =																									
+document.getElementById(																									
+checkout-summary-list																									
+);																									
+																									
+																									
+container.innerHTML =																									
+<p class="text-center text-slate-400 py-10">読み込んでいます...</p>';																									
+																									
+																									
+callJSONP(																									
+getOrderByTable,																									
+{																									
+																									
+tableNo:																									
+currentTableNo																									
+																									
 }																									
+)																									
+																									
+.then(res => {																									
+																									
+if (																									
+!res ||																									
+res.status !== "success"																									
+) {																									
+																									
+container.innerHTML =																									
+<p class="text-center text-red-500 py-10">読み込みに失敗しました</p>';																									
+																									
+return;																									
+																									
+}																									
+																									
+																									
+setConnectionStatus(true);																									
+																									
+																									
+const activeOrders =																									
+(res.orders || [])																									
+.filter(																									
+order =>																									
+order.status !==																									
+会計済み																									
+);																									
+																									
+																									
+if (																									
+activeOrders.length === 0																									
+) {																									
+																									
+container.innerHTML =																									
+<p class="text-center text-slate-400 py-10">お会計対象の注文はありません</p>';																									
+																									
+																									
+document																									
+.getElementById(																									
+checkout-total																									
+)																									
+.textContent =																									
+0;																									
+																									
+																									
+return;																									
+																									
+}																									
+																									
 																									
 let grandTotal = 0;																									
-let allItemsMap = {};																									
 																									
-activeOrders.forEach(o => {																									
-grandTotal += o.total;																									
-o.items.forEach(i => {																									
-if (!allItemsMap[i.id]) {																									
-allItemsMap[i.id] = { name: i.name, price: i.price, quantity: 0, subtotal: 0 };																									
+const allItemsMap = {};																									
+																									
+																									
+activeOrders.forEach(																									
+order => {																									
+																									
+grandTotal +=																									
+Number(																									
+order.total																									
+);																									
+																									
+																									
+order.items.forEach(																									
+item => {																									
+																									
+const key =																									
+String(																									
+item.id																									
+);																									
+																									
+																									
+if (																									
+!allItemsMap[key]																									
+) {																									
+																									
+allItemsMap[key] = {																									
+																									
+name:																									
+item.name,																									
+																									
+price:																									
+Number(																									
+item.price																									
+),																									
+																									
+quantity:																									
+0,																									
+																									
+subtotal:																									
+0																									
+																									
+};																									
+																									
 }																									
-allItemsMap[i.id].quantity += i.quantity;																									
-allItemsMap[i.id].subtotal += i.subtotal;																									
-});																									
-});																									
 																									
-container.innerHTML = Object.values(allItemsMap).map(i => `																									
+																									
+allItemsMap[key]																									
+.quantity +=																									
+Number(																									
+item.quantity																									
+);																									
+																									
+																									
+allItemsMap[key]																									
+.subtotal +=																									
+Number(																									
+item.subtotal																									
+);																									
+																									
+}																									
+);																									
+																									
+}																									
+);																									
+																									
+																									
+container.innerHTML =																									
+Object.values(																									
+allItemsMap																									
+).map(item => {																									
+																									
+return `																									
+																									
 <div class="bg-white p-4 rounded-2xl shadow-sm border flex justify-between items-center text-sm">																									
+																									
 <div>																									
-<div class="font-bold text-slate-800">${i.name} × ${i.quantity}</div>																									
-<div class="text-xs text-slate-400">¥${i.price} / 1点</div>																									
-</div>																									
-<div class="font-bold text-slate-700">¥${i.subtotal.toLocaleString()}</div>																									
-</div>																									
-`).join('');																									
 																									
-document.getElementById("checkout-total").textContent = grandTotal.toLocaleString();																									
-} else {																									
-container.innerHTML = `<p class="text-center text-red-500 py-10">読み込みに失敗しました</p>`;																									
-}																									
+<div class="font-bold text-slate-800">																									
+${escapeHtml(item.name)}																									
+×																									
+${item.quantity}																									
+</div>																									
+																									
+<div class="text-xs text-slate-400">																									
+¥${item.price.toLocaleString("ja-JP")}																									
+/ 1点																									
+</div>																									
+																									
+</div>																									
+																									
+																									
+<div class="font-bold text-slate-700">																									
+¥${item.subtotal.toLocaleString("ja-JP")}																									
+</div>																									
+																									
+</div>																									
+																									
+`;																									
+																									
+}).join("");																									
+																									
+																									
+document																									
+.getElementById(																									
+checkout-total																									
+)																									
+.textContent =																									
+grandTotal																									
+.toLocaleString(																									
+ja-JP																									
+);																									
+																									
 })																									
-.catch(() => container.innerHTML = `<p class="text-center text-red-500 py-10">通信エラーが発生しました</p>`);																									
-}																									
 																									
-// お会計実行																									
-function requestCheckout() {																									
-if (!confirm("お会計に進みますか？")) return;																									
+.catch(err => {																									
 																									
-callJSONP("checkoutByTable", { tableNo: currentTableNo })																									
-.then(res => {																									
-if (res && res.status === "success") {																									
-showReceipt(res.receipt);																									
-} else {																									
-alert("お会計処理に失敗しました: " + (res.message || ""));																									
-}																									
-})																									
-.catch(() => alert("通信エラーが発生しました"));																									
-}																									
+console.error(err);																									
 																									
-// 領収書表示																									
-function showReceipt(receipt) {																									
-document.getElementById("receipt-table").textContent = receipt.tableNo + "番";																									
-document.getElementById("receipt-total").textContent = "¥" + receipt.totalAmount.toLocaleString();																									
+setConnectionStatus(false);																									
 																									
-const container = document.getElementById("receipt-items");																									
-container.innerHTML = receipt.items.map(i => `																									
-<div class="flex justify-between text-xs">																									
-<span>${i.name} × ${i.quantity}</span>																									
-<span>¥${i.subtotal.toLocaleString()}</span>																									
-</div>																									
-`).join('');																									
 																									
-document.getElementById("qrcode").innerHTML = "";																									
-new QRCode(document.getElementById("qrcode"), {																									
-text: `RECEIPT-${receipt.receiptId}-TABLE-${receipt.tableNo}-${receipt.totalAmount}`,																									
-width: 110,																									
-height: 110																									
+container.innerHTML =																									
+<p class="text-center text-red-500 py-10">通信エラーが発生しました</p>';																									
+																									
 });																									
 																									
-document.getElementById("receipt-modal").classList.remove("hidden");																									
 }																									
+																									
+																									
+																									
+/* ==================================================																									
+会計実行																									
+#ERROR!																									
+																									
+function requestCheckout() {																									
+																									
+if (																									
+!confirm(																									
+お会計を確定しますか？																									
+)																									
+) {																									
+																									
+return;																									
+																									
+}																									
+																									
+																									
+const button =																									
+document.getElementById(																									
+checkout-btn																									
+);																									
+																									
+																									
+button.disabled =																									
+true;																									
+																									
+																									
+button.textContent =																									
+処理中...;																									
+																									
+																									
+callJSONP(																									
+checkoutByTable,																									
+{																									
+																									
+tableNo:																									
+currentTableNo																									
+																									
+}																									
+)																									
+																									
+.then(res => {																									
+																									
+if (																									
+res &&																									
+res.status === "success"																									
+) {																									
+																									
+setConnectionStatus(true);																									
+																									
+showReceipt(																									
+res.receipt																									
+);																									
+																									
+} else {																									
+																									
+alert(																									
+お会計処理に失敗しました\n +																									
+(																									
+res.message ||																									
+																									
+)																									
+);																									
+																									
+}																									
+																									
+})																									
+																									
+.catch(err => {																									
+																									
+console.error(err);																									
+																									
+setConnectionStatus(false);																									
+																									
+alert(																									
+通信エラーが発生しました																									
+);																									
+																									
+})																									
+																									
+.finally(() => {																									
+																									
+button.disabled =																									
+false;																									
+																									
+button.textContent =																									
+お会計を確定する;																									
+																									
+});																									
+																									
+}																									
+																									
+																									
+																									
+/* ==================================================																									
+領収書																									
+#ERROR!																									
+																									
+function showReceipt(																									
+receipt																									
+) {																									
+																									
+if (!receipt) {																									
+																									
+alert(																									
+領収書データがありません																									
+);																									
+																									
+return;																									
+																									
+}																									
+																									
+																									
+document																									
+.getElementById(																									
+receipt-table																									
+)																									
+.textContent =																									
+receipt.tableNo +																									
+番;																									
+																									
+																									
+document																									
+.getElementById(																									
+receipt-total																									
+)																									
+.textContent =																									
+¥ +																									
+Number(																									
+receipt.totalAmount																									
+).toLocaleString(																									
+ja-JP																									
+);																									
+																									
+																									
+const container =																									
+document.getElementById(																									
+receipt-items																									
+);																									
+																									
+																									
+container.innerHTML =																									
+receipt.items.map(																									
+item => {																									
+																									
+return `																									
+																									
+<div class="flex justify-between text-xs">																									
+																									
+<span>																									
+${escapeHtml(item.name)}																									
+×																									
+${item.quantity}																									
+</span>																									
+																									
+<span>																									
+¥${Number(item.subtotal).toLocaleString("ja-JP")}																									
+</span>																									
+																									
+</div>																									
+																									
+`;																									
+																									
+}																									
+).join("");																									
+																									
+																									
+document																									
+.getElementById(																									
+qrcode																									
+)																									
+.innerHTML =																									
+;																									
+																									
+																									
+new QRCode(																									
+document.getElementById(																									
+qrcode																									
+),																									
+{																									
+																									
+text:																									
+RECEIPT= +																									
+receipt.receiptId +																									
+&TABLE= +																									
+receipt.tableNo +																									
+&TOTAL= +																									
+receipt.totalAmount,																									
+																									
+width:																									
+110,																									
+																									
+height:																									
+110																									
+																									
+}																									
+);																									
+																									
+																									
+document																									
+.getElementById(																									
+receipt-modal																									
+)																									
+.classList																									
+.remove("hidden");																									
+																									
+}																									
+																									
+																									
 																									
 function closeReceiptModal() {																									
-document.getElementById("receipt-modal").classList.add("hidden");																									
-switchTab('menu');																									
+																									
+document																									
+.getElementById(																									
+receipt-modal																									
+)																									
+.classList																									
+.add("hidden");																									
+																									
+																									
+switchTab(																									
+menu																									
+);																									
+																									
 }																									
+																									
+																									
+																									
+/* ==================================================																									
+HTML安全化																									
+#ERROR!																									
+																									
+function escapeHtml(value) {																									
+																									
+return String(																									
+value ?? ""																									
+)																									
+.replace(																									
+/&/g,																									
+&amp;																									
+)																									
+.replace(																									
+/</g,																									
+&lt;																									
+)																									
+.replace(																									
+/>/g,																									
+&gt;																									
+)																									
+.replace(																									
+/"/g,																									
+&quot;																									
+)																									
+.replace(																									
+/'/g,																									
+&#039;																									
+);																									
+																									
+}																									
+																									
+																									
+																									
+function escapeAttribute(value) {																									
+																									
+return String(																									
+value ?? ""																									
+)																									
+.replace(																									
+/[^a-zA-Z0-9_-]/g,																									
+_																									
+);																									
+																									
+}																									
+																									
 </script>																									
+																									
 </body>																									
 </html>																									
