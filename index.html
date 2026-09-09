@@ -11,29 +11,28 @@
 *{box-sizing:border-box}																									
 body{																									
 margin:0;																									
-font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;																									
 background:#f1f5f9;																									
 color:#1e293b;																									
-padding-bottom:80px;																									
+font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;																									
+padding-bottom:78px;																									
 }																									
 header{																									
-position:sticky;																									
-top:0;																									
-z-index:20;																									
 background:#2563eb;																									
 color:white;																									
-padding:16px;																									
+padding:18px 16px;																									
 display:flex;																									
 justify-content:space-between;																									
 align-items:center;																									
-box-shadow:0 2px 8px #0002;																									
+position:sticky;																									
+top:0;																									
+z-index:20;																									
 }																									
 header button{																									
 border:0;																									
 background:#1d4ed8;																									
 color:white;																									
-padding:7px 10px;																									
 border-radius:8px;																									
+padding:7px 10px;																									
 }																									
 .status{																									
 background:#10b981;																									
@@ -47,28 +46,33 @@ margin:auto;
 padding:16px;																									
 }																									
 .hidden{display:none!important}																									
-.categories{																									
+.title{																									
+font-size:20px;																									
+font-weight:700;																									
+margin-bottom:15px;																									
+}																									
+.catbar{																									
 display:flex;																									
 gap:8px;																									
 overflow-x:auto;																									
-margin-bottom:14px;																									
+margin-bottom:15px;																									
 }																									
-.categories button{																									
+.catbar button{																									
 border:1px solid #ddd;																									
 background:white;																									
 padding:10px 16px;																									
-border-radius:24px;																									
+border-radius:22px;																									
 white-space:nowrap;																									
 }																									
-.categories .active{																									
+.catbar .active{																									
 background:#2563eb;																									
 color:white;																									
 }																									
 .card{																									
 background:white;																									
+border-radius:15px;																									
 padding:15px;																									
 margin-bottom:12px;																									
-border-radius:16px;																									
 box-shadow:0 1px 5px #0001;																									
 }																									
 .row{																									
@@ -79,75 +83,65 @@ gap:10px;
 }																									
 .name{																									
 font-weight:700;																									
-font-size:16px;																									
 }																									
-.category{																									
-font-size:11px;																									
+.small{																									
+font-size:12px;																									
 color:#64748b;																									
 }																									
 .price{																									
-color:#2563eb;																									
 font-weight:700;																									
+color:#2563eb;																									
 margin-top:5px;																									
 }																									
 .qty{																									
 display:flex;																									
 align-items:center;																									
-gap:8px;																									
+gap:9px;																									
 }																									
 .qty button{																									
-width:34px;																									
-height:34px;																									
+width:35px;																									
+height:35px;																									
 border:0;																									
 border-radius:9px;																									
 font-size:20px;																									
 }																									
+.minus{background:#e2e8f0}																									
 .plus{																									
 background:#2563eb;																									
 color:white;																									
 }																									
-.minus{																									
-background:#e2e8f0;																									
-}																									
-.title{																									
-font-size:20px;																									
-font-weight:700;																									
-margin-bottom:15px;																									
-}																									
-.total{																									
+.totalbox{																									
 background:white;																									
-border-radius:16px;																									
-padding:18px;																									
+padding:17px;																									
+border-radius:15px;																									
 margin-top:15px;																									
 }																									
-.total-line{																									
-display:flex;																									
-justify-content:space-between;																									
+.total{																									
 font-size:20px;																									
 font-weight:700;																									
 }																									
-.main-btn{																									
+.mainbtn{																									
 width:100%;																									
+margin-top:15px;																									
 border:0;																									
-border-radius:13px;																									
+border-radius:12px;																									
 padding:15px;																									
 background:#2563eb;																									
 color:white;																									
 font-size:17px;																									
 font-weight:700;																									
-margin-top:15px;																									
 }																									
-.checkout-btn{background:#059669}																									
+.paybtn{background:#059669}																									
 nav{																									
+height:72px;																									
+background:white;																									
 position:fixed;																									
 bottom:0;																									
 left:0;																									
 right:0;																									
-height:72px;																									
-background:white;																									
-border-top:1px solid #ddd;																									
 display:grid;																									
 grid-template-columns:repeat(4,1fr);																									
+border-top:1px solid #ddd;																									
 z-index:30;																									
 }																									
 nav button{																									
@@ -161,57 +155,60 @@ nav span{
 display:block;																									
 font-size:21px;																									
 }																									
-.small{																									
-color:#64748b;																									
-font-size:12px;																									
-}																									
-.badge{																									
-display:inline-block;																									
-padding:5px 9px;																									
-border-radius:15px;																									
-background:#fef3c7;																									
-color:#92400e;																									
-font-size:12px;																									
-}																									
-.paid{																									
-background:#e2e8f0;																									
-color:#475569;																									
-}																									
 .modal{																									
 position:fixed;																									
 inset:0;																									
-z-index:100;																									
 background:#0009;																									
+z-index:100;																									
 display:flex;																									
 align-items:center;																									
 justify-content:center;																									
 padding:20px;																									
 }																									
-.modal-box{																									
+.modalbox{																									
+background:white;																									
 width:100%;																									
 max-width:360px;																									
-background:white;																									
-border-radius:22px;																									
 padding:22px;																									
+border-radius:20px;																									
 }																									
-.table-btn{																									
+.tablebtn{																									
 width:100%;																									
-padding:14px;																									
-margin:5px 0;																									
 border:0;																									
-border-radius:12px;																									
 background:#f1f5f9;																									
+margin:5px 0;																									
+padding:14px;																									
+border-radius:12px;																									
 font-size:17px;																									
 font-weight:700;																									
 }																									
+.loading{																									
+text-align:center;																									
+color:#94a3b8;																									
+padding:55px 0;																									
+}																									
+.error{																									
+text-align:center;																									
+color:#dc2626;																									
+padding:40px 0;																									
+}																									
+.badge{																									
+font-size:12px;																									
+padding:5px 9px;																									
+border-radius:14px;																									
+background:#fef3c7;																									
+color:#92400e;																									
+}																									
+.paid{																									
+background:#e2e8f0;																									
+color:#475569;																									
+}																									
+.center{text-align:center}																									
 .receipt{																									
 border:1px dashed #aaa;																									
 padding:15px;																									
 margin-top:15px;																									
 }																									
-.center{text-align:center}																									
-.error{color:#dc2626;text-align:center;padding:40px 0}																									
-.loading{color:#94a3b8;text-align:center;padding:50px 0}																									
 </style>																									
 </head>																									
 																									
@@ -219,16 +216,16 @@ margin-top:15px;
 																									
 <header>																									
 <div>																									
-<b>テーブル: <span id='tableDisplay'>1</span>番</b>																									
+<b>テーブル: <span id='tableNo'>1</span>番</b>																									
 <button onclick='openTable()'>変更</button>																									
 </div>																									
-<div id='status' class='status'>接続中</div>																									
+<div id='status' class='status'>接続確認中</div>																									
 </header>																									
 																									
 <main>																									
 																									
 <section id='menuView'>																									
-<div id='categories' class='categories'></div>																									
+<div id='catbar' class='catbar'></div>																									
 <div id='menuList' class='loading'>メニューを読み込んでいます...</div>																									
 </section>																									
 																									
@@ -236,13 +233,13 @@ margin-top:15px;
 <div class='title'>注文かご</div>																									
 <div id='cartList'></div>																									
 																									
-<div class='total'>																									
-<div class='total-line'>																									
+<div class='totalbox'>																									
+<div class='row total'>																									
 <span>合計</span>																									
 <span>¥<span id='cartTotal'>0</span></span>																									
 </div>																									
 																									
-<button class='main-btn' onclick='submitOrder()'>																									
+<button class='mainbtn' onclick='submitOrder()'>																									
 注文を確定する																									
 </button>																									
 </div>																									
@@ -257,13 +254,13 @@ margin-top:15px;
 <div class='title'>お会計</div>																									
 <div id='checkoutList'></div>																									
 																									
-<div class='total'>																									
-<div class='total-line'>																									
+<div class='totalbox'>																									
+<div class='row total'>																									
 <span>お支払い総額</span>																									
 <span>¥<span id='checkoutTotal'>0</span></span>																									
 </div>																									
 																									
-<button class='main-btn checkout-btn' onclick='checkout()'>																									
+<button class='mainbtn paybtn' onclick='checkout()'>																									
 お会計を確定する																									
 </button>																									
 </div>																									
@@ -273,36 +270,40 @@ margin-top:15px;
 																									
 <nav>																									
 <button id='navMenu' class='active' onclick='showView("menu")'>																									
-<span>📋</span>メニュー																									
+<span>📋</span>																									
+メニュー																									
 </button>																									
 																									
 <button id='navCart' onclick='showView("cart")'>																									
-<span>🛒</span>かご																									
+<span>🛒</span>																									
+かご																									
 </button>																									
 																									
 <button id='navHistory' onclick='showView("history")'>																									
-<span>⏳</span>履歴																									
+<span>⏳</span>																									
+履歴																									
 </button>																									
 																									
 <button id='navCheckout' onclick='showView("checkout")'>																									
-<span>💰</span>会計																									
+<span>💰</span>																									
+会計																									
 </button>																									
 </nav>																									
 																									
 <div id='tableModal' class='modal hidden'>																									
-<div class='modal-box'>																									
+<div class='modalbox'>																									
 <div class='title center'>テーブル番号を選択</div>																									
 																									
-<button class='table-btn' onclick='selectTable(1)'>テーブル 1</button>																									
-<button class='table-btn' onclick='selectTable(2)'>テーブル 2</button>																									
-<button class='table-btn' onclick='selectTable(3)'>テーブル 3</button>																									
-<button class='table-btn' onclick='selectTable(4)'>テーブル 4</button>																									
-<button class='table-btn' onclick='selectTable(5)'>テーブル 5</button>																									
+<button class='tablebtn' onclick='selectTable(1)'>テーブル 1</button>																									
+<button class='tablebtn' onclick='selectTable(2)'>テーブル 2</button>																									
+<button class='tablebtn' onclick='selectTable(3)'>テーブル 3</button>																									
+<button class='tablebtn' onclick='selectTable(4)'>テーブル 4</button>																									
+<button class='tablebtn' onclick='selectTable(5)'>テーブル 5</button>																									
 </div>																									
 </div>																									
 																									
 <div id='receiptModal' class='modal hidden'>																									
-<div class='modal-box'>																									
+<div class='modalbox'>																									
 																									
 <div class='center' style='font-size:45px'>✅</div>																									
 <div class='title center'>お会計完了</div>																									
@@ -325,9 +326,10 @@ margin-top:15px;
 																									
 <div id='qr' class='center' style='margin-top:18px'></div>																									
 																									
-<button class='main-btn' onclick='closeReceipt()'>																									
+<button class='mainbtn' onclick='closeReceipt()'>																									
 閉じる																									
 </button>																									
+																									
 </div>																									
 </div>																									
 																									
@@ -337,20 +339,20 @@ const API='https://script.google.com/macros/s/AKfycbxzxAT7w9VscVWSYeCGs0b0BSzw_F
 																									
 let menu=[];																									
 let cart={};																									
-let category='all';																									
-let tableNo=localStorage.getItem('saizeriya_table_no')||'1';																									
+let currentCategory='all';																									
+let currentTable=localStorage.getItem('saizeriya_table_no')||'1';																									
 																									
 																									
 window.addEventListener('DOMContentLoaded',function(){																									
 																									
-document.getElementById('tableDisplay').textContent=tableNo;																									
+document.getElementById('tableNo').textContent=currentTable;																									
 																									
 if(!localStorage.getItem('saizeriya_table_no')){																									
 openTable();																									
 }																									
 																									
-loadMenu();																									
 renderCart();																									
+loadMenu();																									
 																									
 });																									
 																									
@@ -359,36 +361,37 @@ function api(action,data){
 																									
 return new Promise(function(resolve,reject){																									
 																									
-const callback='cb_'+Date.now()+'_'+Math.floor(Math.random()*99999);																									
+const cb='cb_'+Date.now()+'_'+Math.floor(Math.random()*99999);																									
 const script=document.createElement('script');																									
 																									
 const timer=setTimeout(function(){																									
-clean();																									
+cleanup();																									
 reject(new Error('タイムアウト'));																									
 },15000);																									
 																									
-function clean(){																									
+function cleanup(){																									
 clearTimeout(timer);																									
-delete window[callback];																									
+delete window[cb];																									
+																									
 if(script.parentNode){																									
 script.parentNode.removeChild(script);																									
 }																									
 }																									
 																									
-window[callback]=function(result){																									
-clean();																									
+window[cb]=function(result){																									
+cleanup();																									
 resolve(result);																									
 };																									
 																									
 script.onerror=function(){																									
-clean();																									
+cleanup();																									
 reject(new Error('通信エラー'));																									
 };																									
 																									
 const params=new URLSearchParams();																									
 																									
 params.set('action',action);																									
-params.set('callback',callback);																									
+params.set('callback',cb);																									
 params.set('data',JSON.stringify(data||{}));																									
 params.set('_',Date.now());																									
 																									
@@ -401,7 +404,7 @@ document.body.appendChild(script);
 }																									
 																									
 																									
-function setStatus(ok){																									
+function connection(ok){																									
 																									
 const el=document.getElementById('status');																									
 																									
@@ -423,18 +426,17 @@ document.getElementById('tableModal').classList.remove('hidden');
 																									
 function selectTable(no){																									
 																									
-tableNo=String(no);																									
+currentTable=String(no);																									
 																									
-localStorage.setItem('saizeriya_table_no',tableNo);																									
+localStorage.setItem('saizeriya_table_no',currentTable);																									
 																									
-document.getElementById('tableDisplay').textContent=tableNo;																									
+document.getElementById('tableNo').textContent=currentTable;																									
 																									
 document.getElementById('tableModal').classList.add('hidden');																									
 																									
 cart={};																									
 																									
 renderCart();																									
-																									
 renderMenu();																									
 																									
 showView('menu');																									
@@ -442,33 +444,33 @@ showView('menu');
 }																									
 																									
 																									
-function showView(view){																									
+function showView(name){																									
 																									
 const names=['menu','cart','history','checkout'];																									
 																									
-names.forEach(function(name){																									
+names.forEach(function(x){																									
 																									
-document.getElementById(name+'View').classList.add('hidden');																									
+document.getElementById(x+'View').classList.add('hidden');																									
 																									
 const nav=document.getElementById(																									
-nav'+name.charAt(0).toUpperCase()+name.slice(1)																									
+nav'+x.charAt(0).toUpperCase()+x.slice(1)																									
 );																									
 																									
 nav.classList.remove('active');																									
 																									
 });																									
 																									
-document.getElementById(view+'View').classList.remove('hidden');																									
+document.getElementById(name+'View').classList.remove('hidden');																									
 																									
 document.getElementById(																									
-nav'+view.charAt(0).toUpperCase()+view.slice(1)																									
+nav'+name.charAt(0).toUpperCase()+name.slice(1)																									
 ).classList.add('active');																									
 																									
-if(view==='history'){																									
+if(name==='history'){																									
 loadHistory();																									
 }																									
 																									
-if(view==='checkout'){																									
+if(name==='checkout'){																									
 loadCheckout();																									
 }																									
 																									
@@ -485,7 +487,7 @@ if(!res||res.status!=='success'){
 throw new Error('メニュー取得失敗');																									
 }																									
 																									
-setStatus(true);																									
+connection(true);																									
 																									
 menu=res.data||[];																									
 																									
@@ -498,10 +500,10 @@ renderMenu();
 																									
 console.error(err);																									
 																									
-setStatus(false);																									
+connection(false);																									
 																									
 document.getElementById('menuList').innerHTML=																									
-<div class=error>メニューの取得に失敗しました</div>';																									
+<div class=error>メニューを取得できません</div>';																									
 																									
 });																									
 																									
@@ -510,32 +512,32 @@ document.getElementById('menuList').innerHTML=
 																									
 function renderCategories(){																									
 																									
-const list=['all'];																									
+const cats=['all'];																									
 																									
 menu.forEach(function(item){																									
 																									
-if(list.indexOf(item.category)===-1){																									
-list.push(item.category);																									
+if(cats.indexOf(item.category)===-1){																									
+cats.push(item.category);																									
 }																									
 																									
 });																									
 																									
-const box=document.getElementById('categories');																									
+const box=document.getElementById('catbar');																									
 																									
 box.innerHTML='';																									
 																									
-list.forEach(function(cat){																									
+cats.forEach(function(cat){																									
 																									
 const btn=document.createElement('button');																									
 																									
 btn.textContent=cat==='all'?'すべて':cat;																									
 																									
-if(cat===category){																									
+if(cat===currentCategory){																									
 btn.className='active';																									
 }																									
 																									
 btn.onclick=function(){																									
-category=cat;																									
+currentCategory=cat;																									
 renderCategories();																									
 renderMenu();																									
 };																									
@@ -551,11 +553,13 @@ function renderMenu(){
 																									
 const box=document.getElementById('menuList');																									
 																									
-const list=category==='all'																									
+const list=currentCategory==='all'																									
 ?menu																									
 :menu.filter(function(item){																									
-return item.category===category;																									
+return item.category===currentCategory;																									
 });																									
+																									
+box.innerHTML='';																									
 																									
 if(list.length===0){																									
 																									
@@ -564,8 +568,6 @@ box.innerHTML='<div class=loading>メニューがありません</div>';
 return;																									
 																									
 }																									
-																									
-box.innerHTML='';																									
 																									
 list.forEach(function(item){																									
 																									
@@ -578,7 +580,7 @@ card.className='card';
 card.innerHTML=																									
 <div class=row>'+																									
 <div>'+																									
-<div class=category>'+safe(item.category)+'</div>'+																									
+<div class=small>'+safe(item.category)+'</div>'+																									
 <div class=name>'+safe(item.name)+'</div>'+																									
 <div class=price>¥'+money(item.price)+'</div>'+																									
 </div>'+																									
@@ -606,7 +608,7 @@ box.appendChild(card);
 }																									
 																									
 																									
-function changeQty(id,change){																									
+function changeQty(id,delta){																									
 																									
 const item=menu.find(function(x){																									
 return String(x.id)===String(id);																									
@@ -618,7 +620,7 @@ return;
 																									
 if(!cart[id]){																									
 																									
-if(change<0){																									
+if(delta<0){																									
 return;																									
 }																									
 																									
@@ -631,7 +633,7 @@ quantity:0
 																									
 }																									
 																									
-cart[id].quantity+=change;																									
+cart[id].quantity+=delta;																									
 																									
 if(cart[id].quantity<=0){																									
 delete cart[id];																									
@@ -648,9 +650,9 @@ function renderCart(){
 const box=document.getElementById('cartList');																									
 const items=Object.values(cart);																									
 																									
-let total=0;																									
-																									
 box.innerHTML='';																									
+																									
+let total=0;																									
 																									
 if(items.length===0){																									
 																									
@@ -702,7 +704,7 @@ return;
 }																									
 																									
 api('submitOrder',{																									
-tableNo:tableNo,																									
+tableNo:currentTable,																									
 items:items																									
 })																									
 																									
@@ -712,7 +714,7 @@ if(!res||res.status!=='success'){
 throw new Error(res&&res.message?res.message:'注文失敗');																									
 }																									
 																									
-setStatus(true);																									
+connection(true);																									
 																									
 alert('注文しました\n注文番号: '+res.orderId);																									
 																									
@@ -727,7 +729,7 @@ showView('history');
 																									
 .catch(function(err){																									
 																									
-setStatus(false);																									
+connection(false);																									
 																									
 alert('注文エラー\n'+err.message);																									
 																									
@@ -743,16 +745,16 @@ const box=document.getElementById('historyList');
 box.innerHTML='<div class=loading>読み込み中...</div>';																									
 																									
 api('getOrderByTable',{																									
-tableNo:tableNo																									
+tableNo:currentTable																									
 })																									
 																									
 .then(function(res){																									
 																									
 if(!res||res.status!=='success'){																									
-throw new Error('取得失敗');																									
+throw new Error('履歴取得失敗');																									
 }																									
 																									
-setStatus(true);																									
+connection(true);																									
 																									
 const orders=res.orders||[];																									
 																									
@@ -772,15 +774,11 @@ const card=document.createElement('div');
 																									
 card.className='card';																									
 																									
-const badge=order.status==='会計済み'																									
-?'badge paid'																									
-:'badge';																									
-																									
-let items='';																									
+let itemsHtml='';																									
 																									
 order.items.forEach(function(item){																									
 																									
-items+=																									
+itemsHtml+=																									
 <div class=row>'+																									
 <span>'+safe(item.name)+' × '+item.quantity+'</span>'+																									
 <span>¥'+money(item.subtotal)+'</span>'+																									
@@ -788,15 +786,22 @@ items+=
 																									
 });																									
 																									
+const badge=order.status==='会計済み'																									
+?'badge paid'																									
+:'badge';																									
+																									
 card.innerHTML=																									
 <div class=row>'+																									
-<div class=small>'+safe(order.orderDate)+'</div>'+																									
+<span class=small>'+safe(order.orderDate)+'</span>'+																									
 <span class=\''+badge+'\'>'+safe(order.status)+'</span>'+																									
 </div>'+																									
 <hr>'+																									
-items+																									
+itemsHtml+																									
 <hr>'+																									
-<div class=row><b>小計</b><b>¥'+money(order.total)+'</b></div>';																									
+<div class=row>'+																									
+<b>小計</b>'+																									
+<b>¥'+money(order.total)+'</b>'+																									
+</div>';																									
 																									
 box.appendChild(card);																									
 																									
@@ -806,7 +811,7 @@ box.appendChild(card);
 																									
 .catch(function(){																									
 																									
-setStatus(false);																									
+connection(false);																									
 																									
 box.innerHTML='<div class=error>注文履歴を取得できません</div>';																									
 																									
@@ -822,20 +827,22 @@ const box=document.getElementById('checkoutList');
 box.innerHTML='<div class=loading>読み込み中...</div>';																									
 																									
 api('getOrderByTable',{																									
-tableNo:tableNo																									
+tableNo:currentTable																									
 })																									
 																									
 .then(function(res){																									
 																									
 if(!res||res.status!=='success'){																									
-throw new Error('取得失敗');																									
+throw new Error('会計取得失敗');																									
 }																									
+																									
+connection(true);																									
 																									
 const orders=(res.orders||[]).filter(function(order){																									
 return order.status!=='会計済み';																									
 });																									
 																									
-const itemMap={};																									
+const map={};																									
 let total=0;																									
 																									
 orders.forEach(function(order){																									
@@ -846,16 +853,18 @@ order.items.forEach(function(item){
 																									
 const id=String(item.id);																									
 																									
-if(!itemMap[id]){																									
-itemMap[id]={																									
+if(!map[id]){																									
+																									
+map[id]={																									
 name:item.name,																									
 quantity:0,																									
 subtotal:0																									
 };																									
+																									
 }																									
 																									
-itemMap[id].quantity+=Number(item.quantity);																									
-itemMap[id].subtotal+=Number(item.subtotal);																									
+map[id].quantity+=Number(item.quantity);																									
+map[id].subtotal+=Number(item.subtotal);																									
 																									
 });																									
 																									
@@ -863,7 +872,7 @@ itemMap[id].subtotal+=Number(item.subtotal);
 																									
 box.innerHTML='';																									
 																									
-const items=Object.values(itemMap);																									
+const items=Object.values(map);																									
 																									
 if(items.length===0){																									
 																									
@@ -895,7 +904,7 @@ document.getElementById('checkoutTotal').textContent=money(total);
 																									
 .catch(function(){																									
 																									
-setStatus(false);																									
+connection(false);																									
 																									
 box.innerHTML='<div class=error>会計情報を取得できません</div>';																									
 																									
@@ -923,7 +932,7 @@ return;
 }																									
 																									
 api('checkoutByTable',{																									
-tableNo:tableNo																									
+tableNo:currentTable																									
 })																									
 																									
 .then(function(res){																									
@@ -932,7 +941,7 @@ if(!res||res.status!=='success'){
 throw new Error(res&&res.message?res.message:'会計失敗');																									
 }																									
 																									
-setStatus(true);																									
+connection(true);																									
 																									
 showReceipt(res.receipt);																									
 																									
@@ -940,7 +949,7 @@ showReceipt(res.receipt);
 																									
 .catch(function(err){																									
 																									
-setStatus(false);																									
+connection(false);																									
 																									
 alert('会計エラー\n'+err.message);																									
 																									
