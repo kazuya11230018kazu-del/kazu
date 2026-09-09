@@ -155,14 +155,14 @@ if (tabName === 'checkout') fetchCheckoutData();
 }																									
 																									
 function fetchMenu() {																									
-fetch(GAS_API_URL + "?action=getMenu")																									
+fetch(GAS_API_URL + "?action=getMenu", { method: "GET", redirect: "follow" })																									
 .then(res => res.json())																									
 .then(result => {																									
 if (result && result.status === "success") {																									
 menuData = result.data || [];																									
 renderMenu();																									
 } else {																									
-alert("メニュー取得失敗: " + (result.message || ""));																									
+alert("メニュー取得失敗: " + (result.message || "不明なエラー"));																									
 }																									
 })																									
 .catch(err => {																									
@@ -262,6 +262,7 @@ if (items.length === 0) return;
 																									
 fetch(GAS_API_URL, {																									
 method: "POST",																									
+redirect: "follow",																									
 headers: { "Content-Type": "text/plain;charset=utf-8" },																									
 body: JSON.stringify({ action: "submitOrder", payload: { tableNo: currentTableNo, items: items } })																									
 })																									
@@ -285,7 +286,7 @@ function fetchHistory() {
 const list = document.getElementById('history-items-list');																									
 list.innerHTML = '<p class="text-gray-400 text-center py-4 text-sm">読み込み中...</p>';																									
 																									
-fetch(GAS_API_URL + "?action=getOrderByTable&tableNo=" + encodeURIComponent(currentTableNo))																									
+fetch(GAS_API_URL + "?action=getOrderByTable&tableNo=" + encodeURIComponent(currentTableNo), { method: "GET", redirect: "follow" })																									
 .then(res => res.json())																									
 .then(res => {																									
 if (res && res.status === "success" && res.items && res.items.length > 0) {																									
@@ -305,7 +306,7 @@ function fetchCheckoutData() {
 const list = document.getElementById('checkout-items-list');																									
 list.innerHTML = '<p class="text-gray-400 text-center py-4 text-sm">計算中...</p>';																									
 																									
-fetch(GAS_API_URL + "?action=getOrderByTable&tableNo=" + encodeURIComponent(currentTableNo))																									
+fetch(GAS_API_URL + "?action=getOrderByTable&tableNo=" + encodeURIComponent(currentTableNo), { method: "GET", redirect: "follow" })																									
 .then(res => res.json())																									
 .then(res => {																									
 if (res && res.status === "success" && res.items && res.items.length > 0) {																									
@@ -328,6 +329,7 @@ document.getElementById('checkout-total').textContent = "0";
 function requestCheckout() {																									
 fetch(GAS_API_URL, {																									
 method: "POST",																									
+redirect: "follow",																									
 headers: { "Content-Type": "text/plain;charset=utf-8" },																									
 body: JSON.stringify({ action: "checkoutByTable", payload: { tableNo: currentTableNo } })																									
 })																									
