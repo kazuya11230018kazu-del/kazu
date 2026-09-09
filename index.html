@@ -1,624 +1,484 @@
 <!DOCTYPE html>																									
 <html lang='ja'>																									
+																									
 <head>																									
+																									
 <meta charset='UTF-8'>																									
-<meta name='viewport' content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no'>																									
+																									
+<meta																									
+name='viewport'																									
+content='width=device-width,initial-scale=1'																									
+>																									
+																									
 <title>モバイルオーダー</title>																									
+																									
+<script src='https://cdn.tailwindcss.com'></script>																									
 																									
 <script src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'></script>																									
 																									
-<style>																									
-*{box-sizing:border-box}																									
-																									
-body{																									
-margin:0;																									
-background:#f1f5f9;																									
-color:#1e293b;																									
-font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;																									
-padding-bottom:75px;																									
-}																									
-																									
-header{																									
-background:#2563eb;																									
-color:white;																									
-padding:18px 16px;																									
-display:flex;																									
-justify-content:space-between;																									
-align-items:center;																									
-}																									
-																									
-header button{																									
-border:0;																									
-background:#1d4ed8;																									
-color:white;																									
-border-radius:8px;																									
-padding:7px 10px;																									
-}																									
-																									
-#status{																									
-background:#f59e0b;																									
-padding:6px 10px;																									
-border-radius:20px;																									
-font-size:12px;																									
-}																									
-																									
-main{																									
-max-width:500px;																									
-margin:auto;																									
-padding:16px;																									
-}																									
-																									
-.hidden{																									
-display:none!important;																									
-}																									
-																									
-.catbar{																									
-display:flex;																									
-gap:8px;																									
-overflow-x:auto;																									
-margin-bottom:15px;																									
-}																									
-																									
-.catbar button{																									
-background:white;																									
-border:1px solid #ddd;																									
-padding:10px 15px;																									
-border-radius:20px;																									
-white-space:nowrap;																									
-}																									
-																									
-.catbar .active{																									
-background:#2563eb;																									
-color:white;																									
-}																									
-																									
-.card{																									
-background:white;																									
-border-radius:15px;																									
-padding:15px;																									
-margin-bottom:12px;																									
-}																									
-																									
-.row{																									
-display:flex;																									
-justify-content:space-between;																									
-align-items:center;																									
-gap:10px;																									
-}																									
-																									
-.name{																									
-font-weight:700;																									
-}																									
-																									
-.small{																									
-color:#64748b;																									
-font-size:12px;																									
-}																									
-																									
-.price{																									
-color:#2563eb;																									
-font-weight:700;																									
-margin-top:5px;																									
-}																									
-																									
-.qty{																									
-display:flex;																									
-align-items:center;																									
-gap:9px;																									
-}																									
-																									
-.qty button{																									
-width:35px;																									
-height:35px;																									
-border:0;																									
-border-radius:9px;																									
-font-size:20px;																									
-}																									
-																									
-.minus{																									
-background:#e2e8f0;																									
-}																									
-																									
-.plus{																									
-background:#2563eb;																									
-color:white;																									
-}																									
-																									
-.title{																									
-font-size:20px;																									
-font-weight:700;																									
-margin-bottom:15px;																									
-}																									
-																									
-.totalbox{																									
-background:white;																									
-border-radius:15px;																									
-padding:17px;																									
-margin-top:15px;																									
-}																									
-																									
-.total{																									
-font-size:20px;																									
-font-weight:700;																									
-}																									
-																									
-.mainbtn{																									
-width:100%;																									
-border:0;																									
-border-radius:12px;																									
-padding:15px;																									
-margin-top:15px;																									
-background:#2563eb;																									
-color:white;																									
-font-size:17px;																									
-font-weight:700;																									
-}																									
-																									
-.paybtn{																									
-background:#059669;																									
-}																									
-																									
-.loading{																									
-text-align:center;																									
-color:#94a3b8;																									
-padding:55px 0;																									
-}																									
-																									
-.error{																									
-text-align:center;																									
-color:#dc2626;																									
-padding:40px 0;																									
-}																									
-																									
-nav{																									
-position:fixed;																									
-bottom:0;																									
-left:0;																									
-right:0;																									
-height:72px;																									
-background:white;																									
-border-top:1px solid #ddd;																									
-display:grid;																									
-grid-template-columns:repeat(4,1fr);																									
-z-index:30;																									
-}																									
-																									
-nav button{																									
-border:0;																									
-background:white;																									
-color:#64748b;																									
-font-weight:700;																									
-}																									
-																									
-nav .active{																									
-color:#2563eb;																									
-}																									
-																									
-nav span{																									
-display:block;																									
-font-size:21px;																									
-}																									
-																									
-.modal{																									
-position:fixed;																									
-inset:0;																									
-background:#0009;																									
-display:flex;																									
-align-items:center;																									
-justify-content:center;																									
-padding:20px;																									
-z-index:100;																									
-}																									
-																									
-.modalbox{																									
-background:white;																									
-width:100%;																									
-max-width:360px;																									
-border-radius:20px;																									
-padding:22px;																									
-}																									
-																									
-.tablebtn{																									
-width:100%;																									
-border:0;																									
-border-radius:12px;																									
-background:#f1f5f9;																									
-padding:14px;																									
-margin:5px 0;																									
-font-size:17px;																									
-font-weight:700;																									
-}																									
-																									
-.center{																									
-text-align:center;																									
-}																									
-																									
-.receipt{																									
-border:1px dashed #aaa;																									
-padding:15px;																									
-}																									
-</style>																									
 </head>																									
 																									
-<body>																									
 																									
-<header>																									
+<body class='bg-gray-50 text-gray-800 pb-28'>																									
+																									
+																									
+<header class='bg-indigo-600 text-white p-4 sticky top-0 z-10 shadow-md flex justify-between items-center'>																									
+																									
 <div>																									
-<b>																									
-テーブル:																									
-<span id='tableDisplay'>1</span>番																									
-</b>																									
 																									
-<button onclick='openTable()'>																									
-変更																									
-</button>																									
+<h1 class='text-lg font-bold'>																									
+モバイルオーダー																									
+</h1>																									
+																									
+<p class='text-xs text-indigo-200'>																									
+																									
+テーブル:																									
+																									
+<span																									
+id='display-table'																									
+class='font-bold'																									
+>																									
+未設定																									
+</span>																									
+																									
+</p>																									
+																									
 </div>																									
 																									
-<div id='status'>																									
+																									
+<div class='flex items-center space-x-2'>																									
+																									
+<button																									
+onclick='openStatusModal()'																									
+class='text-xs bg-indigo-500 px-3 py-1.5 rounded-lg font-bold'																									
+>																									
+注文状況・会計																									
+</button>																									
+																									
+<div																									
+id='status-badge'																									
+class='text-xs bg-yellow-500 px-2 py-1 rounded text-white'																									
+>																									
 接続確認中																									
 </div>																									
+																									
+</div>																									
+																									
 </header>																									
 																									
-<main>																									
 																									
-<section id='menuView'>																									
-<div id='catbar' class='catbar'></div>																									
+<main class='max-w-md mx-auto p-4'>																									
 																									
-<div id='menuList' class='loading'>																									
+																									
+<div																									
+id='table-modal'																									
+class='fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4'																									
+>																									
+																									
+<div class='bg-white w-full max-w-sm rounded-2xl p-6 text-center space-y-4 shadow-xl'>																									
+																									
+<h2 class='text-xl font-bold'>																									
+テーブル番号を入力																									
+</h2>																									
+																									
+<p class='text-sm text-gray-500'>																									
+お座りのテーブル番号を入力してください																									
+</p>																									
+																									
+<input																									
+type='number'																									
+id='table-input'																									
+placeholder='例: 3'																									
+class='w-full border border-gray-300 rounded-xl p-3 text-center text-xl font-bold'																									
+>																									
+																									
+<button																									
+onclick='setTableNumber()'																									
+class='w-full bg-indigo-600 text-white py-3 rounded-xl font-bold'																									
+>																									
+注文を始める																									
+</button>																									
+																									
+</div>																									
+																									
+</div>																									
+																									
+																									
+<div																									
+id='loading'																									
+class='text-center py-10'																									
+>																									
+<p class='text-gray-500'>																									
 メニューを読み込んでいます...																									
-</div>																									
-</section>																									
-																									
-<section id='cartView' class='hidden'>																									
-<div class='title'>注文かご</div>																									
-																									
-<div id='cartList'></div>																									
-																									
-<div class='totalbox'>																									
-<div class='row total'>																									
-<span>合計</span>																									
-																									
-<span>																									
-¥<span id='cartTotal'>0</span>																									
-</span>																									
+</p>																									
 </div>																									
 																									
-<button class='mainbtn' onclick='submitOrder()'>																									
-注文を確定する																									
-</button>																									
+																									
+<div																									
+id='menu-container'																									
+class='space-y-4 hidden'																									
+>																									
 </div>																									
-</section>																									
-																									
-<section id='historyView' class='hidden'>																									
-<div class='title'>注文履歴</div>																									
-<div id='historyList'></div>																									
-</section>																									
-																									
-<section id='checkoutView' class='hidden'>																									
-<div class='title'>お会計</div>																									
-																									
-<div id='checkoutList'></div>																									
-																									
-<div class='totalbox'>																									
-<div class='row total'>																									
-<span>合計</span>																									
-																									
-<span>																									
-¥<span id='checkoutTotal'>0</span>																									
-</span>																									
-</div>																									
-																									
-<button class='mainbtn paybtn' onclick='checkout()'>																									
-お会計を確定する																									
-</button>																									
-</div>																									
-</section>																									
 																									
 </main>																									
 																									
-<nav>																									
-<button id='navMenu' class='active' onclick='showView("menu")'>																									
-<span>📋</span>																									
-メニュー																									
+																									
+<div																									
+id='cart-bar'																									
+class='fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-lg hidden max-w-md mx-auto flex justify-between items-center z-20'																									
+>																									
+																									
+<div>																									
+																									
+<p class='text-sm text-gray-500'>																									
+合計点数:																									
+<span id='cart-count'>0</span>点																									
+</p>																									
+																									
+<p class='text-lg font-bold text-indigo-600'>																									
+¥<span id='cart-total'>0</span>																									
+</p>																									
+																									
+</div>																									
+																									
+																									
+<button																									
+onclick='openCartModal()'																									
+class='bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold'																									
+>																									
+カートを確認する																									
 </button>																									
 																									
-<button id='navCart' onclick='showView("cart")'>																									
-<span>🛒</span>																									
-かご																									
+</div>																									
+																									
+																									
+<div																									
+id='cart-modal'																									
+class='fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-end sm:items-center justify-center'																									
+>																									
+																									
+<div class='bg-white w-full max-w-lg rounded-t-2xl sm:rounded-2xl max-h-[90vh] overflow-y-auto'>																									
+																									
+<div class='p-4 border-b flex justify-between'>																									
+																									
+<h2 class='font-bold'>																									
+注文内容																									
+</h2>																									
+																									
+<button onclick='closeCartModal()'>																									
+×																									
 </button>																									
 																									
-<button id='navHistory' onclick='showView("history")'>																									
-<span>⏳</span>																									
-履歴																									
+</div>																									
+																									
+																									
+<div																									
+id='cart-items-list'																									
+class='p-4 space-y-3'																									
+>																									
+</div>																									
+																									
+																									
+<div class='p-4 border-t'>																									
+																									
+<div class='flex justify-between font-bold'>																									
+																									
+<span>																									
+合計																									
+</span>																									
+																									
+<span class='text-indigo-600'>																									
+¥<span id='modal-total'>0</span>																									
+</span>																									
+																									
+</div>																									
+																									
+																									
+<button																									
+id='submit-btn'																									
+onclick='submitOrder()'																									
+class='w-full bg-indigo-600 text-white py-3 rounded-xl font-bold mt-4'																									
+>																									
+注文を確定する																									
 </button>																									
 																									
-<button id='navCheckout' onclick='showView("checkout")'>																									
-<span>💰</span>																									
-会計																									
+</div>																									
+																									
+</div>																									
+																									
+</div>																									
+																									
+																									
+<div																									
+id='status-modal'																									
+class='fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4'																									
+>																									
+																									
+<div class='bg-white w-full max-w-md rounded-2xl p-6 max-h-[90vh] overflow-y-auto'>																									
+																									
+<div class='flex justify-between border-b pb-3'>																									
+																									
+<h2 class='font-bold'>																									
+注文状況・お会計																									
+</h2>																									
+																									
+<button onclick='closeStatusModal()'>																									
+×																									
 </button>																									
-</nav>																									
-																									
-<div id='tableModal' class='modal hidden'>																									
-<div class='modalbox'>																									
-																									
-<div class='title center'>																									
-テーブル番号																									
-</div>																									
-																									
-<button class='tablebtn' onclick='selectTable(1)'>テーブル 1</button>																									
-<button class='tablebtn' onclick='selectTable(2)'>テーブル 2</button>																									
-<button class='tablebtn' onclick='selectTable(3)'>テーブル 3</button>																									
-<button class='tablebtn' onclick='selectTable(4)'>テーブル 4</button>																									
-<button class='tablebtn' onclick='selectTable(5)'>テーブル 5</button>																									
 																									
 </div>																									
+																									
+																									
+<div																									
+id='status-content'																									
+class='space-y-3 mt-4'																									
+>																									
 </div>																									
 																									
-<div id='receiptModal' class='modal hidden'>																									
-<div class='modalbox'>																									
 																									
-<div class='center' style='font-size:45px'>																									
-✅																									
+<div																									
+id='checkout-area'																									
+class='hidden mt-4'																									
+>																									
+																									
+<button																									
+onclick='requestCheckout()'																									
+class='w-full bg-green-600 text-white py-3 rounded-xl font-bold'																									
+>																									
+お会計する																									
+</button>																									
+																									
 </div>																									
 																									
-<div class='title center'>																									
-お会計完了																									
 </div>																									
 																									
-<div class='receipt'>																									
-<div class='row'>																									
-<b>テーブル</b>																									
-<span id='receiptTable'></span>																									
 </div>																									
 																									
-<div id='receiptItems' style='margin-top:12px'></div>																									
 																									
-<hr>																									
+<div																									
+id='receipt-modal'																									
+class='fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4'																									
+>																									
 																									
-<div class='row'>																									
-<b>合計</b>																									
-<b id='receiptTotal'></b>																									
+<div class='bg-white w-full max-w-md rounded-2xl p-6 text-center'>																									
+																									
+<div class='text-green-600 text-5xl'>																									
+✓																									
 </div>																									
+																									
+<h2 class='text-xl font-bold mt-2'>																									
+お会計・領収書																									
+</h2>																									
+																									
+																									
+<p class='text-sm mt-2'>																									
+注文ID:																									
+<span id='receipt-order-id'></span>																									
+</p>																									
+																									
+																									
+<div class='border border-dashed p-4 rounded-xl mt-4 text-left'>																									
+																									
+<div																									
+id='receipt-items-summary'																									
+class='space-y-1'																									
+>																									
 </div>																									
 																									
-<div id='qr' class='center' style='margin-top:18px'></div>																									
+<hr class='my-3'>																									
 																									
-<button class='mainbtn' onclick='closeReceipt()'>																									
+<div class='flex justify-between font-bold'>																									
+																									
+<span>																									
+合計																									
+</span>																									
+																									
+<span id='receipt-total'>																									
+¥0																									
+</span>																									
+																									
+</div>																									
+																									
+</div>																									
+																									
+																									
+<div																									
+id='qrcode'																									
+class='flex justify-center mt-4'																									
+>																									
+</div>																									
+																									
+																									
+<button																									
+onclick='closeReceipt()'																									
+class='w-full bg-gray-200 py-3 rounded-xl font-bold mt-4'																									
+>																									
 閉じる																									
 </button>																									
 																									
 </div>																									
+																									
 </div>																									
+																									
 																									
 <script>																									
 																									
-const API='https://script.google.com/macros/s/AKfycbxzxAT7w9VscVWSYeCGs0b0BSzw_FSV58ijndShy6Jrn_27p0Abw4O3bru6KK_vCCK2iQ/exec';																									
+const GAS_API_URL=																									
+https://script.google.com/macros/s/AKfycbxzxAT7w9VscVWSYeCGs0b0BSzw_FSV58ijndShy6Jrn_27p0Abw4O3bru6KK_vCCK2iQ/exec';																									
 																									
-let menu=[];																									
+																									
+let menuData=[];																									
 let cart={};																									
-let currentCategory='all';																									
 																									
-let tableNo=																									
-localStorage.getItem('saizeriya_table_no') ||																									
-1';																									
+let currentTableNo=																									
+localStorage.getItem('order_table_no')||'';																									
+																									
+let currentOrderId=																									
+localStorage.getItem('order_id')||'';																									
 																									
 																									
-document.addEventListener('DOMContentLoaded',function(){																									
+document.addEventListener(																									
+DOMContentLoaded',																									
+function(){																									
 																									
-document.getElementById('tableDisplay').textContent=tableNo;																									
+if(currentTableNo){																									
 																									
-if(!localStorage.getItem('saizeriya_table_no')){																									
-openTable();																									
+document																									
+.getElementById('table-modal')																									
+.classList																									
+.add('hidden');																									
+																									
+document																									
+.getElementById('display-table')																									
+.textContent=																									
+currentTableNo+'番';																									
+																									
 }																									
 																									
-renderCart();																									
+fetchMenu();																									
 																									
-document.getElementById('status').textContent='通信開始';																									
-																									
-loadMenu();																									
-																									
-});																									
-																									
-																									
-function api(action,data){																									
-																									
-return new Promise(function(resolve,reject){																									
-																									
-const cb=																									
-jsonp_' +																									
-Date.now() +																									
-_' +																									
-Math.floor(Math.random()*99999);																									
-																									
-const script=																									
-document.createElement('script');																									
-																									
-let finished=false;																									
-																									
-const timer=																									
-setTimeout(function(){																									
-																									
-if(finished){																									
-return;																									
 }																									
-																									
-finished=true;																									
-																									
-cleanup();																									
-																									
-reject(																									
-new Error('通信タイムアウト')																									
 );																									
 																									
-},15000);																									
 																									
+function setConnection(ok){																									
 																									
-function cleanup(){																									
-																									
-clearTimeout(timer);																									
-																									
-try{																									
-delete window[cb];																									
-}catch(e){}																									
-																									
-if(script.parentNode){																									
-script.parentNode.removeChild(script);																									
-}																									
-																									
-}																									
-																									
-																									
-window[cb]=function(result){																									
-																									
-if(finished){																									
-return;																									
-}																									
-																									
-finished=true;																									
-																									
-cleanup();																									
-																									
-resolve(result);																									
-																									
-};																									
-																									
-																									
-script.onerror=function(){																									
-																									
-if(finished){																									
-return;																									
-}																									
-																									
-finished=true;																									
-																									
-cleanup();																									
-																									
-reject(																									
-new Error('JSONP通信エラー')																									
+const badge=																									
+document.getElementById(																									
+status-badge'																									
 );																									
-																									
-};																									
-																									
-																									
-const params=																									
-new URLSearchParams();																									
-																									
-params.set('action',action);																									
-params.set('callback',cb);																									
-params.set('data',JSON.stringify(data||{}));																									
-params.set('_',String(Date.now()));																									
-																									
-script.src=																									
-API +																									
-?' +																									
-params.toString();																									
-																									
-document.body.appendChild(script);																									
-																									
-});																									
-																									
-}																									
-																									
-																									
-function setStatus(ok){																									
-																									
-const el=document.getElementById('status');																									
 																									
 if(ok){																									
 																									
-el.textContent='接続中';																									
-el.style.background='#10b981';																									
+badge.textContent=																									
+接続完了';																									
+																									
+badge.className=																									
+text-xs bg-green-500 px-2 py-1 rounded text-white';																									
 																									
 }else{																									
 																									
-el.textContent='通信エラー';																									
-el.style.background='#dc2626';																									
+badge.textContent=																									
+通信エラー';																									
+																									
+badge.className=																									
+text-xs bg-red-500 px-2 py-1 rounded text-white';																									
 																									
 }																									
 																									
 }																									
 																									
 																									
-function loadMenu(){																									
+function setTableNumber(){																									
 																									
-document.getElementById('status').textContent='通信開始';																									
+const val=																									
+document																									
+.getElementById('table-input')																									
+.value																									
+.trim();																									
 																									
-api('getMenu',{})																									
+if(!val){																									
 																									
-.then(function(res){																									
+alert(																									
+テーブル番号を入力してください'																									
+);																									
 																									
-if(!res || res.status!=='success'){																									
+return;																									
+																									
+}																									
+																									
+currentTableNo=val;																									
+																									
+localStorage.setItem(																									
+order_table_no',																									
+currentTableNo																									
+);																									
+																									
+document																									
+.getElementById('display-table')																									
+.textContent=																									
+currentTableNo+'番';																									
+																									
+document																									
+.getElementById('table-modal')																									
+.classList																									
+.add('hidden');																									
+																									
+}																									
+																									
+																									
+function fetchMenu(){																									
+																									
+fetch(																									
+GAS_API_URL+																									
+?action=getMenu'																									
+)																									
+																									
+.then(function(response){																									
+																									
+return response.json();																									
+																									
+})																									
+																									
+.then(function(result){																									
+																									
+document																									
+.getElementById('loading')																									
+.classList																									
+.add('hidden');																									
+																									
+if(																									
+result.status==='success'																									
+){																									
+																									
+setConnection(true);																									
+																									
+menuData=																									
+result.data||[];																									
+																									
+renderMenu();																									
+																									
+}else{																									
 																									
 throw new Error(																									
-res && res.message																									
-? res.message																									
-: 'メニュー取得失敗'																									
+result.message||																									
+メニュー取得失敗'																									
 );																									
 																									
 }																									
 																									
-setStatus(true);																									
-																									
-menu=res.data||[];																									
-																									
-renderCategories();																									
-renderMenu();																									
-																									
 })																									
 																									
-.catch(function(err){																									
+.catch(function(error){																									
 																									
-setStatus(false);																									
+setConnection(false);																									
 																									
-document.getElementById('menuList').innerHTML=																									
-<div class=error>メニュー取得エラー<br>'+																									
-safe(err.message)+																									
-</div>';																									
-																									
-});																									
-																									
-}																									
-																									
-																									
-function renderCategories(){																									
-																									
-const list=['all'];																									
-																									
-menu.forEach(function(item){																									
-																									
-if(list.indexOf(item.category)===-1){																									
-list.push(item.category);																									
-}																									
-																									
-});																									
-																									
-const box=document.getElementById('catbar');																									
-																									
-box.innerHTML='';																									
-																									
-list.forEach(function(cat){																									
-																									
-const btn=document.createElement('button');																									
-																									
-btn.textContent=																									
-cat==='all'																									
-? 'すべて'																									
-: cat;																									
-																									
-if(cat===currentCategory){																									
-btn.className='active';																									
-}																									
-																									
-btn.onclick=function(){																									
-																									
-currentCategory=cat;																									
-																									
-renderCategories();																									
-renderMenu();																									
-																									
-};																									
-																									
-box.appendChild(btn);																									
+document																									
+.getElementById('loading')																									
+.innerHTML=																									
+<p class="text-red-500">'+																									
+error.message+																									
+</p>';																									
 																									
 });																									
 																									
@@ -627,227 +487,369 @@ box.appendChild(btn);
 																									
 function renderMenu(){																									
 																									
-const box=document.getElementById('menuList');																									
+const container=																									
+document.getElementById(																									
+menu-container'																									
+);																									
 																									
-const list=																									
-currentCategory==='all'																									
-? menu																									
-: menu.filter(function(item){																									
-return item.category===currentCategory;																									
-});																									
+container																									
+.classList																									
+.remove('hidden');																									
 																									
-box.innerHTML='';																									
+container.innerHTML='';																									
 																									
-if(list.length===0){																									
 																									
-box.innerHTML=																									
-<div class=loading>メニューがありません</div>';																									
+menuData.forEach(																									
+function(item){																									
 																									
-return;																									
+const card=																									
+document.createElement(																									
+div'																									
+);																									
 																									
-}																									
+card.className=																									
+bg-white p-4 rounded-xl shadow-sm border flex justify-between items-center';																									
 																									
-list.forEach(function(item){																									
-																									
-const qty=																									
-cart[item.id]																									
-? cart[item.id].quantity																									
-: 0;																									
-																									
-const card=document.createElement('div');																									
-																									
-card.className='card';																									
 																									
 card.innerHTML=																									
-<div class=row>' +																									
-<div>' +																									
-<div class=small>' +																									
-safe(item.category) +																									
-</div>' +																									
-<div class=name>' +																									
-safe(item.name) +																									
-</div>' +																									
-<div class=price>¥' +																									
-money(item.price) +																									
-</div>' +																									
-</div>' +																									
-<div class=qty>' +																									
-<button class=minus>-</button>' +																									
-<b>' + qty + '</b>' +																									
-<button class=plus>+</button>' +																									
-</div>' +																									
+<div>'+																									
+<h3 class="font-bold">'+																									
+item.name+																									
+</h3>'+																									
+<p class="text-indigo-600 font-bold">¥'+																									
+Number(item.price).toLocaleString()+																									
+</p>'+																									
+<p class="text-xs text-gray-400">'+																									
+(item.category||'')+																									
+</p>'+																									
+</div>'+																									
+<div class="flex items-center space-x-3">'+																									
+<button class="minus w-8 h-8 rounded-full bg-gray-100">-</button>'+																									
+<span class="qty font-bold">0</span>'+																									
+<button class="plus w-8 h-8 rounded-full bg-indigo-600 text-white">+</button>'+																									
 </div>';																									
 																									
-const buttons=																									
-card.querySelectorAll('button');																									
 																									
-buttons[0].onclick=function(){																									
-changeQty(item.id,-1);																									
+const minus=																									
+card.querySelector(																									
+.minus'																									
+);																									
+																									
+const plus=																									
+card.querySelector(																									
+.plus'																									
+);																									
+																									
+const qty=																									
+card.querySelector(																									
+.qty'																									
+);																									
+																									
+																									
+minus.onclick=																									
+function(){																									
+																									
+changeQuantity(																									
+item,																									
+-1,																									
+qty																									
+);																									
+																									
 };																									
 																									
-buttons[1].onclick=function(){																									
-changeQty(item.id,1);																									
+																									
+plus.onclick=																									
+function(){																									
+																									
+changeQuantity(																									
+item,																									
+1,																									
+qty																									
+);																									
+																									
 };																									
 																									
-box.appendChild(card);																									
 																									
-});																									
+container.appendChild(																									
+card																									
+);																									
+																									
+}																									
+);																									
 																									
 }																									
 																									
 																									
-function changeQty(id,delta){																									
+function changeQuantity(																									
+item,																									
+delta,																									
+qtyElement																									
+){																									
 																									
-const item=																									
-menu.find(function(x){																									
-return String(x.id)===String(id);																									
-});																									
+const code=																									
+String(item.code);																									
 																									
-if(!item){																									
-return;																									
-}																									
+if(!cart[code]){																									
 																									
-if(!cart[id]){																									
-																									
-if(delta<0){																									
-return;																									
-}																									
-																									
-cart[id]={																									
-id:item.id,																									
+cart[code]={																									
+code:item.code,																									
 name:item.name,																									
 price:Number(item.price),																									
+category:item.category,																									
 quantity:0																									
 };																									
 																									
 }																									
 																									
-cart[id].quantity+=delta;																									
+cart[code].quantity+=																									
+delta;																									
 																									
-if(cart[id].quantity<=0){																									
-delete cart[id];																									
+if(																									
+cart[code].quantity<=0																									
+){																									
+																									
+delete cart[code];																									
+																									
+qtyElement.textContent=																									
+0';																									
+																									
+}else{																									
+																									
+qtyElement.textContent=																									
+cart[code].quantity;																									
+																									
 }																									
 																									
-renderMenu();																									
-renderCart();																									
+updateCartSummary();																									
 																									
 }																									
 																									
 																									
-function renderCart(){																									
+function updateCartSummary(){																									
 																									
-const box=document.getElementById('cartList');																									
-const items=Object.values(cart);																									
+let count=0;																									
+let total=0;																									
+																									
+Object																									
+.values(cart)																									
+.forEach(																									
+function(item){																									
+																									
+count+=																									
+item.quantity;																									
+																									
+total+=																									
+item.price*																									
+item.quantity;																									
+																									
+}																									
+);																									
+																									
+document																									
+.getElementById('cart-count')																									
+.textContent=																									
+count;																									
+																									
+document																									
+.getElementById('cart-total')																									
+.textContent=																									
+total.toLocaleString();																									
+																									
+																									
+const bar=																									
+document.getElementById(																									
+cart-bar'																									
+);																									
+																									
+if(count>0){																									
+																									
+bar.classList.remove(																									
+hidden'																									
+);																									
+																									
+}else{																									
+																									
+bar.classList.add(																									
+hidden'																									
+);																									
+																									
+}																									
+																									
+}																									
+																									
+																									
+function openCartModal(){																									
+																									
+const container=																									
+document.getElementById(																									
+cart-items-list'																									
+);																									
+																									
+container.innerHTML='';																									
 																									
 let total=0;																									
 																									
-box.innerHTML='';																									
 																									
-if(items.length===0){																									
-																									
-box.innerHTML=																									
-<div class=loading>注文かごは空です</div>';																									
-																									
-}																									
-																									
-items.forEach(function(item){																									
+Object																									
+.values(cart)																									
+.forEach(																									
+function(item){																									
 																									
 const subtotal=																									
-Number(item.price) *																									
-Number(item.quantity);																									
+item.price*																									
+item.quantity;																									
 																									
 total+=subtotal;																									
 																									
-const card=document.createElement('div');																									
+const row=																									
+document.createElement(																									
+div'																									
+);																									
 																									
-card.className='card';																									
+row.className=																									
+flex justify-between border-b pb-2';																									
 																									
-card.innerHTML=																									
-<div class=row>' +																									
-<div>' +																									
-<div class=name>' +																									
-safe(item.name) +																									
-</div>' +																									
-<div class=small>¥' +																									
-money(item.price) +																									
- × ' +																									
-item.quantity +																									
-</div>' +																									
-</div>' +																									
-<b>¥' +																									
-money(subtotal) +																									
-</b>' +																									
-</div>';																									
+row.innerHTML=																									
+<div>'+																									
+<b>'+																									
+item.name+																									
+</b>'+																									
+<div class="text-xs text-gray-500">¥'+																									
+item.price+																									
+ × '+																									
+item.quantity+																									
+</div>'+																									
+</div>'+																									
+<b>¥'+																									
+subtotal.toLocaleString()+																									
+</b>';																									
 																									
-box.appendChild(card);																									
+container.appendChild(																									
+row																									
+);																									
 																									
-});																									
+}																									
+);																									
 																									
-document.getElementById('cartTotal').textContent=																									
-money(total);																									
+																									
+document																									
+.getElementById('modal-total')																									
+.textContent=																									
+total.toLocaleString();																									
+																									
+document																									
+.getElementById('cart-modal')																									
+.classList																									
+.remove('hidden');																									
+																									
+}																									
+																									
+																									
+function closeCartModal(){																									
+																									
+document																									
+.getElementById('cart-modal')																									
+.classList																									
+.add('hidden');																									
 																									
 }																									
 																									
 																									
 function submitOrder(){																									
 																									
-const items=Object.values(cart);																									
+const items=																									
+Object.values(cart);																									
 																									
-if(items.length===0){																									
-																									
-alert('商品を選択してください');																									
+if(																									
+items.length===0																									
+){																									
 																									
 return;																									
 																									
 }																									
 																									
-if(!confirm('この内容で注文しますか？')){																									
-return;																									
-}																									
 																									
-api(																									
-submitOrder',																									
+const button=																									
+document.getElementById(																									
+submit-btn'																									
+);																									
+																									
+button.disabled=true;																									
+button.textContent=																									
+送信中...';																									
+																									
+																									
+fetch(																									
+GAS_API_URL,																									
 {																									
-tableNo:tableNo,																									
+method:'POST',																									
+																									
+body:																									
+JSON.stringify({																									
+action:'submitOrder',																									
+payload:{																									
+tableNo:currentTableNo,																									
 items:items																									
+}																									
+})																									
 }																									
 )																									
 																									
-.then(function(res){																									
+.then(function(response){																									
 																									
-if(!res || res.status!=='success'){																									
+return response.json();																									
+																									
+})																									
+																									
+.then(function(result){																									
+																									
+button.disabled=false;																									
+button.textContent=																									
+注文を確定する';																									
+																									
+																									
+if(																									
+result.status!=='success'																									
+){																									
 																									
 throw new Error(																									
-res && res.message																									
-? res.message																									
-: '注文失敗'																									
+result.message||																									
+注文失敗'																									
 );																									
 																									
 }																									
 																									
-setStatus(true);																									
+currentOrderId=																									
+result.data.orderId;																									
 																									
-alert(																									
-注文しました\n注文番号: ' +																									
-res.orderId																									
+localStorage.setItem(																									
+order_id',																									
+currentOrderId																									
 );																									
 																									
 cart={};																									
 																									
-renderMenu();																									
-renderCart();																									
+updateCartSummary();																									
 																									
-showView('history');																									
+closeCartModal();																									
+																									
+alert(																									
+注文が完了しました'																									
+);																									
+																									
+openStatusModal();																									
 																									
 })																									
 																									
-.catch(function(err){																									
+.catch(function(error){																									
 																									
-setStatus(false);																									
+button.disabled=false;																									
+button.textContent=																									
+注文を確定する';																									
 																									
 alert(																									
-注文エラー\n' +																									
-err.message																									
+注文エラー: '+																									
+error.message																									
 );																									
 																									
 });																									
@@ -855,281 +857,218 @@ err.message
 }																									
 																									
 																									
-function loadHistory(){																									
+function openStatusModal(){																									
 																									
-const box=document.getElementById('historyList');																									
-																									
-box.innerHTML=																									
-<div class=loading>読み込み中...</div>';																									
-																									
-api(																									
-getOrderByTable',																									
-{																									
-tableNo:tableNo																									
-}																									
-)																									
-																									
-.then(function(res){																									
-																									
-if(!res || res.status!=='success'){																									
-																									
-throw new Error(																									
-res && res.message																									
-? res.message																									
-: '履歴取得失敗'																									
+const modal=																									
+document.getElementById(																									
+status-modal'																									
 );																									
 																									
-}																									
+const content=																									
+document.getElementById(																									
+status-content'																									
+);																									
 																									
-setStatus(true);																									
+const checkout=																									
+document.getElementById(																									
+checkout-area'																									
+);																									
 																									
-const orders=res.orders||[];																									
+modal.classList.remove(																									
+hidden'																									
+);																									
 																									
-box.innerHTML='';																									
 																									
-if(orders.length===0){																									
+if(																									
+!currentOrderId																									
+){																									
 																									
-box.innerHTML=																									
-<div class=loading>注文履歴はありません</div>';																									
+content.innerHTML=																									
+<p class="text-gray-500 text-center">まだ注文履歴がありません。</p>';																									
+																									
+checkout.classList.add(																									
+hidden'																									
+);																									
 																									
 return;																									
 																									
 }																									
 																									
-orders.forEach(function(order){																									
 																									
-const card=document.createElement('div');																									
+content.innerHTML=																									
+<p class="text-gray-500 text-center">注文状況を確認中...</p>';																									
 																									
-card.className='card';																									
+																									
+fetch(																									
+GAS_API_URL+																									
+?action=getOrderStatus&orderId='+																									
+encodeURIComponent(																									
+currentOrderId																									
+)																									
+)																									
+																									
+.then(function(response){																									
+																									
+return response.json();																									
+																									
+})																									
+																									
+.then(function(result){																									
+																									
+if(																									
+result.status!=='success'																									
+){																									
+																									
+throw new Error(																									
+result.message||																									
+取得失敗'																									
+);																									
+																									
+}																									
+																									
+																									
+const items=																									
+result.items||[];																									
+																									
+if(																									
+items.length===0																									
+){																									
+																									
+content.innerHTML=																									
+<p class="text-gray-500 text-center">注文情報がありません。</p>';																									
+																									
+checkout.classList.add(																									
+hidden'																									
+);																									
+																									
+return;																									
+																									
+}																									
+																									
 																									
 let html=																									
-<div class=row>' +																									
-<span class=small>' +																									
-safe(order.orderDate) +																									
-</span>' +																									
-<b>' +																									
-safe(order.status) +																									
-</b>' +																									
-</div>' +																									
-<hr>';																									
+<p class="text-xs text-gray-500">注文ID: <b>'+																									
+currentOrderId+																									
+</b></p>';																									
 																									
-order.items.forEach(function(item){																									
+																									
+items.forEach(																									
+function(item){																									
 																									
 html+=																									
-<div class=row>' +																									
-<span>' +																									
-safe(item.name) +																									
- × ' +																									
-item.quantity +																									
-</span>' +																									
-<span>¥' +																									
-money(item.subtotal) +																									
-</span>' +																									
+<div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border mt-2">'+																									
+<div>'+																									
+<b>'+																									
+item.name+																									
+ × '+																									
+item.quantity+																									
+</b>'+																									
+<div class="text-xs">¥'+																									
+Number(item.price).toLocaleString()+																									
+</div>'+																									
+</div>'+																									
+<span class="text-xs bg-yellow-100 px-2 py-1 rounded">'+																									
+item.cookStatus+																									
+</span>'+																									
 </div>';																									
-																									
-});																									
-																									
-html+=																									
-<hr>' +																									
-<div class=row>' +																									
-<b>小計</b>' +																									
-<b>¥' +																									
-money(order.total) +																									
-</b>' +																									
-</div>';																									
-																									
-card.innerHTML=html;																									
-																									
-box.appendChild(card);																									
-																									
-});																									
-																									
-})																									
-																									
-.catch(function(err){																									
-																									
-setStatus(false);																									
-																									
-box.innerHTML=																									
-<div class=error>' +																									
-safe(err.message) +																									
-</div>';																									
-																									
-});																									
 																									
 }																									
-																									
-																									
-function loadCheckout(){																									
-																									
-const box=document.getElementById('checkoutList');																									
-																									
-box.innerHTML=																									
-<div class=loading>読み込み中...</div>';																									
-																									
-api(																									
-getOrderByTable',																									
-{																									
-tableNo:tableNo																									
-}																									
-)																									
-																									
-.then(function(res){																									
-																									
-if(!res || res.status!=='success'){																									
-																									
-throw new Error(																									
-res && res.message																									
-? res.message																									
-: '取得失敗'																									
 );																									
 																									
-}																									
 																									
-setStatus(true);																									
+content.innerHTML=																									
+html;																									
 																									
-const orders=																									
-(res.orders||[])																									
-.filter(function(order){																									
-return order.status!=='会計済み';																									
-});																									
-																									
-const map={};																									
-let total=0;																									
-																									
-orders.forEach(function(order){																									
-																									
-total+=Number(order.total);																									
-																									
-order.items.forEach(function(item){																									
-																									
-const id=String(item.id);																									
-																									
-if(!map[id]){																									
-																									
-map[id]={																									
-name:item.name,																									
-quantity:0,																									
-subtotal:0																									
-};																									
-																									
-}																									
-																									
-map[id].quantity+=																									
-Number(item.quantity);																									
-																									
-map[id].subtotal+=																									
-Number(item.subtotal);																									
-																									
-});																									
-																									
-});																									
-																									
-box.innerHTML='';																									
-																									
-Object.values(map)																									
-.forEach(function(item){																									
-																									
-const card=document.createElement('div');																									
-																									
-card.className='card';																									
-																									
-card.innerHTML=																									
-<div class=row>' +																									
-<b>' +																									
-safe(item.name) +																									
- × ' +																									
-item.quantity +																									
-</b>' +																									
-<b>¥' +																									
-money(item.subtotal) +																									
-</b>' +																									
-</div>';																									
-																									
-box.appendChild(card);																									
-																									
-});																									
-																									
-if(Object.keys(map).length===0){																									
-																									
-box.innerHTML=																									
-<div class=loading>未会計の注文はありません</div>';																									
-																									
-}																									
-																									
-document.getElementById('checkoutTotal').textContent=																									
-money(total);																									
+checkout.classList.remove(																									
+hidden'																									
+);																									
 																									
 })																									
 																									
-.catch(function(err){																									
+.catch(function(error){																									
 																									
-setStatus(false);																									
-																									
-box.innerHTML=																									
-<div class=error>' +																									
-safe(err.message) +																									
-</div>';																									
+content.innerHTML=																									
+<p class="text-red-500 text-center">'+																									
+error.message+																									
+</p>';																									
 																									
 });																									
 																									
 }																									
 																									
 																									
-function checkout(){																									
+function closeStatusModal(){																									
 																									
-const text=																									
-document.getElementById('checkoutTotal').textContent;																									
+document																									
+.getElementById('status-modal')																									
+.classList																									
+.add('hidden');																									
 																									
-const total=																									
-Number(text.replace(/,/g,''));																									
+}																									
 																									
-if(total<=0){																									
 																									
-alert('未会計の注文はありません');																									
+function requestCheckout(){																									
+																									
+if(																									
+!currentOrderId																									
+){																									
 																									
 return;																									
 																									
 }																									
 																									
-if(!confirm('お会計を確定しますか？')){																									
-return;																									
-}																									
 																									
-api(																									
-checkoutByTable',																									
+fetch(																									
+GAS_API_URL,																									
 {																									
-tableNo:tableNo																									
+method:'POST',																									
+																									
+body:																									
+JSON.stringify({																									
+action:'checkout',																									
+payload:{																									
+orderId:																									
+currentOrderId																									
+}																									
+})																									
 }																									
 )																									
 																									
-.then(function(res){																									
+.then(function(response){																									
 																									
-if(!res || res.status!=='success'){																									
+return response.json();																									
+																									
+})																									
+																									
+.then(function(result){																									
+																									
+if(																									
+result.status!=='success'																									
+){																									
 																									
 throw new Error(																									
-res && res.message																									
-? res.message																									
-: '会計失敗'																									
+result.message||																									
+会計失敗'																									
 );																									
 																									
 }																									
 																									
-setStatus(true);																									
+																									
+closeStatusModal();																									
 																									
 showReceipt(																									
-res.receipt																									
+result.data.orderId,																									
+result.data.totalPrice,																									
+result.data.items																									
 );																									
 																									
 })																									
 																									
-.catch(function(err){																									
-																									
-setStatus(false);																									
+.catch(function(error){																									
 																									
 alert(																									
-会計エラー\n' +																									
-err.message																									
+会計エラー: '+																									
+error.message																									
 );																									
 																									
 });																									
@@ -1137,54 +1076,81 @@ err.message
 }																									
 																									
 																									
-function showReceipt(receipt){																									
+function showReceipt(																									
+orderId,																									
+total,																									
+items																									
+){																									
 																									
-document.getElementById('receiptTable').textContent=																									
-receipt.tableNo + '番';																									
+document																									
+.getElementById('receipt-order-id')																									
+.textContent=																									
+orderId;																									
 																									
-document.getElementById('receiptTotal').textContent=																									
-¥' + money(receipt.totalAmount);																									
+document																									
+.getElementById('receipt-total')																									
+.textContent=																									
+¥'+																									
+Number(total)																									
+.toLocaleString();																									
 																									
-const box=document.getElementById('receiptItems');																									
 																									
-box.innerHTML='';																									
+const container=																									
+document.getElementById(																									
+receipt-items-summary'																									
+);																									
 																									
-receipt.items.forEach(function(item){																									
+container.innerHTML='';																									
 																									
-const row=document.createElement('div');																									
 																									
-row.className='row';																									
+items.forEach(																									
+function(item){																									
+																									
+const subtotal=																									
+item.price*																									
+item.quantity;																									
+																									
+const row=																									
+document.createElement(																									
+div'																									
+);																									
+																									
+row.className=																									
+flex justify-between text-xs';																									
 																									
 row.innerHTML=																									
-<span>' +																									
-safe(item.name) +																									
- × ' +																									
-item.quantity +																									
-</span>' +																									
-<span>¥' +																									
-money(item.subtotal) +																									
+<span>'+																									
+item.name+																									
+ × '+																									
+item.quantity+																									
+</span>'+																									
+<span>¥'+																									
+subtotal.toLocaleString()+																									
 </span>';																									
 																									
-box.appendChild(row);																									
+container.appendChild(																									
+row																									
+);																									
 																									
-});																									
+}																									
+);																									
 																									
-const qr=document.getElementById('qr');																									
+																									
+const qr=																									
+document.getElementById(																									
+qrcode'																									
+);																									
 																									
 qr.innerHTML='';																									
 																									
-if(typeof QRCode!=='undefined'){																									
+if(																									
+typeof QRCode!=='undefined'																									
+){																									
 																									
 new QRCode(																									
 qr,																									
 {																									
-text:																									
-RECEIPT=' +																									
-receipt.receiptId +																									
-&TABLE=' +																									
-receipt.tableNo +																									
-&TOTAL=' +																									
-receipt.totalAmount,																									
+text:orderId,																									
 width:120,																									
 height:120																									
 }																									
@@ -1192,123 +1158,28 @@ height:120
 																									
 }																									
 																									
-document.getElementById('receiptModal').classList.remove('hidden');																									
+																									
+document																									
+.getElementById('receipt-modal')																									
+.classList																									
+.remove('hidden');																									
+																									
+																									
+localStorage.removeItem(																									
+order_id'																									
+);																									
+																									
+currentOrderId='';																									
 																									
 }																									
 																									
 																									
 function closeReceipt(){																									
 																									
-document.getElementById('receiptModal').classList.add('hidden');																									
-																									
-showView('menu');																									
-																									
-}																									
-																									
-																									
-function openTable(){																									
-																									
-document.getElementById('tableModal').classList.remove('hidden');																									
-																									
-}																									
-																									
-																									
-function selectTable(no){																									
-																									
-tableNo=String(no);																									
-																									
-localStorage.setItem(																									
-saizeriya_table_no',																									
-tableNo																									
-);																									
-																									
-document.getElementById('tableDisplay').textContent=																									
-tableNo;																									
-																									
-document.getElementById('tableModal').classList.add('hidden');																									
-																									
-cart={};																									
-																									
-renderCart();																									
-renderMenu();																									
-																									
-showView('menu');																									
-																									
-}																									
-																									
-																									
-function showView(name){																									
-																									
-const names=[																									
-menu',																									
-cart',																									
-history',																									
-checkout'																									
-];																									
-																									
-names.forEach(function(x){																									
-																									
 document																									
-.getElementById(x+'View')																									
+.getElementById('receipt-modal')																									
 .classList																									
 .add('hidden');																									
-																									
-document																									
-.getElementById(																									
-nav' +																									
-x.charAt(0).toUpperCase() +																									
-x.slice(1)																									
-)																									
-.classList																									
-.remove('active');																									
-																									
-});																									
-																									
-document																									
-.getElementById(name+'View')																									
-.classList																									
-.remove('hidden');																									
-																									
-document																									
-.getElementById(																									
-nav' +																									
-name.charAt(0).toUpperCase() +																									
-name.slice(1)																									
-)																									
-.classList																									
-.add('active');																									
-																									
-if(name==='history'){																									
-loadHistory();																									
-}																									
-																									
-if(name==='checkout'){																									
-loadCheckout();																									
-}																									
-																									
-}																									
-																									
-																									
-function money(value){																									
-																									
-return Number(value||0)																									
-.toLocaleString('ja-JP');																									
-																									
-}																									
-																									
-																									
-function safe(value){																									
-																									
-const div=document.createElement('div');																									
-																									
-div.textContent=																									
-String(																									
-value==null																									
-? ''																									
-: value																									
-);																									
-																									
-return div.innerHTML;																									
 																									
 }																									
 																									
