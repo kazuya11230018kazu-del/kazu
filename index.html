@@ -77,7 +77,6 @@ align-items: center;
 border-bottom: 1px solid #eee;																									
 padding: 14px 0;																									
 }																									
-/* フッターナビゲーション（画像再現） */																									
 .footer-nav {																									
 position: fixed;																									
 bottom: 0;																									
@@ -138,13 +137,13 @@ justify-content: center; align-items: center; font-size: 18px; z-index: 999;
 <div class="table-grid" id="table-grid-buttons"></div>																									
 </div>																									
 																									
-<!-- ① スタート画面（画像1枚目風） -->																									
+<!-- ① スタート画面 -->																									
 <div id="view-start" class="container hidden" style="text-align: center; padding-top: 80px;">																									
 <h2 style="color: #333; margin-bottom: 40px;">いらっしゃいませ</h2>																									
 <button class="btn-red" style="font-size: 18px; padding: 16px;" onclick="goToPeople()">注文をはじめる</button>																									
 </div>																									
 																									
-<!-- ② 人数選択画面（画像3枚目風） -->																									
+<!-- ② 人数選択画面 -->																									
 <div id="view-people" class="container hidden">																									
 <h3 style="text-align: center; margin-bottom: 20px; color: #333;">何名様(全員)でご利用ですか？</h3>																									
 <div class="people-grid">																									
@@ -160,7 +159,7 @@ justify-content: center; align-items: center; font-size: 18px; z-index: 999;
 </div>																									
 </div>																									
 																									
-<!-- ③ メニュー画面（画像2枚目風） -->																									
+<!-- ③ メニュー画面 -->																									
 <div id="view-menu" class="container hidden">																									
 <div style="background: #1976d2; color: white; padding: 10px; text-align: center; font-weight: bold; margin: -16px -16px 15px -16px;">																									
 数量を選択してください																									
@@ -172,7 +171,7 @@ justify-content: center; align-items: center; font-size: 18px; z-index: 999;
 </div>																									
 </div>																									
 																									
-<!-- ④ 注文かご確認画面（画像5枚目風） -->																									
+<!-- ④ 注文かご確認画面 -->																									
 <div id="view-cart" class="container hidden">																									
 <div style="background: #1976d2; color: white; padding: 10px; text-align: center; font-weight: bold; margin: -16px -16px 15px -16px;">																									
 他に注文があれば「追加」、なければ「注文」																									
@@ -192,7 +191,7 @@ justify-content: center; align-items: center; font-size: 18px; z-index: 999;
 <button class="btn-green" onclick="goToMenu()" style="width: 100%; padding: 14px;">続けて注文する</button>																									
 </div>																									
 																									
-<!-- ⑥ 注文履歴画面（画像6枚目風） -->																									
+<!-- ⑥ 注文履歴画面 -->																									
 <div id="view-history" class="container hidden">																									
 <div style="background: #1976d2; color: white; padding: 10px; text-align: center; font-weight: bold; margin: -16px -16px 15px -16px;">																									
 注文内容をご確認ください																									
@@ -203,7 +202,7 @@ justify-content: center; align-items: center; font-size: 18px; z-index: 999;
 <button class="btn-green" onclick="goToMenu()" style="width: 100%; margin-top: 15px;">メニューに戻る</button>																									
 </div>																									
 																									
-<!-- ⑦ お会計確認画面（画像7枚目風） -->																									
+<!-- ⑦ お会計確認画面 -->																									
 <div id="view-checkout" class="container hidden">																									
 <div style="background: #1976d2; color: white; padding: 10px; text-align: center; font-weight: bold; margin: -16px -16px 15px -16px;">																									
 お帰りの際は[お支払いへ進む]をタップ																									
@@ -221,7 +220,7 @@ justify-content: center; align-items: center; font-size: 18px; z-index: 999;
 <button class="btn-green" onclick="location.href='?table=' + currentTableNo" style="width: 100%; padding: 14px;">最初に戻る</button>																									
 </div>																									
 																									
-<!-- フッターナビゲーション（画像再現） -->																									
+<!-- フッターナビゲーション -->																									
 <div class="footer-nav">																									
 <button class="nav-btn" id="nav-menu" onclick="goToMenu()">注文<br>追加</button>																									
 <button class="nav-btn" id="nav-cart" onclick="showCart()">注文<br>かご</button>																									
@@ -268,7 +267,6 @@ document.querySelectorAll('.container').forEach(el => el.classList.add('hidden')
 document.getElementById(viewId).classList.remove('hidden');																									
 window.scrollTo(0, 0);																									
 																									
-// フッターのアクティブ状態更新																									
 document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));																									
 if (viewId === 'view-menu') document.getElementById('nav-menu').classList.add('active');																									
 if (viewId === 'view-cart') document.getElementById('nav-cart').classList.add('active');																									
@@ -308,7 +306,7 @@ html += `<div class="menu-item">
 </div>																									
 <div style="display: flex; align-items: center; gap: 6px;">																									
 <button class="btn-green" style="padding: 4px 10px;" onclick="changeQty(${index}, -1)">-</button>																									
-<input type="number" id="qty-${index}" value="1" min="1">																									
+<input type="number" id="qty-${index}" value="0" min="0">																									
 <button class="btn-green" style="padding: 4px 10px;" onclick="changeQty(${index}, 1)">+</button>																									
 </div>																									
 </div>`;																									
@@ -318,13 +316,30 @@ document.getElementById('menu-list').innerHTML = html;
 																									
 function changeQty(index, delta) {																									
 let input = document.getElementById(`qty-${index}`);																									
-let val = parseInt(input.value) || 1;																									
+let val = parseInt(input.value) || 0;																									
 val += delta;																									
-if (val < 1) val = 1;																									
+if (val < 0) val = 0;																									
 input.value = val;																									
 }																									
 																									
 function showCart() {																									
+// 現在画面で数量が「1以上」入力されているものをかごに追加																									
+menuData.forEach((item, index) => {																									
+let qtyInput = document.getElementById(`qty-${index}`);																									
+if (qtyInput) {																									
+let qty = parseInt(qtyInput.value) || 0;																									
+if (qty > 0) {																									
+let existing = state.cart.find(c => c.id === item.id);																									
+if (existing) {																									
+existing.quantity += qty;																									
+} else {																									
+state.cart.push({ id: item.id, name: item.name, price: item.price, quantity: qty });																									
+}																									
+qtyInput.value = "0"; // 追加したら0に戻す																									
+}																									
+}																									
+});																									
+																									
 let html = "";																									
 let total = 0;																									
 if (state.cart.length === 0) {																									
@@ -338,33 +353,6 @@ total += subtotal;
 });																									
 html += "</table>";																									
 }																									
-																									
-// 現在画面の入力値もかごに追加する																									
-menuData.forEach((item, index) => {																									
-let qtyInput = document.getElementById(`qty-${index}`);																									
-if (qtyInput) {																									
-let qty = parseInt(qtyInput.value) || 0;																									
-if (qty > 0) {																									
-let existing = state.cart.find(c => c.id === item.id);																									
-if (existing) {																									
-existing.quantity += qty;																									
-} else {																									
-state.cart.push({ id: item.id, name: item.name, price: item.price, quantity: qty });																									
-}																									
-qtyInput.value = "1"; // リセット																									
-}																									
-}																									
-});																									
-																									
-// 再計算																									
-total = 0;																									
-html = "<table><tr><th>商品名</th><th>数量</th><th>価格</th></tr>";																									
-state.cart.forEach(item => {																									
-let subtotal = item.price * item.quantity;																									
-html += `<tr><td>${item.name}</td><td>${item.quantity}</td><td>${subtotal}円</td></tr>`;																									
-total += subtotal;																									
-});																									
-html += "</table>";																									
 																									
 document.getElementById('cart-list').innerHTML = html;																									
 document.getElementById('cart-total').innerText = total;																									
@@ -381,7 +369,7 @@ loadMenu();
 																									
 async function sendOrder() {																									
 if (state.cart.length === 0) {																									
-alert("注文する商品がありません");																									
+alert("注文する商品がありません（数量を選択してください）");																									
 return;																									
 }																									
 showLoading(true);																									
