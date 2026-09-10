@@ -124,7 +124,7 @@ justify-content: center; align-items: center; font-size: 18px; z-index: 999;
 <div id="loading" class="hidden">通信中...</div>																									
 <div class="header">テーブル <span id="display-table-no">1</span></div>																									
 																									
-<!-- ⓪ テーブル選択画面（URLに指定がない場合や変更する場合） -->																									
+<!-- ⓪ テーブル選択画面 -->																									
 <div id="view-table-select" class="container hidden" style="text-align: center; padding-top: 30px;">																									
 <h3>テーブル番号を選択してください</h3>																									
 <div class="table-grid" id="table-grid-buttons"></div>																									
@@ -194,7 +194,7 @@ justify-content: center; align-items: center; font-size: 18px; z-index: 999;
 <div id="view-checkout-complete" class="container hidden" style="text-align: center; padding-top: 60px;">																									
 <h3 style="color: #388e3c;">お会計が完了しました</h3>																									
 <p style="color: #666; margin: 20px 0;">ご来店ありがとうございました！</p>																									
-<button class="btn-green" onclick="location.href='?table=' + tableNo" style="width: 100%; padding: 14px;">最初に戻る</button>																									
+<button class="btn-green" onclick="location.href='?table=' + currentTableNo" style="width: 100%; padding: 14px;">最初に戻る</button>																									
 </div>																									
 																									
 <!-- フッターナビゲーション -->																									
@@ -209,15 +209,13 @@ justify-content: center; align-items: center; font-size: 18px; z-index: 999;
 const GAS_URL = "https://script.google.com/macros/s/AKfycbxXmQqy2d4Fi76weIBQFGG1Mmz-doCL5MLsuxOsUWdo8szj-RjRZ3e2DYB0J5ln_YDR/exec";																									
 																									
 const urlParams = new URLSearchParams(window.location.search);																									
-let tableNo = urlParams.get('table');																									
+let currentTableNo = urlParams.get('table');																									
 																									
 let state = { people: 1, cart: [] };																									
 let menuData = [];																									
 																									
-// 起動時の初期化（テーブル番号がURLにない場合は選択画面へ、あればスタート画面へ）																									
 window.onload = function() {																									
-if (!tableNo || isNaN(tableNo) || tableNo < 1 || tableNo > 10) {																									
-// テーブル1〜10の選択ボタンを生成																									
+if (!currentTableNo || isNaN(currentTableNo) || currentTableNo < 1 || currentTableNo > 10) {																									
 let html = "";																									
 for (let i = 1; i <= 10; i++) {																									
 html += `<div class="card" onclick="selectTable(${i})">テーブル ${i}</div>`;																									
@@ -225,14 +223,14 @@ html += `<div class="card" onclick="selectTable(${i})">テーブル ${i}</div>`;
 document.getElementById('table-grid-buttons').innerHTML = html;																									
 switchView('view-table-select');																									
 } else {																									
-document.getElementById('display-table-no').innerText = tableNo;																									
+document.getElementById('display-table-no').innerText = currentTableNo;																									
 switchView('view-start');																									
 }																									
 };																									
 																									
 function selectTable(num) {																									
-tableNo = num;																									
-document.getElementById('display-table-no').innerText = tableNo;																									
+currentTableNo = num;																									
+document.getElementById('display-table-no').innerText = currentTableNo;																									
 switchView('view-start');																									
 }																									
 																									
@@ -329,7 +327,7 @@ showLoading(true);
 try {																									
 let res = await fetch(GAS_URL, {																									
 method: "POST",																									
-body: JSON.stringify({ type: "order", tableNo: tableNo, people: state.people, items: state.cart })																									
+body: JSON.stringify({ type: "order", tableNo: currentTableNo, people: state.people, items: state.cart })																									
 });																									
 let result = await res.json();																									
 if(result.status === "success") {																									
@@ -348,7 +346,7 @@ showLoading(false);
 async function showCheckout() {																									
 showLoading(true);																									
 try {																									
-let res = await fetch(GAS_URL + `?action=getBill&tableNo=${tableNo}`);																									
+let res = await fetch(GAS_URL + `?action=getBill&tableNo=${currentTableNo}`);																									
 let data = await res.json();																									
 																									
 if (data.status === "success") {																									
@@ -381,7 +379,7 @@ showLoading(true);
 try {																									
 let res = await fetch(GAS_URL, {																									
 method: "POST",																									
-body: JSON.stringify({ type: "checkout", tableNo: tableNo })																									
+body: JSON.stringify({ type: "checkout", tableNo: currentTableNo })																									
 });																									
 let result = await res.json();																									
 if (result.status === "success") {																									
