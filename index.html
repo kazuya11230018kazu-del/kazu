@@ -366,29 +366,24 @@ loadMenu();
 }																									
 }																									
 																									
-async function sendOrder() {																									
+// 【超高速化】注文ボタン：裏で送信しつつ、画面は一瞬で完了画面へ切り替える																									
+function sendOrder() {																									
 if (state.cart.length === 0) {																									
 alert("注文する商品がありません（数量を選択してください）");																									
 return;																									
 }																									
-showLoading(true);																									
-try {																									
-// 送信を高速化するため no-cors モード、もしくは応答エラーを無視する仕組みに変更																									
-await fetch(GAS_URL, {																									
+																									
+// 1. 画面を即座に「完了」にする（待ち時間ゼロ）																									
+let payload = { type: "order", tableNo: currentTableNo, people: state.people, items: [...state.cart] };																									
+state.cart = [];																									
+switchView('view-complete');																									
+																									
+// 2. データの送信は裏（バックグラウンド）でこっそり行う																									
+fetch(GAS_URL, {																									
 method: "POST",																									
 mode: "no-cors",																									
-body: JSON.stringify({ type: "order", tableNo: currentTableNo, people: state.people, items: state.cart })																									
-});																									
-// no-corsでは中身が読めないため、送信できたら成功とみなして瞬時に画面を進める																									
-state.cart = [];																									
-switchView('view-complete');																									
-} catch (e) {																									
-// 万が一の通信エラー対策																									
-state.cart = [];																									
-switchView('view-complete');																									
-} finally {																									
-showLoading(false);																									
-}																									
+body: JSON.stringify(payload)																									
+}).catch(err => console.log(err));																									
 }																									
 																									
 async function showHistory() {																									
@@ -445,21 +440,18 @@ showLoading(false);
 }																									
 }																									
 																									
-async function processCheckout() {																									
+// 【超高速化】お会計ボタン：裏で処理しつつ、画面を即座に完了画面へ																									
+function processCheckout() {																									
 if (!confirm("お支払いへ進んでよろしいですか？")) return;																									
-showLoading(true);																									
-try {																									
-await fetch(GAS_URL, {																									
+																									
+let payload = { type: "checkout", tableNo: currentTableNo };																									
+switchView('view-checkout-complete');																									
+																									
+fetch(GAS_URL, {																									
 method: "POST",																									
 mode: "no-cors",																									
-body: JSON.stringify({ type: "checkout", tableNo: currentTableNo })																									
-});																									
-switchView('view-checkout-complete');																									
-} catch (e) {																									
-switchView('view-checkout-complete');																									
-} finally {																									
-showLoading(false);																									
-}																									
+body: JSON.stringify(payload)																									
+}).catch(err => console.log(err));																									
 }																									
 </script>																									
 </body>																									
