@@ -182,7 +182,6 @@
     </div>
 
     <script>
-        // 最新のGASウェブアプリURLを設定済み
         const GAS_URL = "https://script.google.com/macros/s/AKfycbxXmQqy2d4Fi76weIBQFGG1Mmz-doCL5MLsuxOsUWdo8szj-RjRZ3e2DYB0J5ln_YDR/exec";
         
         const urlParams = new URLSearchParams(window.location.search);
@@ -215,14 +214,19 @@
             showLoading(true);
             try {
                 let res = await fetch(GAS_URL + "?action=menu");
-                menuData = await res.json();
+                let text = await res.text();
+                try {
+                    menuData = JSON.parse(text);
+                } catch(err) {
+                    throw new Error("サーバーからの応答が正しくありません: " + text);
+                }
                 if (!Array.isArray(menuData)) {
-                    throw new Error("データ形式が不正です");
+                    throw new Error("データ形式が不正です: " + JSON.stringify(menuData));
                 }
                 renderMenu();
                 switchView('view-menu');
             } catch (e) {
-                alert("メニューの読み込みに失敗しました。スプレッドシートの「メニューマスタ」や「販売中」のチェックをご確認ください。");
+                alert("エラーが発生しました:\n" + e.message);
             } finally {
                 showLoading(false);
             }
@@ -241,7 +245,7 @@
                         </div>
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <input type="number" id="qty-${index}" value="1" min="1" style="width: 50px; text-align: center;">
-                            <button class="btn-green" onclick="addToCart('${item.id}', '${item.name}', ${item.price}, ${index})">追加</button>
+                            <button class="btn-green" onclick="addToCart('${item.id}', '${item.name}', ${item.price},${index})">追加</button>
                         </div>
                     </div>`;
                 });
@@ -262,8 +266,4 @@
         }
 
         function showCart() {
-            if (state.cart.length === 0) {
-                alert("注文かごが空です");
-                return;
-            }
-            let html = "<table><tr><th>商品名</th><th>数
+            if
