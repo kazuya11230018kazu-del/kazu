@@ -112,7 +112,6 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-        /* ローディング画面 */
         #loading {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); color: white; display: flex;
@@ -183,7 +182,6 @@
     </div>
 
     <script>
-        // 新しいGASのウェブアプリURLを設定済み
         const GAS_URL = "https://script.google.com/macros/s/AKfycbxtZvbKiBRdDHlId86pUVQDfPXzk-FvezJ6nQoko7co0wHvFaS2ZDsXEPemgnUSGi-Aaw/exec";
         
         const urlParams = new URLSearchParams(window.location.search);
@@ -215,10 +213,13 @@
             try {
                 let res = await fetch(GAS_URL + "?action=menu");
                 menuData = await res.json();
+                if (!Array.isArray(menuData)) {
+                    throw new Error("データ形式が不正です");
+                }
                 renderMenu();
                 switchView('view-menu');
             } catch (e) {
-                alert("メニューの読み込みに失敗しました。通信環境をご確認ください。");
+                alert("メニューの読み込みに失敗しました。スプレッドシートの「メニューマスタ」や「販売中」のチェック、GASのデプロイ設定をご確認ください。");
             } finally {
                 showLoading(false);
             }
@@ -226,18 +227,22 @@
 
         function renderMenu() {
             let html = "";
-            menuData.forEach((item, index) => {
-                html += `<div class="menu-item">
-                    <div>
-                        <strong>${item.name}</strong><br>
-                        <span style="color:#666; font-size:13px;">${item.price}円</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <input type="number" id="qty-${index}" value="1" min="1" style="width: 50px; text-align: center;">
-                        <button class="btn-green" onclick="addToCart('${item.id}', '${item.name}', ${item.price}, ${index})">追加</button>
-                    </div>
-                </div>`;
-            });
+            if (menuData.length === 0) {
+                html = "<p style='text-align:center; color:#666;'>現在販売中のメニューはありません。「メニューマスタ」の「販売中」にチェックが入っているかご確認ください。</p>";
+            } else {
+                menuData.forEach((item, index) => {
+                    html += `<div class="menu-item">
+                        <div>
+                            <strong>${item.name}</strong><br>
+                            <span style="color:#666; font-size:13px;">${item.price}円</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <input type="number" id="qty-${index}" value="1" min="1" style="width: 50px; text-align: center;">
+                            <button class="btn-green" onclick="addToCart('${item.id}', '${item.name}', ${item.price}, ${index})">追加</button>
+                        </div>
+                    </div>`;
+                });
+            }
             document.getElementById('menu-list').innerHTML = html;
         }
 
@@ -259,11 +264,4 @@
                 return;
             }
             let html = "<table><tr><th>商品名</th><th>数量</th><th>小計</th></tr>";
-            let total = 0;
-            state.cart.forEach(item => {
-                let subtotal = item.price * item.quantity;
-                html += `<tr><td>${item.name}</td><td>${item.quantity}</td><td>${subtotal}円</td></tr>`;
-                total += subtotal;
-            });
-            html += "</table>";
-            document.getElementById('cart-list')
+            let 
