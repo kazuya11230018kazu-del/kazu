@@ -188,7 +188,7 @@ justify-content: center; align-items: center; font-size: 18px; z-index: 999;
 <div id="view-checkout-complete" class="container hidden" style="text-align: center; padding-top: 60px;">																									
 <h3 style="color: #388e3c;">お会計が完了しました</h3>																									
 <p style="color: #666; margin: 20px 0;">ご来店ありがとうございました！</p>																									
-<button class="btn-green" onclick="location.reload()" style="width: 100%; padding: 14px;">最初に戻る</button>																									
+<button class="btn-green" onclick="reloadWithTable()" style="width: 100%; padding: 14px;">最初に戻る</button>																									
 </div>																									
 																									
 <!-- フッターナビゲーション -->																									
@@ -202,6 +202,7 @@ justify-content: center; align-items: center; font-size: 18px; z-index: 999;
 <script>																									
 const GAS_URL = "https://script.google.com/macros/s/AKfycbxXmQqy2d4Fi76weIBQFGG1Mmz-doCL5MLsuxOsUWdo8szj-RjRZ3e2DYB0J5ln_YDR/exec";																									
 																									
+// URLの ?table= からテーブル番号を確実に取得																									
 const urlParams = new URLSearchParams(window.location.search);																									
 const tableNo = urlParams.get('table') ? urlParams.get('table') : "1";																									
 document.getElementById('display-table-no').innerText = tableNo;																									
@@ -224,6 +225,10 @@ function goToPeople() { switchView('view-people'); }
 function setPeople(num) {																									
 state.people = num;																									
 loadMenu();																									
+}																									
+																									
+function reloadWithTable() {																									
+location.href = `?table=${tableNo}`;																									
 }																									
 																									
 async function loadMenu() {																									
@@ -296,7 +301,6 @@ goToPeople();
 }																									
 }																									
 																									
-// 注文確定（POST）																									
 async function sendOrder() {																									
 if (state.cart.length === 0) return;																									
 showLoading(true);																									
@@ -319,7 +323,6 @@ showLoading(false);
 }																									
 }																									
 																									
-// お会計画面の表示																									
 async function showCheckout() {																									
 showLoading(true);																									
 try {																									
@@ -350,7 +353,6 @@ showLoading(false);
 }																									
 }																									
 																									
-// お会計確定（POST: 売上ログへ転記）																									
 async function processCheckout() {																									
 if (!confirm("お会計を確定してよろしいですか？")) return;																									
 showLoading(true);																									
