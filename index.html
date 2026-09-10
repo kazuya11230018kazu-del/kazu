@@ -237,6 +237,7 @@ let currentTableNo = urlParams.get('table');
 																									
 let state = { people: 1, cart: [] };																									
 let menuData = [];																									
+let menuLoaded = false;																									
 																									
 window.onload = function() {																									
 if (!currentTableNo || isNaN(currentTableNo) || currentTableNo < 1 || currentTableNo > 10) {																									
@@ -250,12 +251,30 @@ switchView('view-table-select');
 document.getElementById('display-table-no').innerText = currentTableNo;																									
 switchView('view-start');																									
 }																									
+																									
+// 【高速化】アプリが起動した瞬間から、裏でメニューの読み込みをこっそり走らせておく																									
+preloadMenu();																									
 };																									
 																									
 function selectTable(num) {																									
 currentTableNo = num;																									
 document.getElementById('display-table-no').innerText = currentTableNo;																									
 switchView('view-start');																									
+preloadMenu();																									
+}																									
+																									
+// 裏でメニューをあらかじめ取得しておく関数																									
+async function preloadMenu() {																									
+if (menuLoaded) return;																									
+try {																									
+let res = await fetch(GAS_URL + "?action=menu");																									
+let text = await res.text();																									
+menuData = JSON.parse(text);																									
+renderMenu();																									
+menuLoaded = true;																									
+} catch (e) {																									
+console.log("Preload error:", e);																									
+}																									
 }																									
 																									
 function showLoading(show) {																									
@@ -276,23 +295,16 @@ if (viewId === 'view-checkout') document.getElementById('nav-checkout').classLis
 																									
 function goToPeople() { switchView('view-people'); }																									
 																									
-function setPeople(num) {																									
+// 人数を選択した瞬間に、裏読み込みが終わっていれば即座に画面を開き、まだなら終わるまで少し待つ																									
+async function setPeople(num) {																									
 state.people = num;																									
-loadMenu();																									
-}																									
-																									
-async function loadMenu() {																									
-showLoading(true);																									
-try {																									
-let res = await fetch(GAS_URL + "?action=menu");																									
-let text = await res.text();																									
-menuData = JSON.parse(text);																									
-renderMenu();																									
+if (menuLoaded && menuData.length > 0) {																									
 switchView('view-menu');																									
-} catch (e) {																									
-alert("メニューの読み込みに失敗しました。");																									
-} finally {																									
+} else {																									
+showLoading(true);																									
+await preloadMenu();																									
 showLoading(false);																									
+switchView('view-menu');																									
 }																									
 }																									
 																									
@@ -366,19 +378,16 @@ loadMenu();
 }																									
 }																									
 																									
-// 【超高速化】注文ボタン：裏で送信しつつ、画面は一瞬で完了画面へ切り替える																									
 function sendOrder() {																									
 if (state.cart.length === 0) {																									
 alert("注文する商品がありません（数量を選択してください）");																									
 return;																									
 }																									
 																									
-// 1. 画面を即座に「完了」にする（待ち時間ゼロ）																									
 let payload = { type: "order", tableNo: currentTableNo, people: state.people, items: [...state.cart] };																									
 state.cart = [];																									
 switchView('view-complete');																									
 																									
-// 2. データの送信は裏（バックグラウンド）でこっそり行う																									
 fetch(GAS_URL, {																									
 method: "POST",																									
 mode: "no-cors",																									
@@ -440,7 +449,6 @@ showLoading(false);
 }																									
 }																									
 																									
-// 【超高速化】お会計ボタン：裏で処理しつつ、画面を即座に完了画面へ																									
 function processCheckout() {																									
 if (!confirm("お支払いへ進んでよろしいですか？")) return;																									
 																									
