@@ -182,7 +182,8 @@
     </div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxtZvbKiBRdDHlId86pUVQDfPXzk-FvezJ6nQoko7co0wHvFaS2ZDsXEPemgnUSGi-Aaw/exec";
+        // 最新のGASウェブアプリURLを設定済み
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxXmQqy2d4Fi76weIBQFGG1Mmz-doCL5MLsuxOsUWdo8szj-RjRZ3e2DYB0J5ln_YDR/exec";
         
         const urlParams = new URLSearchParams(window.location.search);
         const tableNo = urlParams.get('table') ? urlParams.get('table') : "1";
@@ -219,7 +220,7 @@
                 renderMenu();
                 switchView('view-menu');
             } catch (e) {
-                alert("メニューの読み込みに失敗しました。スプレッドシートの「メニューマスタ」や「販売中」のチェック、GASのデプロイ設定をご確認ください。");
+                alert("メニューの読み込みに失敗しました。スプレッドシートの「メニューマスタ」や「販売中」のチェックをご確認ください。");
             } finally {
                 showLoading(false);
             }
@@ -263,5 +264,4 @@
                 alert("注文かごが空です");
                 return;
             }
-            let html = "<table><tr><th>商品名</th><th>数量</th><th>小計</th></tr>";
-            let 
+            let html = "<table><tr><th>商品名</th><th>数量</th><th>小計</th></tr>
