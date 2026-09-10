@@ -183,7 +183,8 @@
     </div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxzxAT7w9VscVWSYeCGs0b0BSzw_FSV58ijndShy6Jrn_27p0Abw4O3bru6KK_vCCK2iQ/exec";
+        // 新しいGASのウェブアプリURLを設定済み
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxtZvbKiBRdDHlId86pUVQDfPXzk-FvezJ6nQoko7co0wHvFaS2ZDsXEPemgnUSGi-Aaw/exec";
         
         const urlParams = new URLSearchParams(window.location.search);
         const tableNo = urlParams.get('table') ? urlParams.get('table') : "1";
@@ -265,5 +266,4 @@
                 total += subtotal;
             });
             html += "</table>";
-            document.getElementById('cart-list').innerHTML = html;
-            do
+            document.getElementById('cart-list')
