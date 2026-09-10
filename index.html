@@ -2,268 +2,38 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>オーダーシステム</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>接続テスト</title>
     <style>
-        * { box-sizing: border-box; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background-color: #2b5d34; 
-            color: #333; 
-            margin: 0; 
-            padding: 0; 
-            padding-bottom: 70px; 
-            -webkit-text-size-adjust: 100%;
-        }
-        .header { 
-            background-color: #2b5d34; 
-            color: white; 
-            text-align: center; 
-            padding: 12px; 
-            font-size: 16px; 
-            font-weight: bold;
-            border-bottom: 1px solid #1e4024; 
-        }
-        .container { 
-            background: white; 
-            max-width: 600px; 
-            margin: 0 auto; 
-            min-height: calc(100vh - 50px); 
-            padding: 16px; 
-        }
-        .btn-red { 
-            background-color: #d32f2f; 
-            color: white; 
-            border: none; 
-            padding: 14px 20px; 
-            font-size: 16px; 
-            border-radius: 6px; 
-            width: 100%; 
-            cursor: pointer; 
-            font-weight: bold; 
-            text-align: center;
-        }
-        .btn-green { 
-            background-color: #388e3c; 
-            color: white; 
-            border: none; 
-            padding: 8px 14px; 
-            font-size: 14px; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-weight: bold;
-        }
-        .people-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 12px; 
-            margin-top: 20px; 
-        }
-        .people-card { 
-            background: #f9f9f9; 
-            border: 2px solid #ccc; 
-            border-radius: 8px; 
-            padding: 20px 10px; 
-            text-align: center; 
-            font-size: 18px; 
-            font-weight: bold; 
-            color: #2b5d34; 
-            cursor: pointer; 
-        }
-        .menu-item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 1px solid #eee; 
-            padding: 14px 0; 
-        }
-        .footer-nav { 
-            position: fixed; 
-            bottom: 0; 
-            left: 0; 
-            width: 100%; 
-            background: #2b5d34; 
-            display: flex; 
-            justify-content: space-around; 
-            padding: 6px 4px; 
-            border-top: 2px solid #1e4024; 
-            z-index: 100; 
-        }
-        .nav-btn { 
-            background: white; 
-            border: 1px solid #ccc; 
-            padding: 8px 4px; 
-            font-size: 11px; 
-            font-weight: bold; 
-            border-radius: 4px; 
-            text-align: center; 
-            flex: 1; 
-            margin: 0 2px; 
-            cursor: pointer; 
-            color: #333;
-        }
-        .hidden { display: none !important; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
-        th, td { border: 1px solid #ddd; padding: 10px 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        input[type="number"] {
-            font-size: 16px;
-            padding: 6px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        #loading {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); color: white; display: flex;
-            justify-content: center; align-items: center; font-size: 18px; z-index: 999;
-        }
+        body { font-family: sans-serif; background: #2b5d34; color: white; text-align: center; padding: 40px; }
+        .box { background: white; color: #333; padding: 20px; border-radius: 8px; max-width: 400px; margin: 0 auto; }
+        button { background: #d32f2f; color: white; border: none; padding: 15px; font-size: 16px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-    <div id="loading" class="hidden">通信中...</div>
-    <div class="header">テーブル <span id="display-table-no">1</span></div>
-
-    <!-- スタート画面 -->
-    <div id="view-start" class="container" style="text-align: center; padding-top: 60px;">
-        <h2>いらっしゃいませ</h2>
-        <p style="color: #666; margin-bottom: 30px;">ご利用を開始するにはボタンを押してください</p>
-        <button class="btn-red" onclick="goToPeople()">注文をはじめる</button>
-    </div>
-
-    <!-- 人数選択画面 -->
-    <div id="view-people" class="container hidden">
-        <h3 style="text-align: center; margin-bottom: 20px;">何名様(全員)でご利用ですか？</h3>
-        <div class="people-grid">
-            <div class="people-card" onclick="setPeople(1)">1人</div>
-            <div class="people-card" onclick="setPeople(2)">2人</div>
-            <div class="people-card" onclick="setPeople(3)">3人</div>
-            <div class="people-card" onclick="setPeople(4)">4人</div>
-            <div class="people-card" onclick="setPeople(5)">5人</div>
-            <div class="people-card" onclick="setPeople(6)">6人</div>
-            <div class="people-card" onclick="setPeople(7)">7人</div>
-            <div class="people-card" onclick="setPeople(8)">8人</div>
-            <div class="people-card" onclick="setPeople(9)">9人以上</div>
-        </div>
-    </div>
-
-    <!-- メニュー画面 -->
-    <div id="view-menu" class="container hidden">
-        <h3 style="margin-top: 0;">メニューを選択してください</h3>
-        <div id="menu-list"></div>
-        <br>
-        <button class="btn-red" onclick="showCart()">注文かごへ進む</button>
-    </div>
-
-    <!-- 注文かご確認画面 -->
-    <div id="view-cart" class="container hidden">
-        <h3 style="margin-top: 0;">注文内容をご確認ください</h3>
-        <div id="cart-list"></div>
-        <p style="text-align: right; font-weight: bold; font-size: 18px; margin-top: 15px;">合計: <span id="cart-total">0</span>円 (税込)</p>
-        <div style="display: flex; gap: 10px; margin-top: 20px;">
-            <button class="btn-green" style="flex: 1;" onclick="goToMenu()">追加する</button>
-            <button class="btn-red" style="flex: 2;" onclick="sendOrder()">注文を確定する</button>
-        </div>
-    </div>
-
-    <!-- 注文完了画面 -->
-    <div id="view-complete" class="container hidden" style="text-align: center; padding-top: 60px;">
-        <h3 style="color: #388e3c;">ご注文を受け付けました</h3>
-        <p style="color: #666; margin: 20px 0;">商品の到着までしばらくお待ちください。</p>
-        <button class="btn-green" onclick="goToMenu()" style="width: 100%; padding: 14px;">続けて注文する</button>
-    </div>
-
-    <!-- フッターナビゲーション -->
-    <div class="footer-nav">
-        <button class="nav-btn" onclick="goToMenu()">メニュー</button>
-        <button class="nav-btn" onclick="showCart()">注文かご</button>
-        <button class="nav-btn" onclick="alert('スタッフをお呼びします')">店員呼出</button>
-        <button class="nav-btn" onclick="alert('お会計画面です')">会計する</button>
+    <div class="box">
+        <h2>スプレッドシート接続テスト</h2>
+        <p>下のボタンを押すと、スプレッドシートからメニューを取得して下に表示します。</p>
+        <button onclick="testConnect()">スプレッドシートと通信する</button>
+        <div id="result" style="margin-top: 20px; text-align: left; font-size: 14px; color: #000;"></div>
     </div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxXmQqy2d4Fi76weIBQFGG1Mmz-doCL5MLsuxOsUWdo8szj-RjRZ3e2DYB0J5ln_YDR/exec";
-        
-        const urlParams = new URLSearchParams(window.location.search);
-        const tableNo = urlParams.get('table') ? urlParams.get('table') : "1";
-        document.getElementById('display-table-no').innerText = tableNo;
+        // ▼ ここに最新のGASウェブアプリのURLを貼り付けてください
+        const GAS_URL = "ここにGASのウェブアプリURLを貼り付け";
 
-        let state = { people: 1, cart: [] };
-        let menuData = [];
-
-        function showLoading(show) {
-            document.getElementById('loading').classList.toggle('hidden', !show);
-        }
-
-        function switchView(viewId) {
-            document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));
-            document.getElementById(viewId).classList.remove('hidden');
-            window.scrollTo(0, 0);
-        }
-
-        function goToPeople() { 
-            switchView('view-people'); 
-        }
-
-        function setPeople(num) {
-            state.people = num;
-            loadMenu();
-        }
-
-        async function loadMenu() {
-            showLoading(true);
+        async function testConnect() {
+            const resDiv = document.getElementById('result');
+            resDiv.innerHTML = "通信中...";
             try {
-                let res = await fetch(GAS_URL + "?action=menu");
-                let text = await res.text();
-                try {
-                    menuData = JSON.parse(text);
-                } catch(err) {
-                    throw new Error("サーバーからの応答が正しくありません: " + text);
-                }
-                if (!Array.isArray(menuData)) {
-                    throw new Error("データ形式が不正です: " + JSON.stringify(menuData));
-                }
-                renderMenu();
-                switchView('view-menu');
-            } catch (e) {
-                alert("エラーが発生しました:\n" + e.message);
-            } finally {
-                showLoading(false);
+                let response = await fetch(GAS_URL + "?action=menu");
+                let text = await response.text();
+                resDiv.innerHTML = "<b>通信成功！データ受信：</b><br>" + text;
+            } catch (error) {
+                resDiv.innerHTML = "<b style='color:red;'>通信エラー：</b><br>" + error.message;
             }
         }
-
-        function renderMenu() {
-            let html = "";
-            if (menuData.length === 0) {
-                html = "<p style='text-align:center; color:#666;'>現在販売中のメニューはありません。「メニューマスタ」の「販売中」にチェックが入っているかご確認ください。</p>";
-            } else {
-                menuData.forEach((item, index) => {
-                    html += `<div class="menu-item">
-                        <div>
-                            <strong>${item.name}</strong><br>
-                            <span style="color:#666; font-size:13px;">${item.price}円</span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <input type="number" id="qty-${index}" value="1" min="1" style="width: 50px; text-align: center;">
-                            <button class="btn-green" onclick="addToCart('${item.id}', '${item.name}', ${item.price},${index})">追加</button>
-                        </div>
-                    </div>`;
-                });
-            }
-            document.getElementById('menu-list').innerHTML = html;
-        }
-
-        function addToCart(id, name, price, index) {
-            let qty = parseInt(document.getElementById(`qty-${index}`).value);
-            if (isNaN(qty) || qty < 1) qty = 1;
-            let existing = state.cart.find(item => item.id === id);
-            if (existing) {
-                existing.quantity += qty;
-            } else {
-                state.cart.push({ id, name, price, quantity: qty });
-            }
-            alert(name + " を注文かごに追加しました");
-        }
-
-        function showCart() {
-            if
+    </script>
+</body>
+</html>
