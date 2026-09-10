@@ -3,35 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>接続テスト</title>
+    <title>オーダーシステム</title>
     <style>
-        body { font-family: sans-serif; background: #2b5d34; color: white; text-align: center; padding: 40px; }
-        .box { background: white; color: #333; padding: 20px; border-radius: 8px; max-width: 400px; margin: 0 auto; }
-        button { background: #d32f2f; color: white; border: none; padding: 15px; font-size: 16px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; }
+        body { font-family: sans-serif; background: #2b5d34; color: #333; margin: 0; padding: 20px; }
+        .container { background: white; max-width: 500px; margin: 0 auto; padding: 20px; border-radius: 8px; box-sizing: border-box; }
+        .btn-red { background-color: #d32f2f; color: white; border: none; padding: 14px; font-size: 16px; border-radius: 6px; width: 100%; cursor: pointer; font-weight: bold; text-align: center; margin-top: 10px; }
+        .btn-green { background-color: #388e3c; color: white; border: none; padding: 10px; font-size: 14px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
+        .menu-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding: 12px 0; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div class="box">
-        <h2>スプレッドシート接続テスト</h2>
-        <p>下のボタンを押すと、スプレッドシートからメニューを取得して下に表示します。</p>
-        <button onclick="testConnect()">スプレッドシートと通信する</button>
-        <div id="result" style="margin-top: 20px; text-align: left; font-size: 14px; color: #000;"></div>
+    <div class="container">
+        <h2 style="text-align: center; color: #2b5d34;">オーダーシステム</h2>
+        
+        <!-- ステップ1: スタート -->
+        <div id="view-start">
+            <p style="text-align: center; color: #666;">スプレッドシートと接続します</p>
+            <button class="btn-red" onclick="loadMenu()">注文をはじめる</button>
+        </div>
+
+        <!-- ステップ2: メニュー一覧 -->
+        <div id="view-menu" class="hidden">
+            <h3>メニュー一覧</h3>
+            <div id="menu-list">読み込み中...</div>
+            <button class="btn-green" onclick="sendOrder()" style="margin-top: 20px;">テスト注文を送信する</button>
+        </div>
+
+        <!-- ステップ3: 完了 -->
+        <div id="view-complete" class="hidden" style="text-align: center;">
+            <h3 style="color: #388e3c;">注文が送信されました！</h3>
+            <p>スプレッドシートの「注文一覧」をご確認ください。</p>
+            <button class="btn-red" onclick="location.reload()">最初に戻る</button>
+        </div>
+        
+        <div id="debug" style="margin-top: 15px; font-size: 12px; color: #888; text-align: center;"></div>
     </div>
 
     <script>
-        // ▼ ここに最新のGASウェブアプリのURLを貼り付けてください
-        const GAS_URL = "ここにGASのウェブアプリURLを貼り付け";
+        // あなたの最新GASウェブアプリURL
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxXmQqy2d4Fi76weIBQFGG1Mmz-doCL5MLsuxOsUWdo8szj-RjRZ3e2DYB0J5ln_YDR/exec";
+        
+        let fetchedMenu = [];
 
-        async function testConnect() {
-            const resDiv = document.getElementById('result');
-            resDiv.innerHTML = "通信中...";
+        async function loadMenu() {
+            const debugEl = document.getElementById('debug');
+            debugEl.innerText = "スプレッドシートからデータを取得中...";
+            
             try {
-                let response = await fetch(GAS_URL + "?action=menu");
-                let text = await response.text();
-                resDiv.innerHTML = "<b>通信成功！データ受信：</b><br>" + text;
-            } catch (error) {
-                resDiv.innerHTML = "<b style='color:red;'>通信エラー：</b><br>" + error.message;
+                let res = await fetch(GAS_URL + "?action=menu");
+                let text = await res.text();
+                fetchedMenu = JSON.parse(text);
+                
+                if (!Array.isArray(fetchedMenu) || fetchedMenu.length === 0) {
+                    alert("データが空か、正しく取得できませんでした。「メニューマスタ」のデータをご確認ください。");
+                    debugEl.innerText = "データ取得エラー（空または形式違い）";
+                    return;
+                }
+
+                let html = "";
+                fetchedMenu.forEach((item, index) => {
+                    html += `<div class="menu-item">
+                        <span><strong>${item.name}</strong> (${item.price}円)</span>
+                        <input type="number" id="qty-${index}" value="1" min="1" style="width: 50px; text-align: center; padding: 4px;">
+                    </div>`;
+                });
+                document.getElementById('menu-list').innerHTML = html;
+                
+                document.getElementById('view-start').classList.add('hidden');
+                document.getElementById('view-menu').classList.remove('hidden');
+                debugEl.innerText = "接続成功！";
+            } catch (e) {
+                alert("通信エラー: " + e.message);
+                debugEl.innerText = "エラー: " + e.message;
+            }
+        }
+
+        async function sendOrder() {
+            if (fetchedMenu.length === 0) return;
+            
+            let itemsToSend = [];
+            fetchedMenu.forEach((item, index) => {
+                let qty = parseInt(document.getElementById(`qty-${index}`).value) || 1;
+                itemsToSend.push({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: qty
+                });
+            });
+
+            document.getElementById('debug').innerText = "注文を送信中...";
+
+            try {
+                let res = await fetch(GAS_URL, {
+                    method: "POST",
+                    body: JSON.stringify({ tableNo: "1", people: "2", items: itemsToSend })
+                });
+                let result = await res.json();
+                
+                if (result.status === "success") {
+                    document.getElementById('view-menu').classList.add('hidden');
+                    document.getElementById('view-complete').classList.remove('hidden');
+                    document.getElementById('debug').innerText = "送信完了！";
+                } else {
+                    alert("送信失敗: " + result.message);
+                }
+            } catch (e) {
+                alert("送信エラー: " + e.message);
             }
         }
     </script>
