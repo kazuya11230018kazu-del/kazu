@@ -53,17 +53,17 @@ border-radius: 6px;
 cursor: pointer;																									
 font-weight: bold;																									
 }																									
-.people-grid {																									
+.table-grid, .people-grid {																									
 display: grid;																									
 grid-template-columns: repeat(3, 1fr);																									
 gap: 12px;																									
-margin-top: 20px;																									
+margin-top: 15px;																									
 }																									
-.people-card {																									
+.card {																									
 background: #f9f9f9;																									
 border: 2px solid #ccc;																									
 border-radius: 8px;																									
-padding: 20px 10px;																									
+padding: 18px 10px;																									
 text-align: center;																									
 font-size: 18px;																									
 font-weight: bold;																									
@@ -124,8 +124,14 @@ justify-content: center; align-items: center; font-size: 18px; z-index: 999;
 <div id="loading" class="hidden">通信中...</div>																									
 <div class="header">テーブル <span id="display-table-no">1</span></div>																									
 																									
+<!-- ⓪ テーブル選択画面（URLに指定がない場合や変更する場合） -->																									
+<div id="view-table-select" class="container hidden" style="text-align: center; padding-top: 30px;">																									
+<h3>テーブル番号を選択してください</h3>																									
+<div class="table-grid" id="table-grid-buttons"></div>																									
+</div>																									
+																									
 <!-- ① スタート画面 -->																									
-<div id="view-start" class="container" style="text-align: center; padding-top: 60px;">																									
+<div id="view-start" class="container hidden" style="text-align: center; padding-top: 60px;">																									
 <h2>いらっしゃいませ</h2>																									
 <p style="color: #666; margin-bottom: 30px;">ご利用を開始するにはボタンを押してください</p>																									
 <button class="btn-red" onclick="goToPeople()">注文をはじめる</button>																									
@@ -135,15 +141,15 @@ justify-content: center; align-items: center; font-size: 18px; z-index: 999;
 <div id="view-people" class="container hidden">																									
 <h3 style="text-align: center; margin-bottom: 20px;">何名様(全員)でご利用ですか？</h3>																									
 <div class="people-grid">																									
-<div class="people-card" onclick="setPeople(1)">1人</div>																									
-<div class="people-card" onclick="setPeople(2)">2人</div>																									
-<div class="people-card" onclick="setPeople(3)">3人</div>																									
-<div class="people-card" onclick="setPeople(4)">4人</div>																									
-<div class="people-card" onclick="setPeople(5)">5人</div>																									
-<div class="people-card" onclick="setPeople(6)">6人</div>																									
-<div class="people-card" onclick="setPeople(7)">7人</div>																									
-<div class="people-card" onclick="setPeople(8)">8人</div>																									
-<div class="people-card" onclick="setPeople(9)">9人以上</div>																									
+<div class="card" onclick="setPeople(1)">1人</div>																									
+<div class="card" onclick="setPeople(2)">2人</div>																									
+<div class="card" onclick="setPeople(3)">3人</div>																									
+<div class="card" onclick="setPeople(4)">4人</div>																									
+<div class="card" onclick="setPeople(5)">5人</div>																									
+<div class="card" onclick="setPeople(6)">6人</div>																									
+<div class="card" onclick="setPeople(7)">7人</div>																									
+<div class="card" onclick="setPeople(8)">8人</div>																									
+<div class="card" onclick="setPeople(9)">9人以上</div>																									
 </div>																									
 </div>																									
 																									
@@ -188,7 +194,7 @@ justify-content: center; align-items: center; font-size: 18px; z-index: 999;
 <div id="view-checkout-complete" class="container hidden" style="text-align: center; padding-top: 60px;">																									
 <h3 style="color: #388e3c;">お会計が完了しました</h3>																									
 <p style="color: #666; margin: 20px 0;">ご来店ありがとうございました！</p>																									
-<button class="btn-green" onclick="reloadWithTable()" style="width: 100%; padding: 14px;">最初に戻る</button>																									
+<button class="btn-green" onclick="location.href='?table=' + tableNo" style="width: 100%; padding: 14px;">最初に戻る</button>																									
 </div>																									
 																									
 <!-- フッターナビゲーション -->																									
@@ -202,13 +208,33 @@ justify-content: center; align-items: center; font-size: 18px; z-index: 999;
 <script>																									
 const GAS_URL = "https://script.google.com/macros/s/AKfycbxXmQqy2d4Fi76weIBQFGG1Mmz-doCL5MLsuxOsUWdo8szj-RjRZ3e2DYB0J5ln_YDR/exec";																									
 																									
-// URLの ?table= からテーブル番号を確実に取得																									
 const urlParams = new URLSearchParams(window.location.search);																									
-const tableNo = urlParams.get('table') ? urlParams.get('table') : "1";																									
-document.getElementById('display-table-no').innerText = tableNo;																									
+let tableNo = urlParams.get('table');																									
 																									
 let state = { people: 1, cart: [] };																									
 let menuData = [];																									
+																									
+// 起動時の初期化（テーブル番号がURLにない場合は選択画面へ、あればスタート画面へ）																									
+window.onload = function() {																									
+if (!tableNo || isNaN(tableNo) || tableNo < 1 || tableNo > 10) {																									
+// テーブル1〜10の選択ボタンを生成																									
+let html = "";																									
+for (let i = 1; i <= 10; i++) {																									
+html += `<div class="card" onclick="selectTable(${i})">テーブル ${i}</div>`;																									
+}																									
+document.getElementById('table-grid-buttons').innerHTML = html;																									
+switchView('view-table-select');																									
+} else {																									
+document.getElementById('display-table-no').innerText = tableNo;																									
+switchView('view-start');																									
+}																									
+};																									
+																									
+function selectTable(num) {																									
+tableNo = num;																									
+document.getElementById('display-table-no').innerText = tableNo;																									
+switchView('view-start');																									
+}																									
 																									
 function showLoading(show) {																									
 document.getElementById('loading').classList.toggle('hidden', !show);																									
@@ -225,10 +251,6 @@ function goToPeople() { switchView('view-people'); }
 function setPeople(num) {																									
 state.people = num;																									
 loadMenu();																									
-}																									
-																									
-function reloadWithTable() {																									
-location.href = `?table=${tableNo}`;																									
 }																									
 																									
 async function loadMenu() {																									
