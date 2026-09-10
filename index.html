@@ -8,27 +8,27 @@
 * { box-sizing: border-box; }																									
 body {																									
 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;																									
-background-color: #2b5d34;																									
+background-color: #1976d2;																									
 color: #333;																									
 margin: 0;																									
 padding: 0;																									
-padding-bottom: 70px;																									
+padding-bottom: 75px;																									
 -webkit-text-size-adjust: 100%;																									
 }																									
 .header {																									
-background-color: #2b5d34;																									
+background-color: #1976d2;																									
 color: white;																									
 text-align: center;																									
-padding: 12px;																									
+padding: 14px;																									
 font-size: 16px;																									
 font-weight: bold;																									
-border-bottom: 1px solid #1e4024;																									
+border-bottom: 1px solid #115293;																									
 }																									
 .container {																									
 background: white;																									
 max-width: 600px;																									
 margin: 0 auto;																									
-min-height: calc(100vh - 50px);																									
+min-height: calc(100vh - 55px);																									
 padding: 16px;																									
 }																									
 .btn-red {																									
@@ -47,8 +47,8 @@ text-align: center;
 background-color: #388e3c;																									
 color: white;																									
 border: none;																									
-padding: 10px 14px;																									
-font-size: 14px;																									
+padding: 12px 14px;																									
+font-size: 15px;																									
 border-radius: 6px;																									
 cursor: pointer;																									
 font-weight: bold;																									
@@ -63,11 +63,11 @@ margin-top: 15px;
 background: #f9f9f9;																									
 border: 2px solid #ccc;																									
 border-radius: 8px;																									
-padding: 18px 10px;																									
+padding: 20px 10px;																									
 text-align: center;																									
 font-size: 18px;																									
 font-weight: bold;																									
-color: #2b5d34;																									
+color: #1976d2;																									
 cursor: pointer;																									
 }																									
 .menu-item {																									
@@ -77,22 +77,23 @@ align-items: center;
 border-bottom: 1px solid #eee;																									
 padding: 14px 0;																									
 }																									
+/* フッターナビゲーション（画像再現） */																									
 .footer-nav {																									
 position: fixed;																									
 bottom: 0;																									
 left: 0;																									
 width: 100%;																									
-background: #2b5d34;																									
+background: #1976d2;																									
 display: flex;																									
 justify-content: space-around;																									
 padding: 6px 4px;																									
-border-top: 2px solid #1e4024;																									
+border-top: 2px solid #115293;																									
 z-index: 100;																									
 }																									
 .nav-btn {																									
 background: white;																									
 border: 1px solid #ccc;																									
-padding: 8px 4px;																									
+padding: 6px 2px;																									
 font-size: 11px;																									
 font-weight: bold;																									
 border-radius: 4px;																									
@@ -101,6 +102,11 @@ flex: 1;
 margin: 0 2px;																									
 cursor: pointer;																									
 color: #333;																									
+line-height: 1.3;																									
+}																									
+.nav-btn.active {																									
+border: 2px solid #ff9800;																									
+box-shadow: 0 0 5px rgba(255,152,0,0.5);																									
 }																									
 .hidden { display: none !important; }																									
 table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }																									
@@ -111,6 +117,8 @@ font-size: 16px;
 padding: 6px;																									
 border: 1px solid #ccc;																									
 border-radius: 4px;																									
+width: 55px;																									
+text-align: center;																									
 }																									
 #loading {																									
 position: fixed; top: 0; left: 0; width: 100%; height: 100%;																									
@@ -130,16 +138,15 @@ justify-content: center; align-items: center; font-size: 18px; z-index: 999;
 <div class="table-grid" id="table-grid-buttons"></div>																									
 </div>																									
 																									
-<!-- ① スタート画面 -->																									
-<div id="view-start" class="container hidden" style="text-align: center; padding-top: 60px;">																									
-<h2>いらっしゃいませ</h2>																									
-<p style="color: #666; margin-bottom: 30px;">ご利用を開始するにはボタンを押してください</p>																									
-<button class="btn-red" onclick="goToPeople()">注文をはじめる</button>																									
+<!-- ① スタート画面（画像1枚目風） -->																									
+<div id="view-start" class="container hidden" style="text-align: center; padding-top: 80px;">																									
+<h2 style="color: #333; margin-bottom: 40px;">いらっしゃいませ</h2>																									
+<button class="btn-red" style="font-size: 18px; padding: 16px;" onclick="goToPeople()">注文をはじめる</button>																									
 </div>																									
 																									
-<!-- ② 人数選択画面 -->																									
+<!-- ② 人数選択画面（画像3枚目風） -->																									
 <div id="view-people" class="container hidden">																									
-<h3 style="text-align: center; margin-bottom: 20px;">何名様(全員)でご利用ですか？</h3>																									
+<h3 style="text-align: center; margin-bottom: 20px; color: #333;">何名様(全員)でご利用ですか？</h3>																									
 <div class="people-grid">																									
 <div class="card" onclick="setPeople(1)">1人</div>																									
 <div class="card" onclick="setPeople(2)">2人</div>																									
@@ -153,22 +160,28 @@ justify-content: center; align-items: center; font-size: 18px; z-index: 999;
 </div>																									
 </div>																									
 																									
-<!-- ③ メニュー画面 -->																									
+<!-- ③ メニュー画面（画像2枚目風） -->																									
 <div id="view-menu" class="container hidden">																									
-<h3 style="margin-top: 0;">メニューを選択してください</h3>																									
+<div style="background: #1976d2; color: white; padding: 10px; text-align: center; font-weight: bold; margin: -16px -16px 15px -16px;">																									
+数量を選択してください																									
+</div>																									
 <div id="menu-list"></div>																									
-<br>																									
-<button class="btn-red" onclick="showCart()">注文かごへ進む</button>																									
+<div style="display: flex; gap: 10px; margin-top: 25px;">																									
+<button class="btn-green" style="flex: 1;" onclick="goToPeople()">もどる</button>																									
+<button class="btn-red" style="flex: 2;" onclick="showCart()">注文かごへ追加する</button>																									
+</div>																									
 </div>																									
 																									
-<!-- ④ 注文かご確認画面 -->																									
+<!-- ④ 注文かご確認画面（画像5枚目風） -->																									
 <div id="view-cart" class="container hidden">																									
-<h3 style="margin-top: 0;">注文内容をご確認ください</h3>																									
+<div style="background: #1976d2; color: white; padding: 10px; text-align: center; font-weight: bold; margin: -16px -16px 15px -16px;">																									
+他に注文があれば「追加」、なければ「注文」																									
+</div>																									
 <div id="cart-list"></div>																									
 <p style="text-align: right; font-weight: bold; font-size: 18px; margin-top: 15px;">合計: <span id="cart-total">0</span>円 (税込)</p>																									
 <div style="display: flex; gap: 10px; margin-top: 20px;">																									
-<button class="btn-green" style="flex: 1;" onclick="goToMenu()">追加する</button>																									
-<button class="btn-red" style="flex: 2;" onclick="sendOrder()">注文を確定する</button>																									
+<button class="btn-green" style="flex: 1;" onclick="goToMenu()">追加</button>																									
+<button class="btn-red" style="flex: 2;" onclick="sendOrder()">注文</button>																									
 </div>																									
 </div>																									
 																									
@@ -179,30 +192,42 @@ justify-content: center; align-items: center; font-size: 18px; z-index: 999;
 <button class="btn-green" onclick="goToMenu()" style="width: 100%; padding: 14px;">続けて注文する</button>																									
 </div>																									
 																									
-<!-- ⑥ お会計確認画面 -->																									
-<div id="view-checkout" class="container hidden">																									
-<h3 style="margin-top: 0;">お会計内容</h3>																									
-<div id="checkout-list"></div>																									
-<p style="text-align: right; font-weight: bold; font-size: 18px; margin-top: 15px;">ご請求額: <span id="checkout-total">0</span>円 (税込)</p>																									
-<p style="font-size: 13px; color: #666; text-align: center; margin: 15px 0;">この画面をレジスタッフにお見せください。</p>																									
-<button class="btn-red" onclick="processCheckout()">お会計を確定する（レジ処理）</button>																									
-<br><br>																									
-<button class="btn-green" onclick="goToMenu()" style="width: 100%;">メニューに戻る</button>																									
+<!-- ⑥ 注文履歴画面（画像6枚目風） -->																									
+<div id="view-history" class="container hidden">																									
+<div style="background: #1976d2; color: white; padding: 10px; text-align: center; font-weight: bold; margin: -16px -16px 15px -16px;">																									
+注文内容をご確認ください																									
+</div>																									
+<div id="history-list">読み込み中...</div>																									
+<p style="text-align: center; font-size: 12px; color: #666; margin: 15px 0;">注文の反映には数分かかることがございます</p>																									
+<p style="text-align: right; font-weight: bold; font-size: 18px; margin-top: 10px;">合計: <span id="history-total">0</span>円 (税込)</p>																									
+<button class="btn-green" onclick="goToMenu()" style="width: 100%; margin-top: 15px;">メニューに戻る</button>																									
 </div>																									
 																									
-<!-- ⑦ お会計完了画面 -->																									
+<!-- ⑦ お会計確認画面（画像7枚目風） -->																									
+<div id="view-checkout" class="container hidden">																									
+<div style="background: #1976d2; color: white; padding: 10px; text-align: center; font-weight: bold; margin: -16px -16px 15px -16px;">																									
+お帰りの際は[お支払いへ進む]をタップ																									
+</div>																									
+<div id="checkout-list"></div>																									
+<p style="text-align: right; font-weight: bold; font-size: 18px; margin-top: 15px;">合計: <span id="checkout-total">0</span>円 (税込)</p>																									
+<button class="btn-red" style="margin-top: 20px;" onclick="processCheckout()">お支払いへ進む</button>																									
+<button class="btn-green" style="width: 100%; margin-top: 10px;" onclick="goToMenu()">メニューに戻る</button>																									
+</div>																									
+																									
+<!-- ⑧ お会計完了画面 -->																									
 <div id="view-checkout-complete" class="container hidden" style="text-align: center; padding-top: 60px;">																									
 <h3 style="color: #388e3c;">お会計が完了しました</h3>																									
 <p style="color: #666; margin: 20px 0;">ご来店ありがとうございました！</p>																									
 <button class="btn-green" onclick="location.href='?table=' + currentTableNo" style="width: 100%; padding: 14px;">最初に戻る</button>																									
 </div>																									
 																									
-<!-- フッターナビゲーション -->																									
+<!-- フッターナビゲーション（画像再現） -->																									
 <div class="footer-nav">																									
-<button class="nav-btn" onclick="goToMenu()">メニュー</button>																									
-<button class="nav-btn" onclick="showCart()">注文かご</button>																									
-<button class="nav-btn" onclick="alert('スタッフをお呼びします')">店員呼出</button>																									
-<button class="nav-btn" onclick="showCheckout()">会計する</button>																									
+<button class="nav-btn" id="nav-menu" onclick="goToMenu()">注文<br>追加</button>																									
+<button class="nav-btn" id="nav-cart" onclick="showCart()">注文<br>かご</button>																									
+<button class="nav-btn" id="nav-history" onclick="showHistory()">注文<br>履歴</button>																									
+<button class="nav-btn" id="nav-call" onclick="alert('スタッフをお呼びします')">店員<br>呼出</button>																									
+<button class="nav-btn" id="nav-checkout" onclick="showCheckout()">会計<br>する</button>																									
 </div>																									
 																									
 <script>																									
@@ -242,6 +267,13 @@ function switchView(viewId) {
 document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));																									
 document.getElementById(viewId).classList.remove('hidden');																									
 window.scrollTo(0, 0);																									
+																									
+// フッターのアクティブ状態更新																									
+document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));																									
+if (viewId === 'view-menu') document.getElementById('nav-menu').classList.add('active');																									
+if (viewId === 'view-cart') document.getElementById('nav-cart').classList.add('active');																									
+if (viewId === 'view-history') document.getElementById('nav-history').classList.add('active');																									
+if (viewId === 'view-checkout') document.getElementById('nav-checkout').classList.add('active');																									
 }																									
 																									
 function goToPeople() { switchView('view-people'); }																									
@@ -272,42 +304,68 @@ menuData.forEach((item, index) => {
 html += `<div class="menu-item">																									
 <div>																									
 <strong>${item.name}</strong><br>																									
-<span style="color:#666; font-size:13px;">${item.price}円</span>																									
+<span style="color:#666; font-size:14px;">${item.price}円</span>																									
 </div>																									
-<div style="display: flex; align-items: center; gap: 8px;">																									
-<input type="number" id="qty-${index}" value="1" min="1" style="width: 50px; text-align: center;">																									
-<button class="btn-green" onclick="addToCart('${item.id}', '${item.name}', ${item.price}, ${index})">追加</button>																									
+<div style="display: flex; align-items: center; gap: 6px;">																									
+<button class="btn-green" style="padding: 4px 10px;" onclick="changeQty(${index}, -1)">-</button>																									
+<input type="number" id="qty-${index}" value="1" min="1">																									
+<button class="btn-green" style="padding: 4px 10px;" onclick="changeQty(${index}, 1)">+</button>																									
 </div>																									
 </div>`;																									
 });																									
 document.getElementById('menu-list').innerHTML = html;																									
 }																									
 																									
-function addToCart(id, name, price, index) {																									
-let qty = parseInt(document.getElementById(`qty-${index}`).value);																									
-if (isNaN(qty) || qty < 1) qty = 1;																									
-let existing = state.cart.find(item => item.id === id);																									
-if (existing) {																									
-existing.quantity += qty;																									
-} else {																									
-state.cart.push({ id, name, price, quantity: qty });																									
-}																									
-alert(name + " を注文かごに追加しました");																									
+function changeQty(index, delta) {																									
+let input = document.getElementById(`qty-${index}`);																									
+let val = parseInt(input.value) || 1;																									
+val += delta;																									
+if (val < 1) val = 1;																									
+input.value = val;																									
 }																									
 																									
 function showCart() {																									
-if (state.cart.length === 0) {																									
-alert("注文かごが空です");																									
-return;																									
-}																									
-let html = "<table><tr><th>商品名</th><th>数量</th><th>小計</th></tr>";																									
+let html = "";																									
 let total = 0;																									
+if (state.cart.length === 0) {																									
+html = "<p style='text-align:center; color:#666; padding:20px;'>注文かごは空です</p>";																									
+} else {																									
+html = "<table><tr><th>商品名</th><th>数量</th><th>価格</th></tr>";																									
 state.cart.forEach(item => {																									
 let subtotal = item.price * item.quantity;																									
 html += `<tr><td>${item.name}</td><td>${item.quantity}</td><td>${subtotal}円</td></tr>`;																									
 total += subtotal;																									
 });																									
 html += "</table>";																									
+}																									
+																									
+// 現在画面の入力値もかごに追加する																									
+menuData.forEach((item, index) => {																									
+let qtyInput = document.getElementById(`qty-${index}`);																									
+if (qtyInput) {																									
+let qty = parseInt(qtyInput.value) || 0;																									
+if (qty > 0) {																									
+let existing = state.cart.find(c => c.id === item.id);																									
+if (existing) {																									
+existing.quantity += qty;																									
+} else {																									
+state.cart.push({ id: item.id, name: item.name, price: item.price, quantity: qty });																									
+}																									
+qtyInput.value = "1"; // リセット																									
+}																									
+}																									
+});																									
+																									
+// 再計算																									
+total = 0;																									
+html = "<table><tr><th>商品名</th><th>数量</th><th>価格</th></tr>";																									
+state.cart.forEach(item => {																									
+let subtotal = item.price * item.quantity;																									
+html += `<tr><td>${item.name}</td><td>${item.quantity}</td><td>${subtotal}円</td></tr>`;																									
+total += subtotal;																									
+});																									
+html += "</table>";																									
+																									
 document.getElementById('cart-list').innerHTML = html;																									
 document.getElementById('cart-total').innerText = total;																									
 switchView('view-cart');																									
@@ -317,12 +375,15 @@ function goToMenu() {
 if(menuData.length > 0) {																									
 switchView('view-menu');																									
 } else {																									
-goToPeople();																									
+loadMenu();																									
 }																									
 }																									
 																									
 async function sendOrder() {																									
-if (state.cart.length === 0) return;																									
+if (state.cart.length === 0) {																									
+alert("注文する商品がありません");																									
+return;																									
+}																									
 showLoading(true);																									
 try {																									
 let res = await fetch(GAS_URL, {																									
@@ -343,6 +404,36 @@ showLoading(false);
 }																									
 }																									
 																									
+async function showHistory() {																									
+showLoading(true);																									
+try {																									
+let res = await fetch(GAS_URL + `?action=getBill&tableNo=${currentTableNo}`);																									
+let data = await res.json();																									
+																									
+if (data.status === "success") {																									
+let html = "";																									
+if (data.items.length === 0) {																									
+html = "<p style='text-align:center; color:#666; padding:20px;'>注文履歴はありません</p>";																									
+} else {																									
+html = "<table><tr><th>メニュー名</th><th>数量</th><th>価格</th></tr>";																									
+data.items.forEach(item => {																									
+html += `<tr><td>${item.name}</td><td>${item.quantity}</td><td>${item.subtotal}</td></tr>`;																									
+});																									
+html += "</table>";																									
+}																									
+document.getElementById('history-list').innerHTML = html;																									
+document.getElementById('history-total').innerText = data.total;																									
+switchView('view-history');																									
+} else {																									
+alert("履歴の取得に失敗しました");																									
+}																									
+} catch (e) {																									
+alert("通信エラーが発生しました");																									
+} finally {																									
+showLoading(false);																									
+}																									
+}																									
+																									
 async function showCheckout() {																									
 showLoading(true);																									
 try {																									
@@ -355,9 +446,9 @@ alert("未会計の注文はありません");
 showLoading(false);																									
 return;																									
 }																									
-let html = "<table><tr><th>商品名</th><th>数量</th><th>小計</th></tr>";																									
+let html = "<table><tr><th>メニュー名</th><th>数量</th><th>価格</th></tr>";																									
 data.items.forEach(item => {																									
-html += `<tr><td>${item.name}</td><td>${item.quantity}</td><td>${item.subtotal}円</td></tr>`;																									
+html += `<tr><td>${item.name}</td><td>${item.quantity}</td><td>${item.subtotal}</td></tr>`;																									
 });																									
 html += "</table>";																									
 document.getElementById('checkout-list').innerHTML = html;																									
@@ -374,7 +465,7 @@ showLoading(false);
 }																									
 																									
 async function processCheckout() {																									
-if (!confirm("お会計を確定してよろしいですか？")) return;																									
+if (!confirm("お支払いへ進んでよろしいですか？")) return;																									
 showLoading(true);																									
 try {																									
 let res = await fetch(GAS_URL, {																									
